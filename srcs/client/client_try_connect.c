@@ -10,16 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "client.h"
 
-int				main(int ac, char **av)
+void					client_try_connect(t_client *this)
 {
-	t_prog		*prog;
+	struct protoent		*proto;
+	struct sockaddr_in	sin;
 
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
+	if (!(proto = getprotobyname("ip")))
+	{
+		ft_perror("getprotobyname");
+		exit(1);
+	}
+	this->sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
+	if (this->address)
+	{
+		sin.sin_family = AF_INET;
+		sin.sin_port = htons(this->port);
+		sin.sin_addr.s_addr = inet_addr(this->address);
+		if (!connect(this->sock, (const struct sockaddr *)&sin, sizeof(sin)))
+			this->connected = true;
+		else
+			ft_perror("connect");
+	}
 }

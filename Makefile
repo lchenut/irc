@@ -36,11 +36,12 @@ H_FILES		= $(shell find $(H_DIR) -type f -follow -print | grep ".*\.h$$")
 O_DIRS		= $(C_DIRS:$(C_DIR)%=$(O_DIR)%)
 O_FILES		= $(C_FILES:$(C_DIR)%.c=$(O_DIR)%.o)
 
-all:			$(NAME)
+all:
+	@make -sC $(LIB_PATH)
+	@make -s $(NAME)
 
-$(NAME):		$(O_FILES)
+$(NAME):		$(O_FILES) $(LIB_LD)
 	@echo ""
-	@make -C $(LIB_PATH)
 	@$(CC) $^ -o $@ $(LIB_LD)
 
 $(O_DIR)/%.o:	$(C_DIR)/%.c $(H_FILES)

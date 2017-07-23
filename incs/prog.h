@@ -17,11 +17,17 @@
 
 typedef struct		s_prog
 {
+	int				ac;
+	char			**av;
 	char			*address;
 	unsigned short	port;
 }					t_prog;
 
 t_prog				*prog_new(int ac, char **av);
 void				prog_del(t_prog *this);
+
+void				prog_run(t_prog *this);
+void				prog_dump(t_prog *this);
+void				prog_usage(t_prog *this);
 
 #endif

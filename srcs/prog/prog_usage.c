@@ -12,14 +12,10 @@
 
 #include "prog.h"
 
-int				main(int ac, char **av)
+void			prog_usage(t_prog *this)
 {
-	t_prog		*prog;
-
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
+	ft_putstr_fd("usage reminder: ", 2);
+	ft_putstr_fd(this->av[0], 2);
+	ft_putstr_fd(" [ address [ port ] ]\n", 2);
+	(void)this;
 }

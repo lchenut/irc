@@ -10,16 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "client.h"
 
-int				main(int ac, char **av)
+void			client_del(t_client *this)
 {
-	t_prog		*prog;
-
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
+	if (!this)
+		return ;
+	if (this->address)
+		free(this->address);
+	if (this->sock != -1)
+		close(this->sock);
+	free(this);
 }

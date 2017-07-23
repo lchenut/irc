@@ -12,14 +12,19 @@
 
 #include "prog.h"
 
-int				main(int ac, char **av)
+void			prog_dump(t_prog *this)
 {
-	t_prog		*prog;
-
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
+	if (!this->address)
+	{
+		ft_putstr("address: (null)\n");
+		ft_putstr("port:    (null)\n");
+	}
+	else
+	{
+		ft_putstr("address: ");
+		ft_putendl(this->address);
+		ft_putstr("port:    ");
+		ft_putnbr(this->port);
+		ft_putchar('\n');
+	}
 }

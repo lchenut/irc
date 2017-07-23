@@ -17,6 +17,8 @@ t_prog			*prog_new(int ac, char **av)
 	t_prog		*this;
 
 	this = ft_calloc(sizeof(t_prog));
+	this->ac = ac;
+	this->av = av;
 	if (ac == 3 && ft_strisnum(av[2]))
 	{
 		this->address = ft_strdup(av[1]);

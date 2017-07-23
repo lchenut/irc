@@ -10,16 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#ifndef CLIENT_H
+# define CLIENT_H
 
-int				main(int ac, char **av)
+# include "basics.h"
+# include <sys/types.h>
+# include <sys/select.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <netdb.h>
+
+typedef struct		s_client
 {
-	t_prog		*prog;
+	bool			connected;
+	char			*address;
+	unsigned short	port;
+	int				sock;
+	fd_set			active_set;
+}					t_client;
 
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
-}
+t_client			*client_new(char *address, unsigned short port);
+void				client_del(t_client *this);
+
+void				client_try_connect(t_client *this);
+
+void				client_init_select(t_client *this);
+
+void				client_loop(t_client *this);
+
+#endif

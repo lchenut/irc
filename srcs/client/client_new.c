@@ -10,16 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "client.h"
 
-int				main(int ac, char **av)
+t_client			*client_new(char *address, unsigned short port)
 {
-	t_prog		*prog;
+	t_client		*this;
 
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
+	this = ft_calloc(sizeof(t_client));
+	this->connected = false;
+	this->address = address ? ft_strdup(address) : NULL;
+	this->port = port;
+	this->sock = -1;
+	client_try_connect(this);
+	client_init_select(this);
+	return (this);
 }

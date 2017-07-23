@@ -10,16 +10,48 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "client.h"
 
-int				main(int ac, char **av)
+static void		inner_loop(t_client *this, fd_set *read_fd)
 {
-	t_prog		*prog;
+	int		index;
+	char	buf[100];
+	int		size;
 
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
+	index = 0;
+	while (index < FD_SETSIZE)
+	{
+		if (FD_ISSET(index, read_fd))
+		{
+			if ((size = read(index, buf, 15)) == -1)
+			{
+				ft_perror("read");
+				exit(1);
+			}
+			buf[size] = 0;
+			ft_putnbr(size); ft_putchar(' '); ft_putnbr(index);
+			ft_putstr(" <"); ft_putstr(buf); ft_putstr(">\n");
+			if (size == 0)
+				exit(1);
+			if (index == 0)
+				write(this->sock, buf, size);
+		}
+		index += 1;
+	}
+}
+
+void			client_loop(t_client *this)
+{
+	fd_set	read_fd;
+
+	while (1)
+	{
+		read_fd = this->active_set;
+		if (select(FD_SETSIZE, &read_fd, NULL, NULL, NULL) < 0)
+		{
+			ft_putstr("Select error toussa\n");
+			exit(1);
+		}
+		inner_loop(this, &read_fd);
+	}
 }

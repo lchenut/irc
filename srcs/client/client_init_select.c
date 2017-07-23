@@ -10,16 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "client.h"
 
-int				main(int ac, char **av)
+void			client_init_select(t_client *this)
 {
-	t_prog		*prog;
-
-	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
-	prog_dump(prog);
-	prog_run(prog);
-	prog_del(prog);
+	FD_ZERO(&(this->active_set));
+	if (this->connected)
+		FD_SET(this->sock, &(this->active_set));
+	FD_SET(0, &(this->active_set));
 }
