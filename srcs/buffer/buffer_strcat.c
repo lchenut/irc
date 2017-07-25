@@ -19,5 +19,6 @@ void			buffer_strcat(t_buffer *this, char *s)
 	new_string_length = ft_strlen(s);
 	while (new_string_length + this->current > this->total)
 		buffer_realloc(this);
-	ft_strcat(this->buffer, char s);
+	ft_strcat(this->buffer, s);
+	this->current += new_string_length;
 }

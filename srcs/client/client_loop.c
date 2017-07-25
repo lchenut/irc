@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 
 #include "client.h"
+#include <stdio.h>
 
 static void		inner_loop(t_client *this, fd_set *read_fd)
 {
-	int		index;
-	char	buf[100];
-	int		size;
+	int			index;
+	char		buf[100];
+	int			size;
 
 	index = 0;
 	while (index < FD_SETSIZE)

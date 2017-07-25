@@ -12,14 +12,23 @@
 
 #include "buffer.h"
 
-t_buffer			*buffer_new(int fd)
+char			*buffer_pop_line(t_buffer *this)
 {
-	t_buffer		*this;
+	size_t		index;
+	char		*s;
 
-	this = ft_calloc(sizeof(t_buffer));
-	this->fd = fd;
-	this->buffer = ft_strnew(DFL_BUFFER_SIZE);
-	this->total = DFL_BUFFER_SIZE;
-	this->current = 0;
-	return (this);
+	index = 0;
+	s = this->buffer;
+	while (s[index])
+	{
+		if (s[index] == '\r' && s[index + 1] == '\n')
+			break ;
+		index += 1;
+	}
+	if (!s[index])
+		return (NULL);
+	s = ft_strndup(this->buffer, index);
+	ft_memmove(this->buffer, this->buffer + index + 2, this->total - index - 2);
+	this->current = this->current - index - 2;
+	return (s);
 }

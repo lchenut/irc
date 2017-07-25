@@ -19,3 +19,4 @@ void				buffer_del(t_buffer *this)
 	if (this->buffer)
 		free(this->buffer);
 	free(this);
+}

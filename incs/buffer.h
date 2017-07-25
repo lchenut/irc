@@ -29,7 +29,7 @@ t_buffer			*buffer_new(int fd);
 void				buffer_del(t_buffer *this);
 
 void				buffer_strcat(t_buffer *this, char *s);
-char				*buffer_get_line(t_buffer *this);
+char				*buffer_pop_line(t_buffer *this);
 
 void				buffer_realloc(t_buffer *this);
 

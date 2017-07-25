@@ -14,6 +14,7 @@
 # define CLIENT_H
 
 # include "basics.h"
+# include "buffer.h"
 # include <sys/types.h>
 # include <sys/select.h>
 # include <sys/socket.h>
@@ -28,6 +29,7 @@ typedef struct		s_client
 	unsigned short	port;
 	int				sock;
 	fd_set			active_set;
+	t_buffer		*socket_buf;
 }					t_client;
 
 t_client			*client_new(char *address, unsigned short port);
