@@ -17,7 +17,10 @@ void			prog_run(t_prog *this)
 {
 	t_client	*client;
 
-	client = client_new(this->address, this->port);
+	if (this->ac == 2 || this->ac == 3)
+		client = client_new(this->av[1], this->av[2]);
+	else
+		client = client_new(NULL, NULL);
 	client_loop(client);
 	client_del(client);
 }

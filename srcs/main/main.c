@@ -17,8 +17,6 @@ int				main(int ac, char **av)
 	t_prog		*prog;
 
 	prog = prog_new(ac, av);
-	if (prog->address == NULL)
-		prog_usage(prog);
 	prog_dump(prog);
 	prog_run(prog);
 	prog_del(prog);

@@ -10,10 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "client.h"
 
-void			prog_del(t_prog *this)
+void					client_try_connect_ipv6(t_client *this,
+		struct addrinfo *info)
 {
-	if (this)
-		free(this);
+	struct protoent		*proto;
+
+	if (!(proto = getprotobyname("ip")))
+	{
+		ft_perror("getprotobyname");
+		exit(1); // TODO: quitter plus proprement
+	}
+	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
+	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
+		this->connected = true;
+	else
+		ft_perror("connect");
 }

@@ -27,16 +27,19 @@ typedef struct		s_client
 {
 	bool			connected;
 	char			*address;
-	unsigned short	port;
+	char			*port;
+	unsigned short	us_port;
 	int				sock;
 	fd_set			active_set;
 	t_buffer		*socket_buf;
 }					t_client;
 
-t_client			*client_new(char *address, unsigned short port);
+t_client			*client_new(char *address, char *port);
 void				client_del(t_client *this);
 
 void				client_try_connect(t_client *this);
+void				client_try_connect_ipv4(t_client *this, struct addrinfo *i);
+void				client_try_connect_ipv6(t_client *this, struct addrinfo *i);
 
 void				client_init_select(t_client *this);
 

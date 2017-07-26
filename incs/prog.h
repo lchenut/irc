@@ -19,8 +19,6 @@ typedef struct		s_prog
 {
 	int				ac;
 	char			**av;
-	char			*address;
-	unsigned short	port;
 }					t_prog;
 
 t_prog				*prog_new(int ac, char **av);

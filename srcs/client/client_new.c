@@ -12,14 +12,14 @@
 
 #include "client.h"
 
-t_client			*client_new(char *address, unsigned short port)
+t_client			*client_new(char *address, char *port)
 {
 	t_client		*this;
 
 	this = ft_calloc(sizeof(t_client));
 	this->connected = false;
 	this->address = address ? ft_strdup(address) : NULL;
-	this->port = port;
+	this->port = port ? ft_strdup(port) : NULL;
 	this->sock = -1;
 	client_try_connect(this);
 	client_init_select(this);

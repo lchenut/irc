@@ -14,23 +14,21 @@
 
 void					client_try_connect(t_client *this)
 {
-	struct protoent		*proto;
-	struct sockaddr_in	sin;
+	struct addrinfo		*info;
+	struct addrinfo		hint;
+	int					gai_error;
 
-	if (!(proto = getprotobyname("ip")))
-	{
-		ft_perror("getprotobyname");
-		exit(1);
-	}
-	this->sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
-	if (this->address)
-	{
-		sin.sin_family = AF_INET;
-		sin.sin_port = htons(this->port);
-		sin.sin_addr.s_addr = inet_addr(this->address);
-		if (!connect(this->sock, (const struct sockaddr *)&sin, sizeof(sin)))
-			this->connected = true;
-		else
-			ft_perror("connect");
-	}
+	if (!this->address)
+		return ;
+	hint.ai_family = AF_UNSPEC;
+	hint.ai_socktype = SOCK_STREAM;
+	gai_error = getaddrinfo(this->address, this->port, &hint, &info);
+	if (gai_error)
+		return ; // TODO: L'utilisateur a fait de la merde... si == 8
+	if (info->ai_family == AF_INET)
+		client_try_connect_ipv4(this, info);
+	else if (info->ai_family == AF_INET6)
+		client_try_connect_ipv6(this, info);
+	else
+		return ; // TODO: C'est chelou !
 }

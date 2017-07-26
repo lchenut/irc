@@ -14,7 +14,7 @@
 
 void			prog_dump(t_prog *this)
 {
-	if (!this->address)
+	if (!this->av[1])
 	{
 		ft_putstr("address: (null)\n");
 		ft_putstr("port:    (null)\n");
@@ -22,9 +22,8 @@ void			prog_dump(t_prog *this)
 	else
 	{
 		ft_putstr("address: ");
-		ft_putendl(this->address);
+		ft_putendl(this->av[1]);
 		ft_putstr("port:    ");
-		ft_putnbr(this->port);
-		ft_putchar('\n');
+		ft_putendl(this->av[2]);
 	}
 }

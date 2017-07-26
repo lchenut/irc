@@ -10,10 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "client.h"
 
-void			prog_del(t_prog *this)
+void			client_read_from_stdin(t_client *this)
 {
-	if (this)
-		free(this);
+	char		buf[16];
+	int			size;
+
+	size = read(0, buf, 15);
+	buf[size] = 0;
+	if (size == 0)
+		exit(0);
+	if (this->sock != -1)
+		write(this->sock, buf, size);
+	(void)this;
 }
