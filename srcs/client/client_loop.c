@@ -13,37 +13,10 @@
 #include "client.h"
 #include <stdio.h>
 
-static void		inner_loop(t_client *this, fd_set *read_fd)
-{
-	int			index;
-	char		buf[100];
-	int			size;
-
-	index = 0;
-	while (index < FD_SETSIZE)
-	{
-		if (FD_ISSET(index, read_fd))
-		{
-			if ((size = read(index, buf, 15)) == -1)
-			{
-				ft_perror("read");
-				exit(1);
-			}
-			buf[size] = 0;
-			ft_putnbr(size); ft_putchar(' '); ft_putnbr(index);
-			ft_putstr(" <"); ft_putstr(buf); ft_putstr(">\n");
-			if (size == 0)
-				exit(1);
-			if (index == 0)
-				write(this->sock, buf, size);
-		}
-		index += 1;
-	}
-}
-
 void			client_loop(t_client *this)
 {
 	fd_set	read_fd;
+	int			fd;
 
 	while (1)
 	{
@@ -53,6 +26,17 @@ void			client_loop(t_client *this)
 			ft_putstr("Select error toussa\n");
 			exit(1);
 		}
-		inner_loop(this, &read_fd);
+		fd = 0;
+		while (fd < FD_SETSIZE)
+		{
+			if (FD_ISSET(fd, &read_fd))
+			{
+				if (fd == 0)
+					client_read_from_stdin(this);
+				else
+					client_read_from_socket(this, fd);
+			}
+			fd += 1;
+		}
 	}
 }

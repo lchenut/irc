@@ -42,7 +42,7 @@ all:
 
 $(NAME):		$(O_FILES) $(LIB_LD)
 	@echo ""
-	@$(CC) $^ -o $@ $(LIB_LD)
+	@$(CC) $^ -o $@ $(LIB_LD) -lncurses
 
 $(O_DIR)/%.o:	$(C_DIR)/%.c $(H_FILES)
 	@mkdir -p $(O_DIRS) $(O_DIR)
