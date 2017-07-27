@@ -10,16 +10,37 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#ifndef COMMAND_H
+# define COMMAND_H
 
-void				client_read_from_stdin(t_client *this)
+# include "basics.h"
+
+typedef struct		s_line
 {
-	unsigned char	c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-		command_push(this->command, c);
-	LOG_DEBUG(" %c ", c);
-}
+	char			*line;
+	char			*copy;
+	size_t			total;
+	size_t			size;
+}					t_line;
+
+t_line				*line_new(void);
+void				line_del(t_line *this);
+
+void				line_realloc(t_line *this);
+
+typedef struct		s_command
+{
+	t_vector		*history;
+	t_line			*last;
+	unsigned char	buffer[8];
+	size_t			curspos;
+	size_t			winsize;
+	size_t			index;
+}					t_command;
+
+t_command			*command_new(void);
+void				command_del(t_command *this);
+
+void				command_push(t_command *this, unsigned char c);
+
+#endif

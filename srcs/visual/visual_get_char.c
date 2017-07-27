@@ -10,16 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void				client_read_from_stdin(t_client *this)
+char			visual_get_char(t_visual *this)
 {
-	unsigned char	c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-		command_push(this->command, c);
-	LOG_DEBUG(" %c ", c);
+	return (wgetch(this->prompt));
 }

@@ -34,13 +34,18 @@ static char		*rep_nl(char *s)
 void			client_read_from_socket(t_client *this, int fd)
 {
 	char		*rep;
+	char		*tmp;
 
 	if (!this->socket_buf)
 		this->socket_buf = buffer_new(fd);
 	buffer_read_from_fd(this->socket_buf, fd);
-	buffer_dump(this->socket_buf);
-	printf("LINE   >\e[34m%s\e[m<\n", rep_nl((rep = buffer_pop_line(this->socket_buf))));
+	rep = buffer_pop_line(this->socket_buf);
+	tmp = rep ? ft_strrep_unprint_char(rep) : NULL;
+	free(tmp);
 	if (rep && !ft_strchr(rep, '\n'))
 		buffer_flush_fd(this->socket_buf, fd);
+	else if (rep)
+		visual_print_chat(this->visual, rep);
 	free(rep);
+	(void)rep_nl;
 }

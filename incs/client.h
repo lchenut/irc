@@ -15,6 +15,7 @@
 
 # include "basics.h"
 # include "buffer.h"
+# include "command.h"
 # include "visual.h"
 # include <sys/types.h>
 # include <sys/select.h>
@@ -32,6 +33,8 @@ typedef struct		s_client
 	int				sock;
 	fd_set			active_set;
 	t_buffer		*socket_buf;
+	t_visual		*visual;
+	t_command		*command;
 }					t_client;
 
 t_client			*client_new(char *address, char *port);

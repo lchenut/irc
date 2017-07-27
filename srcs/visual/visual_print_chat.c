@@ -10,16 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void				client_read_from_stdin(t_client *this)
+void			visual_print_chat(t_visual *this, char *buf)
 {
-	unsigned char	c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-		command_push(this->command, c);
-	LOG_DEBUG(" %c ", c);
+	while (*buf)
+	{
+		if (*buf == '\r' && buf[1] == '\n')
+			buf += 1;
+		waddch(this->chat, *buf);
+		buf += 1;
+	}
+	wrefresh(this->chat);
 }

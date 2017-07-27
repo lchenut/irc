@@ -22,7 +22,6 @@ int				buffer_read_from_fd(t_buffer *this, int fd)
 	size = (this->end < this->start) ?
 		this->start - this->end : this->total - this->end;
 	read_ret = read(fd, this->buffer + this->end, size);
-	printf("size to read & read return: \e[32m%i\e[34m %i\e[m\n", size, read_ret);
 	if (read_ret <= 0)
 		return (read_ret);
 	this->size += read_ret;

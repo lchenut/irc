@@ -20,5 +20,7 @@ void			client_del(t_client *this)
 		free(this->address);
 	if (this->sock != -1)
 		close(this->sock);
+	if (this->visual)
+		visual_del(this->visual);
 	free(this);
 }

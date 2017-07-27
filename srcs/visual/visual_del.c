@@ -10,16 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void				client_read_from_stdin(t_client *this)
+void			visual_del(t_visual *this)
 {
-	unsigned char	c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-		command_push(this->command, c);
-	LOG_DEBUG(" %c ", c);
+	if (!this)
+		return ;
+	delwin(this->chat);
+	delwin(this->prompt);
+	delwin(this->border);
+	free(this);
 }

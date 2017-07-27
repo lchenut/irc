@@ -23,5 +23,6 @@ t_client			*client_new(char *address, char *port)
 	this->sock = -1;
 	client_try_connect(this);
 	client_init_select(this);
+	this->visual = visual_new();
 	return (this);
 }

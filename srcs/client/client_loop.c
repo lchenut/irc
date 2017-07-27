@@ -34,7 +34,7 @@ void			client_loop(t_client *this)
 				if (fd == 0)
 					client_read_from_stdin(this);
 				else
-					client_read_from_socket(this, fd);
+					client_read_from_socket(this, this->sock);
 			}
 			fd += 1;
 		}

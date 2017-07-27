@@ -10,16 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void				client_read_from_stdin(t_client *this)
+t_visual			*visual_new(void)
 {
-	unsigned char	c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-		command_push(this->command, c);
-	LOG_DEBUG(" %c ", c);
+	t_visual		*this;
+
+	this = ft_calloc(sizeof(t_visual));
+	initscr();
+	noecho();
+	this->chat = newwin(CHAT_NB_LINES, CHAT_NB_COLS,
+			CHAT_START_LINES, CHAT_START_COLS);
+	scrollok(this->chat, true);
+	this->prompt = newwin(PROMPT_NB_LINES, PROMPT_NB_COLS,
+			PROMPT_START_LINES, PROMPT_START_COLS);
+	this->border = newwin(BORDER_NB_LINES, BORDER_NB_COLS,
+			BORDER_START_LINES, BORDER_START_COLS);
+	box(this->border, 0, 0);
+	wrefresh(this->border);
+	wprintw(this->prompt, "$ ");
+	wrefresh(this->prompt);
+	return (this);
 }
