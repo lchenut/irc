@@ -12,14 +12,13 @@
 
 #include "buffer.h"
 
-t_buffer			*buffer_new(int fd)
+t_buffer			*buffer_new(int index)
 {
 	t_buffer		*this;
 
 	this = ft_calloc(sizeof(t_buffer));
-	this->fd = fd;
+	this->index = index;
 	this->buffer = ft_strnew(DFL_BUFFER_SIZE);
-	this->remainder = ft_strnew(DFL_BUFFER_SIZE);
 	this->total = DFL_BUFFER_SIZE;
 	this->start = 0;
 	this->end = 0;

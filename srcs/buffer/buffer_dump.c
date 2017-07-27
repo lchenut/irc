@@ -12,18 +12,15 @@
 
 #include "buffer.h"
 
-void			buffer_strcat(t_buffer *this, char *s)
+void			buffer_dump(t_buffer *this)
 {
-	while (*s)
-	{
-		this->buffer[this->end] = *s;
-		this->size += 1;
-		s += 1;
-		if (this->size == DFL_BUFFER_SIZE)
-			break ;
-		if (this->end == this->total)
-			this->end = 0;
-	}
-	if (*s)
-		this->remainder = ft_strdup(s);
+	ft_putstr("BUFFER >\e[35m");
+	ft_putstr(ft_strrep_unprint_char(this->buffer));
+	ft_putstr("\e[m<\nSTART ");
+	ft_putnbr(this->start);
+	ft_putstr("\nEND   ");
+	ft_putnbr(this->end);
+	ft_putstr("\nSIZE  ");
+	ft_putnbr(this->size);
+	ft_putchar('\n');
 }

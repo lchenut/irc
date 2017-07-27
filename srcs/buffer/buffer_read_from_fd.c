@@ -11,43 +11,24 @@
 /* ************************************************************************** */
 
 #include "buffer.h"
+#include <sys/types.h>
+#include <sys/uio.h>
 
-static char		*pop_line(t_buffer *this, size_t count)
+int				buffer_read_from_fd(t_buffer *this, int fd)
 {
-	char		*ret;
-	int			index;
+	int			read_ret;
+	int			size;
 
-	ret = ft_strnew(count);
-	index = 0;
-	this->size -= count;
-	while (count)
-	{
-		ret[index] = this->buffer[this->start];
-		index += 1;
-		if ((this->start += 1) == this->total)
-			this->start = 0;
-		count -= 1;
-	}
-	return (ret);
-}
-
-char			*buffer_pop_line(t_buffer *this)
-{
-	size_t		index;
-	size_t		count;
-
-	index = this->start;
-	count = 0;
-	while (this->buffer[index] != '\n' && count != this->size)
-	{
-		index += 1;
-		count += 1;
-		if (index == this->total)
-			index = 0;
-	}
-	if (this->buffer[index] != '\n' && count < this->total)
-		return (NULL);
-	if (this->buffer[index] == '\n' && count == this->size)
-		return (NULL);
-	return (pop_line(this, this->buffer[index] != '\n' ? count : count + 1));
+	size = (this->end < this->start) ?
+		this->start - this->end : this->total - this->end;
+	read_ret = read(fd, this->buffer + this->end, size);
+	printf("size to read & read return: \e[32m%i\e[34m %i\e[m\n", size, read_ret);
+	if (read_ret <= 0)
+		return (read_ret);
+	this->size += read_ret;
+	if (this->end + read_ret == this->total)
+		this->end = 0;
+	else
+		this->end += read_ret;
+	return (read_ret);
 }

@@ -11,29 +11,36 @@
 /* ************************************************************************** */
 
 #include "client.h"
-#define CLIENT_READ_FROM_SOCKET_BUFFER_SIZE 64
+
+static char		*rep_nl(char *s)
+{
+	char		*ret;
+	char		*tmp;
+
+	if (!s)
+		return ("(null)");
+	ret = ft_strnew(ft_strlen(s) << 1);
+	tmp = ret;
+	while (*s)
+	{
+		if (*s == '\n') { *tmp = '\\'; tmp += 1; *tmp = 'n'; }
+		else if (*s == '\r') { *tmp = '\\'; tmp += 1; *tmp = 'r'; }
+		else { *tmp = *s; }
+		tmp += 1; s += 1;
+	}
+	return (ret);
+}
 
 void			client_read_from_socket(t_client *this, int fd)
 {
-	char		buf[CLIENT_READ_FROM_SOCKET_BUFFER_SIZE];
-	char		*s;
-	int			size;
+	char		*rep;
 
-	size = read(fd, buf, CLIENT_READ_FROM_SOCKET_BUFFER_SIZE - 1);
-	if (size == -1)
-	{
-		ft_perror("read");
-		exit(1);
-	}
-	if (size == 0)
-	{
-		exit(0); // TODO: 13:16 -!- Irssi: Connection lost to 127.0.0.1
-	}
-	buf[size] = 0;
-	ft_putendl(buf);
 	if (!this->socket_buf)
 		this->socket_buf = buffer_new(fd);
-	buffer_strcat(this->socket_buf, buf);
-	while ((s = buffer_pop_line(this->socket_buf)))
-		ft_putendl(s);
+	buffer_read_from_fd(this->socket_buf, fd);
+	buffer_dump(this->socket_buf);
+	printf("LINE   >\e[34m%s\e[m<\n", rep_nl((rep = buffer_pop_line(this->socket_buf))));
+	if (rep && !ft_strchr(rep, '\n'))
+		buffer_flush_fd(this->socket_buf, fd);
+	free(rep);
 }

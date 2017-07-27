@@ -22,7 +22,7 @@ void					client_try_connect(t_client *this)
 		return ;
 	hint.ai_family = AF_UNSPEC;
 	hint.ai_socktype = SOCK_STREAM;
-	gai_error = getaddrinfo(this->address, this->port, &hint, &info);
+	gai_error = getaddrinfo(this->address, this->port, NULL, &info);
 	if (gai_error)
 		return ; // TODO: L'utilisateur a fait de la merde... si == 8
 	if (info->ai_family == AF_INET)

@@ -12,12 +12,25 @@
 
 #include "buffer.h"
 
-void				buffer_realloc(t_buffer *this)
+int				buffer_flush_fd(t_buffer *this, int fd)
 {
-	char			*new_buffer;
+	int			read_ret;
+	size_t		index;
 
-	new_buffer = ft_strnew(this->total << 1);
-	ft_strcpy(new_buffer, this->buffer);
-	free(this->buffer);
-	this->buffer = new_buffer;
+	while ((read_ret = read(fd, this->buffer, DFL_BUFFER_SIZE)) > 0)
+	{
+		if (read_ret <= 0)
+			return (read_ret);
+		index = 0;
+		while (this->buffer[index] != '\n' && index < (size_t)read_ret)
+			index += 1;
+		if (index < (size_t)read_ret)
+		{
+			this->start = (index + 1 == this->total) ? 0 : index + 1;
+			this->end = ((size_t)read_ret == this->total) ? 0 : read_ret;
+			this->size = read_ret - index;
+			return (1);
+		}
+	}
+	return (-1);
 }
