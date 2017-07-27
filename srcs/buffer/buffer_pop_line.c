@@ -12,9 +12,44 @@
 
 #include "buffer.h"
 
+static char		*pop_line(t_buffer *this, int count)
+{
+	char		*ret;
+	int			index_ret;
+
+	ret = ft_strnew(count);
+}
+
 char			*buffer_pop_line(t_buffer *this)
 {
-	size_t		index;
+	int			count;
+	int			index;
+	char		*ret;
+	bool		found;
+
+	count = 0;
+	index = (int)this->start;
+	found = false;
+	ret = NULL;
+	while (this->buffer[index])
+	{
+		if (this->buffer[index] == '\n')
+		{
+			found = true;
+			break ;
+		}
+		index += 1;
+		count += 1;
+		if (index == this->total)
+			index = 0;
+		if (count == this->total)
+			break ;
+	}
+	if (!found && this->remainder)
+		ret = pop_line(this, this->total);
+	else if (found)
+		ret = pop_line(this, count);
+	return (ret);
 	char		*s;
 
 	index = 0;

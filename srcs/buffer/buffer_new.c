@@ -19,7 +19,10 @@ t_buffer			*buffer_new(int fd)
 	this = ft_calloc(sizeof(t_buffer));
 	this->fd = fd;
 	this->buffer = ft_strnew(DFL_BUFFER_SIZE);
+	this->remainder = ft_strnew(DFL_BUFFER_SIZE);
 	this->total = DFL_BUFFER_SIZE;
-	this->current = 0;
+	this->start = 0;
+	this->end = 0;
+	this->size = 0;
 	return (this);
 }

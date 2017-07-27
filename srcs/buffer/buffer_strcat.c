@@ -14,11 +14,16 @@
 
 void			buffer_strcat(t_buffer *this, char *s)
 {
-	size_t		new_string_length;
-
-	new_string_length = ft_strlen(s);
-	while (new_string_length + this->current > this->total)
-		buffer_realloc(this);
-	ft_strcat(this->buffer, s);
-	this->current += new_string_length;
+	while (*s)
+	{
+		this->buffer[this->end] = *s;
+		this->size += 1;
+		s += 1;
+		if (this->size == DFL_BUFFER_SIZE)
+			break ;
+		if (this->end == this->total)
+			this->end = 0;
+	}
+	if (*s)
+		this->remainder = ft_strdup(s);
 }

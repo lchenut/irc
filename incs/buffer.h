@@ -15,14 +15,17 @@
 
 # include "basics.h"
 
-# define DFL_BUFFER_SIZE 256
+# define DFL_BUFFER_SIZE 512
 
 typedef struct		s_buffer
 {
 	int				fd;
 	char			*buffer;
+	char			*remainder;
 	size_t			total;
-	size_t			current;
+	size_t			start;
+	size_t			end;
+	size_t			size;
 }					t_buffer;
 
 t_buffer			*buffer_new(int fd);
