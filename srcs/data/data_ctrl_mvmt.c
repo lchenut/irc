@@ -30,10 +30,14 @@ t_vector			*data_ctrl_mvmt(void)
 	if (!data)
 	{
 		data = vector_new();
+		vector_push_back(data, ctrlmv_new("\033[A", command_history_up));
+		vector_push_back(data, ctrlmv_new("\033[B", command_history_down));
+		vector_push_back(data, ctrlmv_new("\033[C", command_move_right));
+		vector_push_back(data, ctrlmv_new("\033[D", command_move_left));
 		vector_push_back(data, ctrlmv_new("\177", command_del_left));
 		vector_push_back(data, ctrlmv_new("\033[3~", command_del_right));
-		vector_push_back(data, ctrlmv_new("\033[D", command_move_left));
-		vector_push_back(data, ctrlmv_new("\033[C", command_move_right));
+		vector_push_back(data, ctrlmv_new("\001", command_move_home));
+		vector_push_back(data, ctrlmv_new("\005", command_move_end));
 	}
 	return (data);
 }

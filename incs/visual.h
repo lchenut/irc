@@ -46,4 +46,6 @@ void				visual_print_prompt(t_visual *this, char *buf);
 void				visual_move_curspos(t_visual *this, int x);
 char				visual_get_char(t_visual *this);
 
+void				visual_clear_prompt(t_visual *this);
+
 #endif

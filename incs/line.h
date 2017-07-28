@@ -28,6 +28,9 @@ typedef struct		s_line
 t_line				*line_new(void);
 void				line_del(t_line *this);
 
+t_line				*line_copy(t_line *this);
+void				line_reset_line(t_line *this);
+
 void				line_realloc(t_line *this);
 
 #endif

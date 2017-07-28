@@ -88,6 +88,8 @@ void			command_push(t_command *this, char c)
 	{
 		this->last = line_new();
 		this->current = this->last;
+		this->index = vector_len(this->history);
+		LOG_DEBUG("Coucou");
 	}
 	if (this->buffer[0] || !ft_isprint(c))
 		command_ctrl_mvmt(this, c); // Match les trucs longs genre les fleches etc...

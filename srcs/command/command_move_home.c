@@ -12,8 +12,7 @@
 
 #include "command.h"
 
-char			*command_get_line(t_command *this)
+void			command_move_home(t_command *this)
 {
-	// TODO: Tout !
-	return (ft_strdup(this->current->line));
+	this->curspos = 0;
 }

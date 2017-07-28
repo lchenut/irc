@@ -12,8 +12,20 @@
 
 #include "command.h"
 
-char			*command_get_line(t_command *this)
+void				command_history_up(t_command *this)
 {
-	// TODO: Tout !
-	return (ft_strdup(this->current->line));
+	if (this->index == 0 || vector_len(this->history) == 0)
+	{
+		return ;
+	}
+	this->index -= 1;
+	if (this->last == this->current)
+	{
+		this->current = vector_get_last(this->history);
+	}
+	else
+	{
+		this->current = vector_get(this->history, this->index);
+	}
+	this->curspos = this->current->size;
 }

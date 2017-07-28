@@ -12,17 +12,33 @@
 
 #include "client.h"
 
+void			client_execute_command(t_client *this)
+{
+	char		*command;
+	
+	command = command_get_line(this->command);
+	command_history_push(this->command);
+	if (this->connected)
+	{
+		write(this->sock, command, ft_strlen(command));
+		write(this->sock, "\r\n", 2);
+	}
+	visual_clear_prompt(this->visual);
+	free(command);
+}
+
 void			client_read_from_stdin(t_client *this)
 {
 	char		c;
 	
 	c = visual_get_char(this->visual);
 	if (c == '\n')
-		; // TODO: SA PETE
+		client_execute_command(this);
 	else
 	{
 		command_push(this->command, c);
-		visual_print_prompt(this->visual, command_get_line(this->command));
+		visual_print_prompt(this->visual,
+				command_get_line_scaled(this->command));
 		visual_move_curspos(this->visual, command_get_curspos(this->command));
 	}
 	if (ft_isprint(c))

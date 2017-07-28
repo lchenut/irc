@@ -12,8 +12,15 @@
 
 #include "command.h"
 
-char			*command_get_line(t_command *this)
+char			*command_get_line_scaled(t_command *this)
 {
-	// TODO: Tout !
-	return (ft_strdup(this->current->line));
+	char		*ret;
+	size_t		tmp;
+
+	tmp = 0;
+	while (this->curspos >= tmp)
+		tmp += this->winsize;
+	tmp -= this->winsize;
+	ret = ft_strndup(this->current->line + tmp, this->winsize);
+	return (ret);
 }

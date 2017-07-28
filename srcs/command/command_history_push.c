@@ -12,8 +12,28 @@
 
 #include "command.h"
 
-char			*command_get_line(t_command *this)
+void			command_history_push(t_command *this)
 {
-	// TODO: Tout !
-	return (ft_strdup(this->current->line));
+	while (vector_len(this->history) > 100)
+	{
+		line_del(vector_pop_front(this->history));
+	}
+	if (this->current != this->last)
+	{
+		line_del(this->last);
+		this->last = NULL;
+		vector_push_back(this->history, line_copy(this->current));
+		line_reset_line(this->current);
+		this->current = NULL;
+	}
+	else
+	{
+		this->last = NULL;
+		vector_push_back(this->history, line_copy(this->current));
+		line_del(this->current);
+		this->current = NULL;
+	}
+	this->index = vector_len(this->history);
+	this->curspos = 0;
+	*((unsigned long *)this->buffer) = 0ul;
 }

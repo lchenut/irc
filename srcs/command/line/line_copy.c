@@ -10,10 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "command.h"
+#include "line.h"
 
-char			*command_get_line(t_command *this)
+t_line          *line_copy(t_line *this)
 {
-	// TODO: Tout !
-	return (ft_strdup(this->current->line));
+	t_line      *copy;
+
+	copy = ft_calloc(sizeof(t_line));
+	copy->copy = ft_strdup(this->line);
+	copy->line = ft_strnew(this->total);
+	ft_strcat(copy->line, this->line);
+	copy->size = this->size;
+	copy->total = this->total;
+	return (copy);
 }

@@ -32,11 +32,18 @@ void				command_del(t_command *this);
 
 void				command_push(t_command *this, char c);
 char				*command_get_line(t_command *this);
+char				*command_get_line_scaled(t_command *this);
 size_t				command_get_curspos(t_command *this);
 
 void				command_move_left(t_command *this);
 void				command_move_right(t_command *this);
 void				command_del_left(t_command *this);
 void				command_del_right(t_command *this);
+void				command_move_home(t_command *this);
+void				command_move_end(t_command *this);
+void				command_history_up(t_command *this);
+void				command_history_down(t_command *this);
+
+void				command_history_push(t_command *this);
 
 #endif

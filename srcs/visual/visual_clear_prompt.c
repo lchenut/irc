@@ -10,10 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "command.h"
+#include "visual.h"
 
-char			*command_get_line(t_command *this)
+void			visual_clear_prompt(t_visual *this)
 {
-	// TODO: Tout !
-	return (ft_strdup(this->current->line));
+	mvwprintw(this->prompt, 0, 0, "%- *c", PROMPT_NB_COLS, ' ');
+	wmove(this->prompt, 0, 0);
+	wrefresh(this->prompt);
 }
