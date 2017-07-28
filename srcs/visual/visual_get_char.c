@@ -12,7 +12,7 @@
 
 #include "visual.h"
 
-char			visual_get_char(t_visual *this)
+char		visual_get_char(t_visual *this)
 {
 	return (wgetch(this->prompt));
 }

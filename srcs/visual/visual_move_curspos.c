@@ -10,23 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void			client_read_from_stdin(t_client *this)
+void			visual_move_curspos(t_visual *this, int x)
 {
-	char		c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-	{
-		command_push(this->command, c);
-		visual_print_prompt(this->visual, command_get_line(this->command));
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
-	}
-	if (ft_isprint(c))
-		LOG_DEBUG("%#hhx (%c)", c, c)
-	else
-		LOG_DEBUG("%#hhx", c)
+	wmove(this->prompt, 0, x);
+	wrefresh(this->prompt);
 }

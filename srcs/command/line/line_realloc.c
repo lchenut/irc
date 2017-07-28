@@ -10,23 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "line.h"
 
-void			client_read_from_stdin(t_client *this)
+void			line_realloc(t_line *this)
 {
-	char		c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
+	char		*tmp;
+
+	if (this->size >= this->total)
 	{
-		command_push(this->command, c);
-		visual_print_prompt(this->visual, command_get_line(this->command));
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
+		tmp = ft_strnew(this->total << 1);
+		ft_strcpy(tmp, this->line);
+		free(this->line);
+		this->line = tmp;
+		this->total <<= 1;
 	}
-	if (ft_isprint(c))
-		LOG_DEBUG("%#hhx (%c)", c, c)
-	else
-		LOG_DEBUG("%#hhx", c)
 }

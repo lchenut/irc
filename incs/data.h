@@ -10,23 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#ifndef DATA_H
+# define DATA_H
 
-void			client_read_from_stdin(t_client *this)
+# include "vector.h"
+
+typedef struct s_command	t_command;
+
+typedef struct		s_ctrl_mvmt_data
 {
-	char		c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-	{
-		command_push(this->command, c);
-		visual_print_prompt(this->visual, command_get_line(this->command));
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
-	}
-	if (ft_isprint(c))
-		LOG_DEBUG("%#hhx (%c)", c, c)
-	else
-		LOG_DEBUG("%#hhx", c)
-}
+	char			*buf;
+	void			(*fn)(t_command *);
+}					t_ctrl_mvmt_data;
+
+t_vector			*data_ctrl_mvmt(void);
+
+#endif

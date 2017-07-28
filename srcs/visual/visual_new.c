@@ -28,7 +28,6 @@ t_visual			*visual_new(void)
 			BORDER_START_LINES, BORDER_START_COLS);
 	box(this->border, 0, 0);
 	wrefresh(this->border);
-	wprintw(this->prompt, "$ ");
 	wrefresh(this->prompt);
 	return (this);
 }

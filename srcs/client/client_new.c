@@ -24,5 +24,6 @@ t_client			*client_new(char *address, char *port)
 	client_try_connect(this);
 	client_init_select(this);
 	this->visual = visual_new();
+	this->command = command_new();
 	return (this);
 }

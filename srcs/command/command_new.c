@@ -10,23 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "command.h"
+#include <ncurses.h>
 
-void			client_read_from_stdin(t_client *this)
+t_command			*command_new(void)
 {
-	char		c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
+	t_command		*this;
+	int				winsize;
+
+	this = ft_calloc(sizeof(t_command));
+	this->history = vector_new();
+	winsize = COLS;
+	if (winsize <= 4)
+		this->winsize = 2;
 	else
-	{
-		command_push(this->command, c);
-		visual_print_prompt(this->visual, command_get_line(this->command));
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
-	}
-	if (ft_isprint(c))
-		LOG_DEBUG("%#hhx (%c)", c, c)
-	else
-		LOG_DEBUG("%#hhx", c)
+		this->winsize = winsize - 4;
+	return (this);
 }

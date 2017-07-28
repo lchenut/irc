@@ -10,23 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "data.h"
+#include "command.h"
 
-void			client_read_from_stdin(t_client *this)
+static t_ctrl_mvmt_data	*ctrlmv_new(char *sequence, void (*fn)(t_command *))
 {
-	char		c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
+	t_ctrl_mvmt_data	*data;
+
+	data = ft_calloc(sizeof(t_ctrl_mvmt_data));
+	data->buf = sequence;
+	data->fn = fn;
+	return (data);
+}
+
+t_vector			*data_ctrl_mvmt(void)
+{
+	static t_vector	*data = NULL;
+
+	if (!data)
 	{
-		command_push(this->command, c);
-		visual_print_prompt(this->visual, command_get_line(this->command));
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
+		data = vector_new();
+		vector_push_back(data, ctrlmv_new("\177", command_del_left));
+		vector_push_back(data, ctrlmv_new("\033[3~", command_del_right));
+		vector_push_back(data, ctrlmv_new("\033[D", command_move_left));
+		vector_push_back(data, ctrlmv_new("\033[C", command_move_right));
 	}
-	if (ft_isprint(c))
-		LOG_DEBUG("%#hhx (%c)", c, c)
-	else
-		LOG_DEBUG("%#hhx", c)
+	return (data);
 }

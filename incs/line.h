@@ -10,23 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#ifndef LINE_H
+# define LINE_H
 
-void			client_read_from_stdin(t_client *this)
+# define DFL_LINE_SIZE 64
+
+# include "basics.h"
+
+typedef struct		s_line
 {
-	char		c;
-	
-	c = visual_get_char(this->visual);
-	if (c == '\n')
-		; // TODO: SA PETE
-	else
-	{
-		command_push(this->command, c);
-		visual_print_prompt(this->visual, command_get_line(this->command));
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
-	}
-	if (ft_isprint(c))
-		LOG_DEBUG("%#hhx (%c)", c, c)
-	else
-		LOG_DEBUG("%#hhx", c)
-}
+	char			*line;
+	char			*copy;
+	size_t			total;
+	size_t			size;
+}					t_line;
+
+t_line				*line_new(void);
+void				line_del(t_line *this);
+
+void				line_realloc(t_line *this);
+
+#endif

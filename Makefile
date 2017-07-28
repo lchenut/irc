@@ -55,4 +55,7 @@ clean:
 fclean: clean
 	@rm -rf $(NAME)
 
+log:
+	clear; tail -f /tmp/.debug_irc
+
 re: fclean all
