@@ -60,4 +60,8 @@ void				client_read_from_socket(t_client *this, int fd);
 void				client_print_and_refresh(t_client *this,
 		void (*fn)(t_visual *, char *), char *s);
 
+void                (*client_get_execute_fn(char *s))(t_client *, char *);
+void				client_exec(t_client *this);
+void				client_exec_connect(t_client *this, char *cmd);
+
 #endif

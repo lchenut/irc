@@ -10,28 +10,43 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DATA_H
-# define DATA_H
+#include "client.h"
 
-# include "vector.h"
-# include "client.h"
-
-typedef struct s_command	t_command;
-
-typedef struct				s_ctrl_mvmt_data
+void			client_exec_connect(t_client *this, char *cmd)
 {
-	char					*buf;
-	void					(*fn)(t_command *);
-}							t_ctrl_mvmt_data;
+	LOG_INFO("Connect \\o/");
+	(void)this;
+	(void)cmd;
+}
 
-typedef struct				s_command_data
+static char		*get_first_word(char *cmd)
 {
-	char					*low;
-	char					*upp;
-	void					(*exec_fn)(t_client *, char *cmd);
-}							t_command_data;
+	size_t		len;
 
-t_vector					*data_ctrl_mvmt(void);
-t_vector					*data_command(void);
+	len = 0;
+	while (cmd[len] && cmd[len] != ' ' && cmd[len] != '\t')
+		len += 1;
+	return (ft_strndup(cmd, len));
+}
 
-#endif
+void			client_exec(t_client *this)
+{
+	char		*command;
+	char		*first_word;
+	void		(*fn)(t_client *, char *);
+	
+	command = command_get_line(this->command);
+	command_history_push(this->command);
+	if (this->connected)
+	{
+		write(this->sock, command, ft_strlen(command));
+		write(this->sock, "\r\n", 2);
+	}
+	first_word = get_first_word(command);
+	fn = client_get_execute_fn(first_word);
+	if (fn)
+		fn(this, command);
+	free(first_word);
+	visual_clear_prompt(this->visual);
+	free(command);
+}

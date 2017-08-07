@@ -12,28 +12,13 @@
 
 #include "client.h"
 
-void			client_execute_command(t_client *this)
-{
-	char		*command;
-	
-	command = command_get_line(this->command);
-	command_history_push(this->command);
-	if (this->connected)
-	{
-		write(this->sock, command, ft_strlen(command));
-		write(this->sock, "\r\n", 2);
-	}
-	visual_clear_prompt(this->visual);
-	free(command);
-}
-
 void			client_read_from_stdin(t_client *this)
 {
 	char		c;
 	
 	c = visual_get_char(this->visual);
 	if (c == '\n')
-		client_execute_command(this);
+		client_exec(this);
 	else
 	{
 		command_push(this->command, c);

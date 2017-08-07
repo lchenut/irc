@@ -10,28 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DATA_H
-# define DATA_H
+#include "data.h"
+#include "client.h"
 
-# include "vector.h"
-# include "client.h"
-
-typedef struct s_command	t_command;
-
-typedef struct				s_ctrl_mvmt_data
+static bool			find_fn(void *data, void *ctx)
 {
-	char					*buf;
-	void					(*fn)(t_command *);
-}							t_ctrl_mvmt_data;
+	t_command_data	*cmd;
 
-typedef struct				s_command_data
+	cmd = data;
+	return (!ft_strcmp(cmd->low, ctx) || !ft_strcmp(cmd->upp, ctx));
+}
+
+void				(*client_get_execute_fn(char *s))(t_client *, char *)
 {
-	char					*low;
-	char					*upp;
-	void					(*exec_fn)(t_client *, char *cmd);
-}							t_command_data;
+	t_vector		*data;
+	t_command_data	*cmd;
 
-t_vector					*data_ctrl_mvmt(void);
-t_vector					*data_command(void);
-
-#endif
+	data = data_command();
+	cmd = vector_find(data, find_fn, s);
+	if (!cmd)
+		return (NULL);
+	return (cmd->exec_fn);
+}
