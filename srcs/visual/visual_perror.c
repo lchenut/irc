@@ -10,26 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PROG_H
-# define PROG_H
+#include "visual.h"
+#include <errno.h>
 
-# include "basics.h"
-# include "argparser/argparser.h"
-
-typedef struct			s_prog
+void			visual_perror(t_visual *this, char *s)
 {
-	int					ac;
-	char				**av;
-	t_argparser			*arg;
-	t_argparser_result	*res;
-	bool				should_exit;
-}						t_prog;
-
-t_prog					*prog_new(int ac, char **av);
-void					prog_del(t_prog *this);
-
-void					prog_run(t_prog *this);
-void					prog_dump(t_prog *this);
-void					prog_usage(t_prog *this);
-
-#endif
+	wattron(this->chat, COLOR_PAIR(40));
+	if (s != NULL)
+	{
+		waddstr(this->chat, s);
+		waddstr(this->chat, ": ");
+	}
+	waddstr(this->chat, ft_strerror(errno));
+	wattroff(this->chat, COLOR_PAIR(40));
+	waddch(this->chat, '\n');
+	wrefresh(this->chat);
+}

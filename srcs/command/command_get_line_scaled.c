@@ -18,6 +18,8 @@ char			*command_get_line_scaled(t_command *this)
 	size_t		tmp;
 
 	tmp = 0;
+	if (!this->current)
+		return (ft_strnew(0));
 	while (this->curspos >= tmp)
 		tmp += this->winsize;
 	tmp -= this->winsize;

@@ -18,6 +18,10 @@ void			client_del(t_client *this)
 		return ;
 	if (this->address)
 		free(this->address);
+	if (this->port)
+		free(this->port);
+	if (this->password)
+		free(this->password);
 	if (this->sock != -1)
 		close(this->sock);
 	if (this->visual)

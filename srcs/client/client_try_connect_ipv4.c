@@ -26,5 +26,5 @@ void					client_try_connect_ipv4(t_client *this,
 	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in)))
 		this->connected = true;
 	else
-		ft_perror("connect");
+		client_print_and_refresh(this, visual_perror, "connect");
 }

@@ -14,6 +14,11 @@
 
 void			prog_del(t_prog *this)
 {
-	if (this)
-		free(this);
+	if (!this)
+		return ;
+	if (this->res)
+		argparser_result_del(this->res);
+	if (this->arg)
+		argparser_del(this->arg);
+	free(this);
 }

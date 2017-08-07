@@ -45,7 +45,7 @@ void			client_read_from_socket(t_client *this, int fd)
 	if (rep && !ft_strchr(rep, '\n'))
 		buffer_flush_fd(this->socket_buf, fd);
 	else if (rep)
-		visual_print_chat(this->visual, rep);
+		client_print_and_refresh(this, visual_print_chat, rep);
 	free(rep);
 	(void)rep_nl;
 }

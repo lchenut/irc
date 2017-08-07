@@ -42,6 +42,8 @@ t_visual			*visual_new(void);
 void				visual_del(t_visual *this);
 
 void				visual_print_chat(t_visual *this, char *buf);
+void				visual_perror(t_visual *this, char *buf);
+void				visual_gaierror(t_visual *this, char *buf);
 void				visual_print_prompt(t_visual *this, char *buf);
 void				visual_move_curspos(t_visual *this, int x);
 char				visual_get_char(t_visual *this);

@@ -17,12 +17,19 @@
 
 typedef struct s_command	t_command;
 
-typedef struct		s_ctrl_mvmt_data
+typedef struct				s_ctrl_mvmt_data
 {
-	char			*buf;
-	void			(*fn)(t_command *);
-}					t_ctrl_mvmt_data;
+	char					*buf;
+	void					(*fn)(t_command *);
+}							t_ctrl_mvmt_data;
 
-t_vector			*data_ctrl_mvmt(void);
+typedef struct				s_command_data
+{
+	char					*low;
+	char					*upp;
+}							t_command_data;
+
+t_vector					*data_ctrl_mvmt(void);
+t_vector					*data_command(void);
 
 #endif

@@ -10,26 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PROG_H
-# define PROG_H
+#ifndef UTILS_H
+# define UTILS_H
 
 # include "basics.h"
-# include "argparser/argparser.h"
 
-typedef struct			s_prog
-{
-	int					ac;
-	char				**av;
-	t_argparser			*arg;
-	t_argparser_result	*res;
-	bool				should_exit;
-}						t_prog;
-
-t_prog					*prog_new(int ac, char **av);
-void					prog_del(t_prog *this);
-
-void					prog_run(t_prog *this);
-void					prog_dump(t_prog *this);
-void					prog_usage(t_prog *this);
+char			*utils_gai_strerror(int error);
 
 #endif

@@ -10,26 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PROG_H
-# define PROG_H
+#include "client.h"
 
-# include "basics.h"
-# include "argparser/argparser.h"
 
-typedef struct			s_prog
+void			client_print_and_refresh(t_client *this,
+		void (*fn)(t_visual *, char *), char *s)
 {
-	int					ac;
-	char				**av;
-	t_argparser			*arg;
-	t_argparser_result	*res;
-	bool				should_exit;
-}						t_prog;
-
-t_prog					*prog_new(int ac, char **av);
-void					prog_del(t_prog *this);
-
-void					prog_run(t_prog *this);
-void					prog_dump(t_prog *this);
-void					prog_usage(t_prog *this);
-
-#endif
+	if (fn != NULL)
+		fn(this->visual, s);
+	if (this->command)
+	{
+		visual_print_prompt(this->visual,
+			command_get_line_scaled(this->command));
+		visual_move_curspos(this->visual, command_get_curspos(this->command));
+	}
+}

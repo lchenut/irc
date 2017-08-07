@@ -12,17 +12,14 @@
 
 #include "client.h"
 
-t_client			*client_new(char *address, char *port)
+t_client			*client_new(void)
 {
 	t_client		*this;
 
 	this = ft_calloc(sizeof(t_client));
 	this->connected = false;
-	this->address = address ? ft_strdup(address) : NULL;
-	this->port = port ? ft_strdup(port) : NULL;
+	client_set_port(this, DFL_SERVER_PORT);
 	this->sock = -1;
-	client_try_connect(this);
-	client_init_select(this);
 	this->visual = visual_new();
 	this->command = command_new();
 	return (this);

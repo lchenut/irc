@@ -10,26 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PROG_H
-# define PROG_H
+#include "client.h"
 
-# include "basics.h"
-# include "argparser/argparser.h"
-
-typedef struct			s_prog
+void			client_set_address(t_client *this, char *address)
 {
-	int					ac;
-	char				**av;
-	t_argparser			*arg;
-	t_argparser_result	*res;
-	bool				should_exit;
-}						t_prog;
-
-t_prog					*prog_new(int ac, char **av);
-void					prog_del(t_prog *this);
-
-void					prog_run(t_prog *this);
-void					prog_dump(t_prog *this);
-void					prog_usage(t_prog *this);
-
-#endif
+	if (!address)
+		return ;
+	if (this->address)
+		free(this->address);
+	this->address = ft_strdup(address);
+}

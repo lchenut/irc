@@ -13,6 +13,8 @@
 #ifndef CLIENT_H
 # define CLIENT_H
 
+# define DFL_SERVER_PORT "6667"
+
 # include "basics.h"
 # include "buffer.h"
 # include "command.h"
@@ -30,6 +32,7 @@ typedef struct		s_client
 	char			*address;
 	char			*port;
 	unsigned short	us_port;
+	char			*password;
 	int				sock;
 	fd_set			active_set;
 	t_buffer		*socket_buf;
@@ -37,8 +40,12 @@ typedef struct		s_client
 	t_command		*command;
 }					t_client;
 
-t_client			*client_new(char *address, char *port);
+t_client			*client_new(void);
 void				client_del(t_client *this);
+
+void				client_set_address(t_client *this, char *address);
+void				client_set_port(t_client *this, char *port);
+void				client_set_password(t_client *this, char *password);
 
 void				client_try_connect(t_client *this);
 void				client_try_connect_ipv4(t_client *this, struct addrinfo *i);
@@ -50,5 +57,7 @@ void				client_loop(t_client *this);
 
 void				client_read_from_stdin(t_client *this);
 void				client_read_from_socket(t_client *this, int fd);
+void				client_print_and_refresh(t_client *this,
+		void (*fn)(t_visual *, char *), char *s);
 
 #endif

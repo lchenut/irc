@@ -11,24 +11,34 @@
 /* ************************************************************************** */
 
 #include "client.h"
+#include "utils.h"
+
+static void				client_address_error(t_client *this, int error)
+{
+	char				*err;
+
+	err = utils_gai_strerror(error);
+	client_print_and_refresh(this, visual_gaierror, err);
+}
 
 void					client_try_connect(t_client *this)
 {
 	struct addrinfo		*info;
-	struct addrinfo		hint;
 	int					gai_error;
 
 	if (!this->address)
 		return ;
-	hint.ai_family = AF_UNSPEC;
-	hint.ai_socktype = SOCK_STREAM;
 	gai_error = getaddrinfo(this->address, this->port, NULL, &info);
 	if (gai_error)
-		return ; // TODO: L'utilisateur a fait de la merde... si == 8
+	{
+		client_address_error(this, gai_error);
+		return ;
+	}
 	if (info->ai_family == AF_INET)
 		client_try_connect_ipv4(this, info);
 	else if (info->ai_family == AF_INET6)
 		client_try_connect_ipv6(this, info);
 	else
-		return ; // TODO: C'est chelou !
+		client_address_error(this, 8);
+
 }
