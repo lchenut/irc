@@ -10,15 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
+#include "array.h"
 
-void			visual_del(t_visual *this)
+void			client_exec_connect(t_client *this, char *cmd)
 {
-	if (!this)
-		return ;
-	delwin(this->chat);
-	delwin(this->prompt);
-	delwin(this->border);
-	endwin();
-	free(this);
+	char		**split;
+
+	if (this->connected)
+	{
+		client_disconnect(this);
+	}
+	split = ft_strsplit(cmd, ' ');
+	if (split[1])
+		client_set_address(this, split[1]);
+	if (split[1] && split[2])
+		client_set_port(this, split[2]);
+	array_del(split);
+	client_try_connect(this);
 }

@@ -16,10 +16,10 @@
 # include "basics.h"
 # include <ncurses.h>
 
-# define CHAT_NB_LINES (LINES - 4)
-# define CHAT_NB_COLS (COLS - 2)
-# define CHAT_START_LINES 1
-# define CHAT_START_COLS 1
+# define CHAT_NB_LINES (LINES - 3)
+# define CHAT_NB_COLS (COLS)
+# define CHAT_START_LINES 0
+# define CHAT_START_COLS 0
 
 # define PROMPT_NB_LINES 1
 # define PROMPT_NB_COLS (COLS - 4)
@@ -41,9 +41,12 @@ typedef struct		s_visual
 t_visual			*visual_new(void);
 void				visual_del(t_visual *this);
 
+void				visual_dump_date(t_visual *this);
 void				visual_print_chat(t_visual *this, char *buf);
 void				visual_perror(t_visual *this, char *buf);
 void				visual_gaierror(t_visual *this, char *buf);
+void				visual_print_bold(t_visual *this, char *buf);
+void				visual_print_green(t_visual *this, char *buf);
 void				visual_print_prompt(t_visual *this, char *buf);
 void				visual_move_curspos(t_visual *this, int x);
 char				visual_get_char(t_visual *this);

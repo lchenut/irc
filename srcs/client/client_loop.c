@@ -11,20 +11,21 @@
 /* ************************************************************************** */
 
 #include "client.h"
-#include <stdio.h>
 
 void			client_loop(t_client *this)
 {
-	fd_set	read_fd;
+	fd_set		read_fd;
 	int			fd;
 
 	while (1)
 	{
 		read_fd = this->active_set;
+		if (this->should_quit)
+			break ;
 		if (select(FD_SETSIZE, &read_fd, NULL, NULL, NULL) < 0)
 		{
-			ft_putstr("Select error toussa\n");
-			exit(1);
+			ft_perror("select");
+			break ;
 		}
 		fd = 0;
 		while (fd < FD_SETSIZE)

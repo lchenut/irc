@@ -12,13 +12,6 @@
 
 #include "client.h"
 
-void			client_exec_connect(t_client *this, char *cmd)
-{
-	LOG_INFO("Connect \\o/");
-	(void)this;
-	(void)cmd;
-}
-
 static char		*get_first_word(char *cmd)
 {
 	size_t		len;
@@ -37,15 +30,15 @@ void			client_exec(t_client *this)
 	
 	command = command_get_line(this->command);
 	command_history_push(this->command);
-	if (this->connected)
-	{
-		write(this->sock, command, ft_strlen(command));
-		write(this->sock, "\r\n", 2);
-	}
 	first_word = get_first_word(command);
 	fn = client_get_execute_fn(first_word);
 	if (fn)
 		fn(this, command);
+	else if (this->connected)
+	{
+		write(this->sock, command, ft_strlen(command));
+		write(this->sock, "\r\n", 2);
+	}
 	free(first_word);
 	visual_clear_prompt(this->visual);
 	free(command);

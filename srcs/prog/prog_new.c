@@ -25,6 +25,8 @@ static t_argparser	*prog_argparser(void)
 			argparser_argument_new('p', "port",
 				"Autoconnect port (default: 6667)", 2));
 	argparser_add_argument(arg,
+			argparser_argument_new('n', "nick", "Autoconnect nickname", 2));
+	argparser_add_argument(arg,
 			argparser_argument_new('w', "password", "Autoconnect password", 2));
 	argparser_add_argument(arg,
 			argparser_argument_new('?', "help", "Show help option", 1));

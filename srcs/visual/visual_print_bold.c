@@ -10,12 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void			client_init_select(t_client *this)
+void			visual_print_bold(t_visual *this, char *s)
 {
-	FD_ZERO(&(this->active_set));
-	if (this->connected)
-		FD_SET(this->sock, &(this->active_set));
-	FD_SET(0, &(this->active_set));
+	wattron(this->chat, COLOR_PAIR(41));
+	waddstr(this->chat, s);
+	wattroff(this->chat, COLOR_PAIR(41));
+	waddch(this->chat, '\n');
+	wrefresh(this->chat);
 }

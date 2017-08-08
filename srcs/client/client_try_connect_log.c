@@ -10,15 +10,38 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_del(t_visual *this)
+static char			*concat_str(char *s1, char *s2)
 {
-	if (!this)
-		return ;
-	delwin(this->chat);
-	delwin(this->prompt);
-	delwin(this->border);
-	endwin();
-	free(this);
+	while (*s2)
+	{
+		*s1 = *s2;
+		s1 += 1;
+		s2 += 1;
+	}
+	*s1 = 0;
+	return (s1);
+}
+
+void				client_try_connect_log(t_client *this, int af_family)
+{
+	char			*tmp;
+	char			*s;
+
+	if (af_family == AF_INET)
+	{
+		LOG_INFO("Try connect ipv4");
+	}
+	else
+	{
+		LOG_INFO("Try connect ipv6");
+	}
+	tmp = malloc(ft_strlen(this->address) + ft_strlen(this->port) + 20);
+	s = concat_str(tmp, "Try connect to: ");
+	s = concat_str(s, this->address);
+	s = concat_str(s, " ");
+	concat_str(s, this->port);
+	client_print_and_refresh(this, visual_print_bold, tmp);
+	free(tmp);
 }

@@ -28,6 +28,8 @@
 
 typedef struct		s_client
 {
+	bool			should_quit;
+	char			*quit_msg;
 	bool			connected;
 	char			*address;
 	char			*port;
@@ -50,6 +52,9 @@ void				client_set_password(t_client *this, char *password);
 void				client_try_connect(t_client *this);
 void				client_try_connect_ipv4(t_client *this, struct addrinfo *i);
 void				client_try_connect_ipv6(t_client *this, struct addrinfo *i);
+void				client_try_connect_log(t_client *this, int af_family);
+
+void				client_disconnect(t_client *this);
 
 void				client_init_select(t_client *this);
 

@@ -20,7 +20,10 @@ t_client			*client_new(void)
 	this->connected = false;
 	client_set_port(this, DFL_SERVER_PORT);
 	this->sock = -1;
+	this->should_quit = false;
 	this->visual = visual_new();
 	this->command = command_new();
+	FD_ZERO(&(this->active_set));
+	FD_SET(0, &(this->active_set));
 	return (this);
 }

@@ -10,15 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_del(t_visual *this)
+void			client_disconnect(t_client *this)
 {
-	if (!this)
-		return ;
-	delwin(this->chat);
-	delwin(this->prompt);
-	delwin(this->border);
-	endwin();
-	free(this);
+	FD_CLR(this->sock, &this->active_set);
+	close(this->sock);
+	this->sock = -1;
+	this->connected = false;
+	client_print_and_refresh(this, visual_print_bold, "Disconnect");
 }

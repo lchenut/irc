@@ -12,19 +12,29 @@
 
 #include "client.h"
 
-void					client_try_connect_ipv4(t_client *this,
+void				client_try_connect_ipv4(t_client *this,
 		struct addrinfo *info)
 {
-	struct protoent		*proto;
+	struct protoent	*proto;
 
+	client_try_connect_log(this, AF_INET);
 	if (!(proto = getprotobyname("ip")))
 	{
-		ft_perror("getprotobyname");
-		exit(1); // TODO: quitter plus proprement
+		this->should_quit = true;
+		this->quit_msg = "Bad protocol";
+		return ;
 	}
 	this->sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
 	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in)))
+	{
+		client_print_and_refresh(this, visual_print_green, "Connected");
+		FD_SET(this->sock, &this->active_set);
 		this->connected = true;
+	}
 	else
+	{
+		close(this->sock);
+		this->sock = -1;
 		client_print_and_refresh(this, visual_perror, "connect");
+	}
 }

@@ -56,7 +56,6 @@ void			prog_run(t_prog *this)
 	client = client_new();
 	manage_client(this, client);
 	client_try_connect(client);
-	client_init_select(client);
 	client_loop(client);
 	client_del(client);
 }

@@ -12,13 +12,11 @@
 
 #include "visual.h"
 
-void			visual_del(t_visual *this)
+void			visual_print_green(t_visual *this, char *s)
 {
-	if (!this)
-		return ;
-	delwin(this->chat);
-	delwin(this->prompt);
-	delwin(this->border);
-	endwin();
-	free(this);
+	wattron(this->chat, COLOR_PAIR(42));
+	waddstr(this->chat, s);
+	wattroff(this->chat, COLOR_PAIR(42));
+	waddch(this->chat, '\n');
+	wrefresh(this->chat);
 }

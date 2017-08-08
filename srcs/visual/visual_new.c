@@ -21,6 +21,8 @@ t_visual			*visual_new(void)
 	noecho();
 	start_color();
 	init_pair(40, 9, COLOR_BLACK);
+	init_pair(41, 15, COLOR_BLACK);
+	init_pair(42, 10, COLOR_BLACK);
 	this->chat = newwin(CHAT_NB_LINES, CHAT_NB_COLS,
 			CHAT_START_LINES, CHAT_START_COLS);
 	scrollok(this->chat, true);

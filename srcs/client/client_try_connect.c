@@ -28,6 +28,7 @@ void					client_try_connect(t_client *this)
 
 	if (!this->address)
 		return ;
+	LOG_INFO("Try connect to: %s:%s", this->address, this->port);
 	gai_error = getaddrinfo(this->address, this->port, NULL, &info);
 	if (gai_error)
 	{

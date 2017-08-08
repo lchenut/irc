@@ -12,12 +12,14 @@
 
 #include "client.h"
 
-
 void			client_print_and_refresh(t_client *this,
 		void (*fn)(t_visual *, char *), char *s)
 {
 	if (fn != NULL)
+	{
+		visual_dump_date(this->visual);
 		fn(this->visual, s);
+	}
 	if (this->command)
 	{
 		visual_print_prompt(this->visual,
