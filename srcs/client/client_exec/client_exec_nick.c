@@ -10,31 +10,49 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUFFER_H
-# define BUFFER_H
+#include "client.h"
+#include <sys/types.h>
+#include <pwd.h>
+#include <uuid/uuid.h>
 
-# include "basics.h"
-
-# define DFL_BUFFER_SIZE 512
-
-typedef struct		s_buffer
+static void		client_exec_nick_register(t_client *this)
 {
-	int				index;
-	char			*buffer;
-	size_t			total;
-	size_t			start;
-	size_t			end;
-	size_t			size;
-}					t_buffer;
+	char		*buffer;
+	char		*tmp;
+	size_t		index;
 
-t_buffer			*buffer_new(int fd);
-void				buffer_del(t_buffer *this);
+	buffer = malloc(ft_strlen(this->nick) + 10);
+	index = 0;
+	while ("NICK "[index])
+	{
+		buffer[index] = "NICK "[index];
+		index += 1;
+	}
+	tmp = this->nick;
+	while (*tmp)
+	{
+		buffer[index] = *tmp;
+		index += 1;
+		tmp += 1;
+	}
+	buffer[index] = '\r';
+	buffer[index + 1] = '\n';
+	write(this->sock, buffer, index + 2);
+	free(buffer);
+}
 
-int					buffer_read_from_fd(t_buffer *this, int fd);
-int					buffer_flush_fd(t_buffer *this, int fd);
+void			client_exec_nick(t_client *this, char *s)
+{
+	struct passwd	*pw;
 
-char				*buffer_pop_line(t_buffer *this);
-
-void				buffer_dump(t_buffer *this);
-
-#endif
+	if (!s)
+	{
+		if (!this->nick)
+		{
+			pw = getpwuid(getuid());
+			client_set_nick(this, (pw) ? pw->pw_name : "unknown");
+		}
+		client_exec_nick_register(this);
+	}
+	// TODO: le reste :3
+}

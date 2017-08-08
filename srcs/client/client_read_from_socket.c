@@ -18,11 +18,17 @@ void			client_read_from_socket(t_client *this, int fd)
 
 	if (!this->socket_buf)
 		this->socket_buf = buffer_new(fd);
-	buffer_read_from_fd(this->socket_buf, fd);
-	rep = buffer_pop_line(this->socket_buf);
-	if (rep && !ft_strchr(rep, '\n'))
-		buffer_flush_fd(this->socket_buf, fd);
-	else if (rep)
-		client_print_and_refresh(this, visual_print_chat, rep);
-	free(rep);
+	if (!buffer_read_from_fd(this->socket_buf, fd))
+	{
+		client_disconnect(this);
+		return ;
+	}
+	while ((rep = buffer_pop_line(this->socket_buf)))
+	{
+		if (rep && !ft_strchr(rep, '\n'))
+			buffer_flush_fd(this->socket_buf, fd);
+		else if (rep)
+			client_print_and_refresh(this, visual_print_chat, rep);
+		free(rep);
+	}
 }

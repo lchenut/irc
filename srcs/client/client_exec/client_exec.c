@@ -11,21 +11,36 @@
 /* ************************************************************************** */
 
 #include "client.h"
-#include "array.h"
 
-void			client_exec_connect(t_client *this, char *cmd)
+static char		*get_first_word(char *cmd)
 {
-	char		**split;
+	size_t		len;
 
-	if (this->connected)
+	len = 0;
+	while (cmd[len] && cmd[len] != ' ' && cmd[len] != '\t')
+		len += 1;
+	return (ft_strndup(cmd, len));
+}
+
+void			client_exec(t_client *this)
+{
+	char		*command;
+	char		*first_word;
+	void		(*fn)(t_client *, char *);
+	
+	if (!(command = command_get_line(this->command)))
+		return ;
+	command_history_push(this->command);
+	first_word = get_first_word(command);
+	fn = client_get_execute_fn(first_word);
+	free(first_word);
+	if (fn)
+		fn(this, command);
+	else if (this->connected)
 	{
-		client_disconnect(this);
+		write(this->sock, command, ft_strlen(command));
+		write(this->sock, "\r\n", 2);
 	}
-	split = ft_strsplit(cmd, ' ');
-	if (split[1])
-		client_set_address(this, split[1]);
-	if (split[1] && split[2])
-		client_set_port(this, split[2]);
-	array_del(split);
-	client_try_connect(this);
+	visual_clear_prompt(this->visual);
+	free(command);
 }

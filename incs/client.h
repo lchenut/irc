@@ -33,6 +33,7 @@ typedef struct		s_client
 	bool			connected;
 	char			*address;
 	char			*port;
+	char			*nick;
 	unsigned short	us_port;
 	char			*password;
 	int				sock;
@@ -48,11 +49,13 @@ void				client_del(t_client *this);
 void				client_set_address(t_client *this, char *address);
 void				client_set_port(t_client *this, char *port);
 void				client_set_password(t_client *this, char *password);
+void				client_set_nick(t_client *this, char *password);
 
 void				client_try_connect(t_client *this);
 void				client_try_connect_ipv4(t_client *this, struct addrinfo *i);
 void				client_try_connect_ipv6(t_client *this, struct addrinfo *i);
 void				client_try_connect_log(t_client *this, int af_family);
+void				client_register(t_client *this);
 
 void				client_disconnect(t_client *this);
 
@@ -67,6 +70,9 @@ void				client_print_and_refresh(t_client *this,
 
 void                (*client_get_execute_fn(char *s))(t_client *, char *);
 void				client_exec(t_client *this);
+void				client_exec_pass(t_client *this, char *cmd);
+void				client_exec_nick(t_client *this, char *cmd);
+void				client_exec_user(t_client *this, char *cmd);
 void				client_exec_connect(t_client *this, char *cmd);
 
 #endif

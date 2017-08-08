@@ -15,5 +15,7 @@
 char			*command_get_line(t_command *this)
 {
 	// TODO: Tout !
+	if (!this->current || !this->current->line)
+		return (NULL);
 	return (ft_strdup(this->current->line));
 }

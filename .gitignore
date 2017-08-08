@@ -4,3 +4,7 @@
 objs
 /client
 serveur
+*.DSYM
+.DS_Store
+*.log
+/lol*

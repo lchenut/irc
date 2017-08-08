@@ -10,31 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUFFER_H
-# define BUFFER_H
+#include "client.h"
 
-# include "basics.h"
-
-# define DFL_BUFFER_SIZE 512
-
-typedef struct		s_buffer
+static void		client_exec_pass_register(t_client *this)
 {
-	int				index;
-	char			*buffer;
-	size_t			total;
-	size_t			start;
-	size_t			end;
-	size_t			size;
-}					t_buffer;
+	char		*buffer;
+	char		*tmp;
+	size_t		index;
 
-t_buffer			*buffer_new(int fd);
-void				buffer_del(t_buffer *this);
+	buffer = malloc(ft_strlen(this->password) + 10);
+	index = 0;
+	while ("PASS :"[index])
+	{
+		buffer[index] = "PASS :"[index];
+		index += 1;
+	}
+	tmp = this->password;
+	while (*tmp)
+	{
+		buffer[index] = *tmp;
+		index += 1;
+		tmp += 1;
+	}
+	buffer[index] = '\r';
+	buffer[index + 1] = '\n';
+	write(this->sock, buffer, index + 2);
+	free(buffer);
+}
 
-int					buffer_read_from_fd(t_buffer *this, int fd);
-int					buffer_flush_fd(t_buffer *this, int fd);
-
-char				*buffer_pop_line(t_buffer *this);
-
-void				buffer_dump(t_buffer *this);
-
-#endif
+void			client_exec_pass(t_client *this, char *s)
+{
+	if (!s && !this->password)
+		return ;
+	if (!s)
+	{
+		client_exec_pass_register(this);
+		return ;
+	}
+	// TODO: l'autre cas :3
+}

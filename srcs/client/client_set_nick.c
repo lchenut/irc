@@ -10,31 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUFFER_H
-# define BUFFER_H
+#include "client.h"
 
-# include "basics.h"
-
-# define DFL_BUFFER_SIZE 512
-
-typedef struct		s_buffer
+void			client_set_nick(t_client *this, char *nick)
 {
-	int				index;
-	char			*buffer;
-	size_t			total;
-	size_t			start;
-	size_t			end;
-	size_t			size;
-}					t_buffer;
-
-t_buffer			*buffer_new(int fd);
-void				buffer_del(t_buffer *this);
-
-int					buffer_read_from_fd(t_buffer *this, int fd);
-int					buffer_flush_fd(t_buffer *this, int fd);
-
-char				*buffer_pop_line(t_buffer *this);
-
-void				buffer_dump(t_buffer *this);
-
-#endif
+	if (!nick)
+		return ;
+	if (this->nick)
+		free(this->nick);
+	this->nick = ft_strdup(nick);
+}

@@ -10,31 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUFFER_H
-# define BUFFER_H
+#include "client.h"
+#include "array.h"
 
-# include "basics.h"
-
-# define DFL_BUFFER_SIZE 512
-
-typedef struct		s_buffer
+void			client_exec_connect(t_client *this, char *cmd)
 {
-	int				index;
-	char			*buffer;
-	size_t			total;
-	size_t			start;
-	size_t			end;
-	size_t			size;
-}					t_buffer;
+	char		**split;
 
-t_buffer			*buffer_new(int fd);
-void				buffer_del(t_buffer *this);
-
-int					buffer_read_from_fd(t_buffer *this, int fd);
-int					buffer_flush_fd(t_buffer *this, int fd);
-
-char				*buffer_pop_line(t_buffer *this);
-
-void				buffer_dump(t_buffer *this);
-
-#endif
+	if (this->connected)
+		client_disconnect(this);
+	split = ft_strsplit(cmd, ' ');
+	if (split[1])
+		client_set_address(this, split[1]);
+	if (split[1] && split[2])
+		client_set_port(this, split[2]);
+	array_del(split);
+	client_try_connect(this);
+}

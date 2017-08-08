@@ -26,6 +26,8 @@ void				(*client_get_execute_fn(char *s))(t_client *, char *)
 	t_vector		*data;
 	t_command_data	*cmd;
 
+	if (*s == '\0')
+		return (NULL);
 	data = data_command();
 	cmd = vector_find(data, find_fn, s);
 	if (!cmd)

@@ -42,6 +42,9 @@ static void		manage_client(t_prog *this, t_client *client)
 	if (argparser_result_opt_is_set(this->res, "w"))
 		client_set_password(client,
 				argparser_result_opt_get_arg(this->res, "w"));
+	if (argparser_result_opt_is_set(this->res, "n"))
+		client_set_nick(client,
+				argparser_result_opt_get_arg(this->res, "n"));
 }
 
 void			prog_run(t_prog *this)
@@ -56,6 +59,10 @@ void			prog_run(t_prog *this)
 	client = client_new();
 	manage_client(this, client);
 	client_try_connect(client);
+	if (client->connected)
+	{
+		client_register(client);
+	}
 	client_loop(client);
 	client_del(client);
 }
