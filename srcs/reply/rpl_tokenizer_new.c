@@ -10,28 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "replies.h"
 
-void				client_try_connect_ipv6(t_client *this,
-		struct addrinfo *info)
+t_rpl_tokenizer		*rpl_tokenizer_new(const char *input)
 {
-	struct protoent	*proto;
+	t_rpl_tokenizer	*this;
 
-	if (!(proto = getprotobyname("ip")))
-	{
-		this->should_quit = true;
-		this->quit_msg = "Bad protocol";
-		return ;
-	}
-	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
-	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
-	{
-		FD_SET(this->sock, &this->active_set);
-		this->connected = true;
-	}
-	else
-	{
-		close(this->sock);
-		this->sock = -1;
-	}
+	this = ft_calloc(sizeof(t_rpl_tokenizer));
+	this->content = reply_new();
+	this->input = ft_strdup(input);
+	this->index_input = 0;
+	this->to_push = ft_strnew(ft_strlen(input));
+	this->index_to_push = 0;
+	return (this);
 }

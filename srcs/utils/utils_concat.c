@@ -10,28 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
-
-void				client_try_connect_ipv6(t_client *this,
-		struct addrinfo *info)
+char			*utils_concat(char *src, const char *dst)
 {
-	struct protoent	*proto;
-
-	if (!(proto = getprotobyname("ip")))
+	while (*dst)
 	{
-		this->should_quit = true;
-		this->quit_msg = "Bad protocol";
-		return ;
+		*src = *dst;
+		src += 1;
+		dst += 1;
 	}
-	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
-	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
-	{
-		FD_SET(this->sock, &this->active_set);
-		this->connected = true;
-	}
-	else
-	{
-		close(this->sock);
-		this->sock = -1;
-	}
+	*src = 0;
+	return (src);
 }

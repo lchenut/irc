@@ -10,28 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "replies.h"
 
-void				client_try_connect_ipv6(t_client *this,
-		struct addrinfo *info)
+static void			iter_fn(void *data, int index)
 {
-	struct protoent	*proto;
+	LOG_INFO("param[%i]: %s", index, data);
+}
 
-	if (!(proto = getprotobyname("ip")))
+void				reply_dump(t_rpl_cnt *this)
+{
+	LOG_INFO("======================");
+	if (this->servername)
 	{
-		this->should_quit = true;
-		this->quit_msg = "Bad protocol";
-		return ;
-	}
-	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
-	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
-	{
-		FD_SET(this->sock, &this->active_set);
-		this->connected = true;
+		LOG_INFO("servername: %s", this->servername);
 	}
 	else
 	{
-		close(this->sock);
-		this->sock = -1;
+		LOG_INFO("nick: %s", this->nick);
+		LOG_INFO("user: %s", this->user);
+		LOG_INFO("host: %s", this->host);
 	}
+	LOG_INFO("command: %s", this->command);
+	vector_iteri0(this->params, iter_fn);
+	LOG_INFO("======================");
 }

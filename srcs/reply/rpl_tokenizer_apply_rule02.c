@@ -10,28 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "replies.h"
 
-void				client_try_connect_ipv6(t_client *this,
-		struct addrinfo *info)
+t_rpl_status		rpl_tokenizer_apply_rule02(t_rpl_tokenizer *this)
 {
-	struct protoent	*proto;
+	char			c;
+	t_rpl_type		type;
 
-	if (!(proto = getprotobyname("ip")))
+	if (this->index_input == 0 && this->input[this->index_input] == ':')
 	{
-		this->should_quit = true;
-		this->quit_msg = "Bad protocol";
-		return ;
+		type = RPL_TYPE_SERVERNAME;
+		this->index_input += 1;
+		while (true)
+		{
+			c = this->input[this->index_input];
+			if (c == ' ' || c == '\0')
+			{
+				rpl_tokenizer_delimit(this, type);
+				return (RPL_STATUS_APPLIED);
+			}
+			if (c == '!')
+			{
+				rpl_tokenizer_delimit(this, RPL_TYPE_NICK);
+				this->index_input += 1;
+				type = RPL_TYPE_USER;
+			}
+			if (c == '@' && type == RPL_TYPE_USER)
+			{
+				rpl_tokenizer_delimit(this, type);
+				this->index_input += 1;
+				type = RPL_TYPE_HOST;
+			}
+			else
+			{
+				rpl_tokenizer_addone(this);
+			}
+		}
 	}
-	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
-	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
-	{
-		FD_SET(this->sock, &this->active_set);
-		this->connected = true;
-	}
-	else
-	{
-		close(this->sock);
-		this->sock = -1;
-	}
+	return (RPL_STATUS_NOT_APPLIED);
 }

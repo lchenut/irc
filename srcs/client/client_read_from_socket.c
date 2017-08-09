@@ -11,10 +11,30 @@
 /* ************************************************************************** */
 
 #include "client.h"
+#include "replies.h"
+
+void			client_read(t_client *this, t_rpl_cnt *content)
+{
+	int			index;
+	const t_reply		*rep;
+
+	index = 0;
+	while (g_replies[index].command)
+	{
+		if (ft_strcmp(g_replies[index].command, content->command) == 0)
+			break ;
+		index += 1;
+	}
+	reply_dump(content);
+	rep = g_replies + index;
+	LOG_WARN("%s %s - %i", rep->command, rep->message, rep->args_number);
+	(void)this;
+}
 
 void			client_read_from_socket(t_client *this, int fd)
 {
 	char		*rep;
+	t_rpl_cnt	*content;
 
 	if (!this->socket_buf)
 		this->socket_buf = buffer_new(fd);
@@ -27,8 +47,12 @@ void			client_read_from_socket(t_client *this, int fd)
 	{
 		if (rep && !ft_strchr(rep, '\n'))
 			buffer_flush_fd(this->socket_buf, fd);
-		else if (rep)
+		else
+		{
 			client_print_and_refresh(this, visual_print_chat, rep);
+			content = rpl_tokenizer_tokenize(rep);
+			client_read(this, content);
+		}
 		free(rep);
 	}
 }

@@ -16,5 +16,10 @@
 # include "basics.h"
 
 char			*utils_gai_strerror(int error);
+char			*utils_concat(char *src, const char *dst);
+
+int				utils_isspecial(int c);
+int				utils_ischstring(int c);
+bool			utils_is_valid_nick(char *nick);
 
 #endif

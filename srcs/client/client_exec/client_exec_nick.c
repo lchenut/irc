@@ -17,11 +17,10 @@
 
 static void		client_exec_nick_register(t_client *this)
 {
-	char		*buffer;
+	char		buffer[512];
 	char		*tmp;
 	size_t		index;
 
-	buffer = malloc(ft_strlen(this->nick) + 10);
 	index = 0;
 	while ("NICK "[index])
 	{
@@ -29,7 +28,7 @@ static void		client_exec_nick_register(t_client *this)
 		index += 1;
 	}
 	tmp = this->nick;
-	while (*tmp)
+	while (*tmp && index < 510)
 	{
 		buffer[index] = *tmp;
 		index += 1;
@@ -38,7 +37,6 @@ static void		client_exec_nick_register(t_client *this)
 	buffer[index] = '\r';
 	buffer[index + 1] = '\n';
 	write(this->sock, buffer, index + 2);
-	free(buffer);
 }
 
 void			client_exec_nick(t_client *this, char *s)
@@ -47,7 +45,7 @@ void			client_exec_nick(t_client *this, char *s)
 
 	if (!s)
 	{
-		if (!this->nick)
+		if (!this->nick || !*this->nick)
 		{
 			pw = getpwuid(getuid());
 			client_set_nick(this, (pw) ? pw->pw_name : "unknown");

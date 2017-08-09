@@ -18,6 +18,7 @@
 # include "basics.h"
 # include "buffer.h"
 # include "command.h"
+# include "utils.h"
 # include "visual.h"
 # include <sys/types.h>
 # include <sys/select.h>
@@ -74,5 +75,6 @@ void				client_exec_pass(t_client *this, char *cmd);
 void				client_exec_nick(t_client *this, char *cmd);
 void				client_exec_user(t_client *this, char *cmd);
 void				client_exec_connect(t_client *this, char *cmd);
+void				client_exec_join(t_client *this, char *cmd);
 
 #endif

@@ -17,7 +17,6 @@ void				client_try_connect_ipv4(t_client *this,
 {
 	struct protoent	*proto;
 
-	client_try_connect_log(this, AF_INET);
 	if (!(proto = getprotobyname("ip")))
 	{
 		this->should_quit = true;
@@ -27,7 +26,6 @@ void				client_try_connect_ipv4(t_client *this,
 	this->sock = socket(PF_INET, SOCK_STREAM, proto->p_proto);
 	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in)))
 	{
-		client_print_and_refresh(this, visual_print_green, "Connected");
 		FD_SET(this->sock, &this->active_set);
 		this->connected = true;
 	}
@@ -35,6 +33,5 @@ void				client_try_connect_ipv4(t_client *this,
 	{
 		close(this->sock);
 		this->sock = -1;
-		client_print_and_refresh(this, visual_perror, "connect");
 	}
 }

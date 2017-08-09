@@ -16,26 +16,35 @@
 # include "basics.h"
 # include <ncurses.h>
 
-# define CHAT_NB_LINES (LINES - 3)
+# define CHAT_NB_LINES (LINES - 2)
 # define CHAT_NB_COLS (COLS)
 # define CHAT_START_LINES 0
 # define CHAT_START_COLS 0
 
 # define PROMPT_NB_LINES 1
-# define PROMPT_NB_COLS (COLS - 4)
-# define PROMPT_START_LINES (LINES - 2)
-# define PROMPT_START_COLS 2
+# define PROMPT_NB_COLS (COLS - 2)
+# define PROMPT_START_LINES (LINES - 1)
+# define PROMPT_START_COLS 1
 
-# define BORDER_NB_LINES 3
+# define BORDER_NB_LINES 1
 # define BORDER_NB_COLS COLS
-# define BORDER_START_LINES (LINES - 3)
+# define BORDER_START_LINES (LINES - 2)
 # define BORDER_START_COLS 0
+
+typedef struct		s_channel
+{
+	char			*name;
+	WINDOW			*chat;
+}					t_channel;
 
 typedef struct		s_visual
 {
 	WINDOW			*chat;
 	WINDOW			*prompt;
 	WINDOW			*border;
+	t_channel		*current;
+	t_vector		*channels;
+	size_t			index;
 }					t_visual;
 
 t_visual			*visual_new(void);

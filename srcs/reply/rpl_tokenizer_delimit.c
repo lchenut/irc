@@ -10,28 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "replies.h"
 
-void				client_try_connect_ipv6(t_client *this,
-		struct addrinfo *info)
+static char			*inner_delimit(t_rpl_tokenizer *this)
 {
-	struct protoent	*proto;
+	char			*ret;
 
-	if (!(proto = getprotobyname("ip")))
-	{
-		this->should_quit = true;
-		this->quit_msg = "Bad protocol";
-		return ;
-	}
-	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
-	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
-	{
-		FD_SET(this->sock, &this->active_set);
-		this->connected = true;
-	}
-	else
-	{
-		close(this->sock);
-		this->sock = -1;
-	}
+	ret = ft_strdup(this->to_push);
+	ft_bzero(this->to_push, this->index_to_push);
+	this->index_to_push = 0;
+	return (ret);
+}
+
+void				rpl_tokenizer_delimit(t_rpl_tokenizer *this, t_rpl_type type)
+{
+	char			*to_push;
+
+	to_push = inner_delimit(this);
+	if (type == RPL_TYPE_SERVERNAME)
+		this->content->servername = to_push;
+	else if (type == RPL_TYPE_NICK)
+		this->content->nick = to_push;
+	else if (type == RPL_TYPE_USER)
+		this->content->user = to_push;
+	else if (type == RPL_TYPE_HOST)
+		this->content->host = to_push;
+	else if (type == RPL_TYPE_COMMAND)
+		this->content->command = to_push;
+	else if (type == RPL_TYPE_PARAM)
+		vector_push_back(this->content->params, to_push);
 }

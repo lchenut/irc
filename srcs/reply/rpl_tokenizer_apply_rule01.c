@@ -10,28 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "replies.h"
 
-void				client_try_connect_ipv6(t_client *this,
-		struct addrinfo *info)
+static bool			is_last(t_rpl_tokenizer *this)
 {
-	struct protoent	*proto;
+	return (this->input[this->index_input] == '\0' ||
+			this->input[this->index_input] == '\n' ||
+			(this->input[this->index_input] == '\r' &&
+				this->input[this->index_input + 1] == '\n'));
+}
 
-	if (!(proto = getprotobyname("ip")))
+t_rpl_status		rpl_tokenizer_apply_rule01(t_rpl_tokenizer *this)
+{
+	if (is_last(this))
 	{
-		this->should_quit = true;
-		this->quit_msg = "Bad protocol";
-		return ;
+		if (this->index_to_push > 0)
+		{
+			if (!this->content->command)
+				rpl_tokenizer_delimit(this, RPL_TYPE_COMMAND);
+			else
+				rpl_tokenizer_delimit(this, RPL_TYPE_PARAM);
+		}
+		return (RPL_STATUS_END_OF_INPUT);
 	}
-	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
-	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
-	{
-		FD_SET(this->sock, &this->active_set);
-		this->connected = true;
-	}
-	else
-	{
-		close(this->sock);
-		this->sock = -1;
-	}
+	return (RPL_STATUS_NOT_APPLIED);
 }

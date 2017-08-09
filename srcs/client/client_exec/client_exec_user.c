@@ -15,32 +15,21 @@
 #include <pwd.h>
 #include <uuid/uuid.h>
 
-static char		*cli_exe_user_concat(char *src, const char *dst)
-{
-	while (*dst)
-	{
-		*src = *dst;
-		src += 1;
-		dst += 1;
-	}
-	*src = 0;
-	return (src);
-}
-
-static void		client_exec_pass_register(t_client *this, struct passwd *pw)
+static void		client_exec_user_register(t_client *this, struct passwd *pw)
 {
 	char		buffer[512];
 	char		*tmp;
 
-	tmp = cli_exe_user_concat(buffer, "USER ");
-	tmp = cli_exe_user_concat(tmp, pw->pw_name);
-	tmp = cli_exe_user_concat(buffer, " ");
-	tmp = cli_exe_user_concat(tmp, pw->pw_name);
-	tmp = cli_exe_user_concat(buffer, " ");
-	tmp = cli_exe_user_concat(tmp, this->address);
-	tmp = cli_exe_user_concat(buffer, " :");
-	tmp = cli_exe_user_concat(tmp, pw->pw_gecos);
-	write(this->sock, buffer, buffer - tmp);
+	tmp = utils_concat(buffer, "USER ");
+	tmp = utils_concat(tmp, pw->pw_name);
+	tmp = utils_concat(tmp, " ");
+	tmp = utils_concat(tmp, pw->pw_name);
+	tmp = utils_concat(tmp, " ");
+	tmp = utils_concat(tmp, this->address);
+	tmp = utils_concat(tmp, " :");
+	tmp = utils_concat(tmp, pw->pw_gecos);
+	tmp = utils_concat(tmp, "\r\n");
+	write(this->sock, buffer, tmp - buffer);
 }
 
 void			client_exec_user(t_client *this, char *s)
@@ -55,6 +44,6 @@ void			client_exec_user(t_client *this, char *s)
 			write(this->sock, "USER unknown unknown unkown :unknown\r\n", 38);
 			return ;
 		}
-		client_exec_pass_register(this, pw);
+		client_exec_user_register(this, pw);
 	}
 }

@@ -55,6 +55,9 @@ clean:
 fclean: clean
 	@rm -rf $(NAME)
 
+make check:
+	make -k -C tests/unit
+
 log:
 	touch /tmp/.debug_irc; clear; tail -f /tmp/.debug_irc
 

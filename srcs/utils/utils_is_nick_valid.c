@@ -10,28 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "utils.h"
 
-void				client_try_connect_ipv6(t_client *this,
-		struct addrinfo *info)
+bool			utils_is_valid_nick(char *nick)
 {
-	struct protoent	*proto;
+	size_t		index;
 
-	if (!(proto = getprotobyname("ip")))
+	index = 1;
+	if (!ft_isalpha(*nick))
+		return (false);
+	while (nick[index] && index < 10)
 	{
-		this->should_quit = true;
-		this->quit_msg = "Bad protocol";
-		return ;
+		if (!ft_isalnum(nick[index]) && !utils_isspecial(nick[index]))
+			return (false);
+		index += 1;
 	}
-	this->sock = socket(PF_INET6, SOCK_STREAM, proto->p_proto);
-	if (!connect(this->sock, info->ai_addr, sizeof(struct sockaddr_in6)))
-	{
-		FD_SET(this->sock, &this->active_set);
-		this->connected = true;
-	}
-	else
-	{
-		close(this->sock);
-		this->sock = -1;
-	}
+	return (nick[index] == '\0');
 }

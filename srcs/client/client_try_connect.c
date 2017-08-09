@@ -35,11 +35,24 @@ void					client_try_connect(t_client *this)
 		client_address_error(this, gai_error);
 		return ;
 	}
-	if (info->ai_family == AF_INET)
-		client_try_connect_ipv4(this, info);
-	else if (info->ai_family == AF_INET6)
-		client_try_connect_ipv6(this, info);
-	else
+	while (info)
+	{
+		if (info->ai_family == AF_INET)
+			client_try_connect_ipv4(this, info);
+		else if (info->ai_family == AF_INET6)
+			client_try_connect_ipv6(this, info);
+		if (this->connected)
+			break ;
+		info = info->ai_next;
+	}
+	client_try_connect_log(this, AF_INET);
+	if (!this->connected)
+	{
+		client_print_and_refresh(this, visual_perror, "connect");
 		client_address_error(this, 8);
-
+	}
+	else
+	{
+		client_print_and_refresh(this, visual_print_green, "Connected");
+	}
 }
