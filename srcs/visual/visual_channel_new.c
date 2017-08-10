@@ -12,18 +12,14 @@
 
 #include "visual.h"
 
-static void		visual_channel_del_void(void *this)
+void					visual_channel_new(t_visual *this, const char *name)
 {
-	visual_channel_del(this);
-}
+	t_visual_channel	*channel;
 
-void			visual_del(t_visual *this)
-{
-	if (!this)
-		return ;
-	vector_del(this->channels, visual_channel_del_void);
-	delwin(this->prompt);
-	delwin(this->border);
-	endwin();
-	free(this);
+	channel = ft_calloc(sizeof(t_visual_channel));
+	channel->name = ft_strdup(name);
+	channel->chat = newwin(CHAT_NB_LINES, CHAT_NB_COLS,
+			CHAT_START_LINES, CHAT_START_COLS);
+	scrollok(channel->chat, true);
+	vector_push_back(this->channels, channel);
 }

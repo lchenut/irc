@@ -12,18 +12,11 @@
 
 #include "visual.h"
 
-static void		visual_channel_del_void(void *this)
+void				visual_print_border(t_visual *this)
 {
-	visual_channel_del(this);
-}
-
-void			visual_del(t_visual *this)
-{
-	if (!this)
-		return ;
-	vector_del(this->channels, visual_channel_del_void);
-	delwin(this->prompt);
-	delwin(this->border);
-	endwin();
-	free(this);
+	wattron(this->border, COLOR_PAIR(VIS_COLOR_BORDER));
+	wborder(this->border, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+	mvwprintw(this->border, 0, 1, this->current->name);
+	wattroff(this->border, COLOR_PAIR(VIS_COLOR_BORDER));
+	wrefresh(this->border);
 }

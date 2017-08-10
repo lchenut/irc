@@ -18,8 +18,8 @@ void			visual_print_chat(t_visual *this, char *buf)
 	{
 		if (*buf == '\r' && buf[1] == '\n')
 			buf += 1;
-		waddch(this->chat, *buf);
+		waddch(this->current->chat, *buf);
 		buf += 1;
 	}
-	wrefresh(this->chat);
+	wrefresh(this->current->chat);
 }

@@ -15,14 +15,10 @@
 
 void			visual_perror(t_visual *this, char *s)
 {
-	wattron(this->chat, COLOR_PAIR(40));
+	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_RED));
 	if (s != NULL)
-	{
-		waddstr(this->chat, s);
-		waddstr(this->chat, ": ");
-	}
-	waddstr(this->chat, ft_strerror(errno));
-	wattroff(this->chat, COLOR_PAIR(40));
-	waddch(this->chat, '\n');
-	wrefresh(this->chat);
+		wprintw(this->current->chat, "%s: %s\n", s, ft_strerror(errno));
+	else
+		wprintw(this->current->chat, "%s\n", ft_strerror(errno));
+	wrefresh(this->current->chat);
 }

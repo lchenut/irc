@@ -18,7 +18,7 @@ static void				client_address_error(t_client *this, int error)
 	char				*err;
 
 	err = utils_gai_strerror(error);
-	client_print_and_refresh(this, visual_gaierror, err);
+	client_print_and_refresh(this, visual_print_red, err);
 }
 
 void					client_try_connect(t_client *this)

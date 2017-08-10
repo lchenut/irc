@@ -14,9 +14,8 @@
 
 void			visual_print_bold(t_visual *this, char *s)
 {
-	wattron(this->chat, COLOR_PAIR(41));
-	waddstr(this->chat, s);
-	wattroff(this->chat, COLOR_PAIR(41));
-	waddch(this->chat, '\n');
-	wrefresh(this->chat);
+	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	wprintw(this->current->chat, "%s\n", s);
+	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	wrefresh(this->current->chat);
 }

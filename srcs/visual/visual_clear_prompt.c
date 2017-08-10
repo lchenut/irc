@@ -14,7 +14,6 @@
 
 void			visual_clear_prompt(t_visual *this)
 {
-	mvwprintw(this->prompt, 0, 0, "%- *c", PROMPT_NB_COLS, ' ');
-	wmove(this->prompt, 0, 0);
+	wclear(this->prompt);
 	wrefresh(this->prompt);
 }

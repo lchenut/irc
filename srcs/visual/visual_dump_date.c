@@ -22,8 +22,8 @@ void			visual_dump_date(t_visual *this)
 	time(&t);
 	info = localtime(&t);
 	strftime(buffer, sizeof(buffer), "%H:%M:%S -- ", info);
-	wattron(this->chat, COLOR_PAIR(41));
-	waddstr(this->chat, buffer);
-	wattroff(this->chat, COLOR_PAIR(41));
-	wrefresh(this->chat);
+	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	waddstr(this->current->chat, buffer);
+	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	wrefresh(this->current->chat);
 }

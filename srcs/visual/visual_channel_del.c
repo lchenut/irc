@@ -12,18 +12,11 @@
 
 #include "visual.h"
 
-static void		visual_channel_del_void(void *this)
-{
-	visual_channel_del(this);
-}
-
-void			visual_del(t_visual *this)
+void			visual_channel_del(t_visual_channel *this)
 {
 	if (!this)
 		return ;
-	vector_del(this->channels, visual_channel_del_void);
-	delwin(this->prompt);
-	delwin(this->border);
-	endwin();
+	delwin(this->chat);
+	free(this->name);
 	free(this);
 }

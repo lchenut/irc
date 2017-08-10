@@ -13,16 +13,10 @@
 #include "visual.h"
 #include <errno.h>
 
-void			visual_gaierror(t_visual *this, char *s)
+void			visual_print_red(t_visual *this, char *s)
 {
-	wattron(this->chat, COLOR_PAIR(40));
-	waddstr(this->chat, "getaddrinfo error");
-	if (s != NULL)
-	{
-		waddstr(this->chat, ": ");
-		waddstr(this->chat, s);
-	}
-	wattroff(this->chat, COLOR_PAIR(40));
-	waddch(this->chat, '\n');
-	wrefresh(this->chat);
+	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_RED));
+	wprintw(this->current->chat, "%s\n", s);
+	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_RED));
+	wrefresh(this->current->chat);
 }

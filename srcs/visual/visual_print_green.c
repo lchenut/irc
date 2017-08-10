@@ -14,9 +14,8 @@
 
 void			visual_print_green(t_visual *this, char *s)
 {
-	wattron(this->chat, COLOR_PAIR(42));
-	waddstr(this->chat, s);
-	wattroff(this->chat, COLOR_PAIR(42));
-	waddch(this->chat, '\n');
-	wrefresh(this->chat);
+	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_GREEN));
+	wprintw(this->current->chat, "%s\n", s);
+	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_GREEN));
+	wrefresh(this->current->chat);
 }
