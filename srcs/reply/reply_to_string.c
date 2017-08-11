@@ -10,20 +10,43 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
-#include <time.h>
+#include "replies.h"
+#include "utils.h"
 
-void			visual_dump_date(t_visual *this)
+static char		*reply_to_string_concat(char *src, const char *dst)
 {
-	time_t		t;
-	struct tm	*info;
-	char		buffer[16];
+	src[0] = ' ';
+	src += 1;
+	while (*dst)
+	{
+		*src = *dst;
+		src += 1;
+		dst += 1;
+	}
+	src[0] = 0;
+	return (src);
+}
 
-	time(&t);
-	info = localtime(&t);
-	strftime(buffer, sizeof(buffer), "%H:%M:%S -- ", info);
-	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	waddstr(this->current->chat, buffer);
-	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	//wrefresh(this->current->chat);
+static void		iter_len_fn(void *data, void *ctx)
+{
+	*((size_t *)ctx) += ft_strlen(data) + 1;
+}
+
+static void		iter_concat_fn(void *data, void *ctx)
+{
+	*((char **)ctx) = reply_to_string_concat(*((char **)ctx), data);
+}
+
+char			*reply_to_string(t_rpl_cnt *this)
+{
+	size_t		len;
+	char		*ret;
+	char		*tmp;
+
+	len = ft_strlen(this->command);
+	vector_iter(this->params, iter_len_fn, &len);
+	ret = ft_strnew(len);
+	tmp = utils_concat(ret, this->command);
+	vector_iter(this->params, iter_concat_fn, &tmp);
+	return (ret);
 }

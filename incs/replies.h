@@ -15,6 +15,9 @@
 
 # include "basics.h"
 
+typedef struct s_client	t_client;
+typedef struct s_reply	t_reply;
+
 typedef enum			e_rpl_type
 {
 	RPL_TYPE_SERVERNAME,
@@ -73,6 +76,7 @@ typedef struct			s_reply
 	char				*command;
 	char				*message;
 	int					args_number;
+	void				(*fn)(t_client *, t_rpl_cnt *, const struct s_reply *);
 }						t_reply;
 
 extern const t_reply	g_replies[];
@@ -80,5 +84,6 @@ extern const t_reply	g_replies[];
 t_rpl_cnt				*reply_new(void);
 void					reply_del(t_rpl_cnt *this);
 void					reply_dump(t_rpl_cnt *this);
+char					*reply_to_string(t_rpl_cnt *this);
 
 #endif

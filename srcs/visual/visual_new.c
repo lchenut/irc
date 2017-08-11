@@ -14,6 +14,8 @@
 
 static void			visual_init_pair(void)
 {
+	init_color(COLOR_BLACK, 0, 0, 0);
+	init_pair(7, COLOR_WHITE, COLOR_BLACK);
 	init_pair(VIS_COLOR_RED, 9, COLOR_BLACK);
 	init_pair(VIS_COLOR_BOLD, 15, COLOR_BLACK);
 	init_pair(VIS_COLOR_GREEN, 10, COLOR_BLACK);

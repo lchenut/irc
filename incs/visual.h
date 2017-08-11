@@ -34,16 +34,13 @@
 # define VIS_COLOR_RED 40
 # define VIS_COLOR_BOLD 41
 # define VIS_COLOR_GREEN 42
-# define VIS_COLOR_BORDER 42
+# define VIS_COLOR_BORDER 43
 
 typedef struct			s_visual_channel
 {
 	char				*name;
 	WINDOW				*chat;
 }						t_visual_channel;
-
-void					visual_channel_new(t_visual *this, const char *s);
-void					visual_channel_del(t_visual_channel *this);
 
 typedef struct			s_visual
 {
@@ -57,10 +54,14 @@ typedef struct			s_visual
 t_visual				*visual_new(void);
 void					visual_del(t_visual *this);
 
+void					visual_channel_new(t_visual *this, const char *s);
+void					visual_channel_del(t_visual_channel *this);
+
 void					visual_dump_date(t_visual *this);
 void					visual_print_chat(t_visual *this, char *buf);
 void					visual_perror(t_visual *this, char *buf);
 
+void					visual_print_home(t_visual *this, char *buf);
 void					visual_print_red(t_visual *this, char *buf);
 void					visual_print_bold(t_visual *this, char *buf);
 void					visual_print_green(t_visual *this, char *buf);

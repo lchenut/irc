@@ -11,19 +11,13 @@
 /* ************************************************************************** */
 
 #include "visual.h"
-#include <time.h>
 
-void			visual_dump_date(t_visual *this)
+void			visual_print_home(t_visual *this, char *buf)
 {
-	time_t		t;
-	struct tm	*info;
-	char		buffer[16];
-
-	time(&t);
-	info = localtime(&t);
-	strftime(buffer, sizeof(buffer), "%H:%M:%S -- ", info);
-	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	waddstr(this->current->chat, buffer);
-	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	//wrefresh(this->current->chat);
+	wprintw(((t_visual_channel *)vector_get_first(this->channels))->chat,
+			"%s\n", buf);
+	if (vector_get_first(this->channels) == this->current)
+	{
+		wrefresh(this->current->chat);
+	}
 }

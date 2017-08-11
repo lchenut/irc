@@ -17,6 +17,7 @@
 
 # include "basics.h"
 # include "buffer.h"
+# include "client_reply_exec.h"
 # include "command.h"
 # include "utils.h"
 # include "visual.h"

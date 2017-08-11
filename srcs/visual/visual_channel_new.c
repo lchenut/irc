@@ -20,6 +20,7 @@ void					visual_channel_new(t_visual *this, const char *name)
 	channel->name = ft_strdup(name);
 	channel->chat = newwin(CHAT_NB_LINES, CHAT_NB_COLS,
 			CHAT_START_LINES, CHAT_START_COLS);
+	wbkgd(channel->chat, COLOR_PAIR(3));
 	scrollok(channel->chat, true);
 	vector_push_back(this->channels, channel);
 }

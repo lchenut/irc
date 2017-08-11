@@ -10,20 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
-#include <time.h>
+#ifndef CLIENT_REPLY_EXEC_H
+# define CLIENT_REPLY_EXEC_H
 
-void			visual_dump_date(t_visual *this)
-{
-	time_t		t;
-	struct tm	*info;
-	char		buffer[16];
+# include "replies.h"
 
-	time(&t);
-	info = localtime(&t);
-	strftime(buffer, sizeof(buffer), "%H:%M:%S -- ", info);
-	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	waddstr(this->current->chat, buffer);
-	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	//wrefresh(this->current->chat);
-}
+typedef struct s_client	t_client;
+
+void	client_reply_exec_default(t_client *t, t_rpl_cnt *c, const t_reply *r);
+
+#endif

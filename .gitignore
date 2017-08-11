@@ -8,3 +8,4 @@ serveur
 .DS_Store
 *.log
 /lol*
+.*.swp

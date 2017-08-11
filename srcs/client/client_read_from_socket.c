@@ -13,10 +13,10 @@
 #include "client.h"
 #include "replies.h"
 
-void			client_read(t_client *this, t_rpl_cnt *content)
+void				client_read(t_client *this, t_rpl_cnt *content)
 {
-	int			index;
-	const t_reply		*rep;
+	int				index;
+	const t_reply	*rep;
 
 	index = 0;
 	while (g_replies[index].command)
@@ -27,7 +27,12 @@ void			client_read(t_client *this, t_rpl_cnt *content)
 	}
 	reply_dump(content);
 	rep = g_replies + index;
-	LOG_WARN("%s %s - %i", rep->command, rep->message, rep->args_number);
+	if (!rep->command)
+	{
+		LOG_WARN("Command unknown");
+	}
+	else
+		rep->fn(this, content, rep);
 	(void)this;
 }
 
@@ -49,7 +54,6 @@ void			client_read_from_socket(t_client *this, int fd)
 			buffer_flush_fd(this->socket_buf, fd);
 		else
 		{
-			client_print_and_refresh(this, visual_print_chat, rep);
 			content = rpl_tokenizer_tokenize(rep);
 			client_read(this, content);
 		}
