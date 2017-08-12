@@ -16,6 +16,8 @@
 # include "basics.h"
 # include <ncurses.h>
 
+# define PROMPT_SIZE 12
+
 # define CHAT_NB_LINES (LINES - 2)
 # define CHAT_NB_COLS (COLS)
 # define CHAT_START_LINES 0
@@ -41,6 +43,8 @@ typedef struct			s_visual_channel
 	char				*name;
 	WINDOW				*chat;
 	t_vector			*users;
+	size_t				longest_users_name;
+	size_t				current_line;
 }						t_visual_channel;
 
 typedef struct			s_visual
@@ -57,6 +61,8 @@ void					visual_del(t_visual *this);
 
 void					visual_channel_new(t_visual *this, const char *s);
 void					visual_channel_del(t_visual_channel *this);
+void					visual_channel_del_by_name(t_visual *this,
+		const char *chan);
 t_visual_channel		*visual_get_visual_channel(t_visual *this,
 		const char *chan);
 

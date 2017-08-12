@@ -61,10 +61,18 @@ void			client_exec_join(t_client *this, char *s)
 	if (!this->connected)
 		return ; // TODO: Message d'erreur
 	split = ft_strsplit(s, ' ');
+	if (!split)
+		return ;
+	if (!split[0] || !split[1])
+	{
+		array_del(split);
+		return ;
+	}
 	tmp = utils_concat(buffer, "JOIN ");
 	tmp = set_channel(buffer, tmp, split[1]);
-	if (split[1])
+	if (split[2])
 		tmp = set_key(buffer, tmp, split[2]);
-	tmp = utils_concat(tmp, "\r\n");
-	write(this->sock, buffer, tmp - buffer);
+	client_write_sock(this, buffer);
+	client_write_sock(this, "\r\n");
+	array_del(split);
 }

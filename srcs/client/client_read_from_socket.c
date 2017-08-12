@@ -38,7 +38,6 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 	}
 	else
 	{
-		client_reply_pop_params(this, content); // /!\ Peut-etre une connerie de laisser ca la.
 		rep->fn(this, content, rep);
 	}
 	(void)this;

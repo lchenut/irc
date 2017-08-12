@@ -10,20 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_chat_decr(t_visual *this)
+void			client_reply_part(t_client *this, t_rpl_cnt *content,
+		const t_reply *reply)
 {
-	if (this->index == 0)
+	client_reply_pop_params(this, content);
+	if (content->nick && !ft_strcmp(content->nick, this->nick) &&
+			vector_get_first(content->params))
 	{
-		this->index = vector_len(this->channels) - 1;
+		visual_channel_del_by_name(this->visual,
+				vector_get_first(content->params));
 	}
 	else
 	{
-		this->index = (this->index - 1) % vector_len(this->channels);
+		// TODO: Trouver un moyen de tester le depart d'un autre pecnos sur un
+		// serveur pour voir la reaction du serveur
+		// et resoudre le probleme
 	}
-	this->current = vector_get(this->channels, this->index);
-	visual_print_border(this);
-	redrawwin(this->current->chat);
-	wrefresh(this->current->chat);
+	(void)reply;
 }

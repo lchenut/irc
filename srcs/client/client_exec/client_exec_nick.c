@@ -34,9 +34,9 @@ static void		client_exec_nick_register(t_client *this)
 		index += 1;
 		tmp += 1;
 	}
-	buffer[index] = '\r';
-	buffer[index + 1] = '\n';
-	write(this->sock, buffer, index + 2);
+	client_write_sock(this, buffer);
+	client_write_sock(this, "\r\n");
+	//write(this->sock, buffer, index + 2);
 }
 
 void			client_exec_nick(t_client *this, char *s)

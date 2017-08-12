@@ -19,6 +19,7 @@ void			client_reply_topic(t_client *this,
 	char		*chan;
 	char		*topic;
 
+	client_reply_pop_params(this, content);
 	if ((int)vector_len(content->params) == reply->args_number)
 	{
 		chan = vector_get_first(content->params);

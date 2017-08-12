@@ -32,9 +32,8 @@ static void		client_exec_pass_register(t_client *this)
 		index += 1;
 		tmp += 1;
 	}
-	buffer[index] = '\r';
-	buffer[index + 1] = '\n';
-	write(this->sock, buffer, index + 2);
+	client_write_sock(this, buffer);
+	client_write_sock(this, "\r\n");
 	free(buffer);
 }
 

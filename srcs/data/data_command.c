@@ -49,7 +49,7 @@ t_vector			*data_command(void)
 		vector_push_back(data, cmd_new("/nick", "NICK", NULL));
 		vector_push_back(data, cmd_new("/notice", "NOTICE", NULL));
 		vector_push_back(data, cmd_new("/oper", "OPER", NULL));
-		vector_push_back(data, cmd_new("/part", "PART", NULL));
+		vector_push_back(data, cmd_new("/part", "PART", client_exec_part));
 		vector_push_back(data, cmd_new("/pass", "PASS", NULL));
 		vector_push_back(data, cmd_new("/ping", "PING", NULL));
 		vector_push_back(data, cmd_new("/pong", "PONG", NULL));

@@ -66,6 +66,8 @@ void				client_init_select(t_client *this);
 
 void				client_loop(t_client *this);
 
+void				client_write_sock(t_client *this, char *to_print);
+
 void				client_read_from_stdin(t_client *this);
 void				client_read_from_socket(t_client *this, int fd);
 void				client_print_chan(t_client *this,
@@ -78,5 +80,6 @@ void				client_exec_nick(t_client *this, char *cmd);
 void				client_exec_user(t_client *this, char *cmd);
 void				client_exec_connect(t_client *this, char *cmd);
 void				client_exec_join(t_client *this, char *cmd);
+void				client_exec_part(t_client *this, char *cmd);
 
 #endif

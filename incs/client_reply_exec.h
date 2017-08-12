@@ -26,8 +26,17 @@ void	client_reply_print_all_params_to_home(t_client *t,
 
 void	client_reply_ping(t_client *t, t_rpl_cnt *c, const t_reply *r);
 void	client_reply_join(t_client *t, t_rpl_cnt *c, const t_reply *r);
-
+void	client_reply_part(t_client *t, t_rpl_cnt *c, const t_reply *r);
+void	client_reply_privmsg(t_client *t, t_rpl_cnt *c, const t_reply *r);
+/*
+** 331 / 332
+*/
 void	client_reply_topic(t_client *t, t_rpl_cnt *c, const t_reply *r); // 331 / 332
-void	client_reply_get_users(t_client *t, t_rpl_cnt *c, const t_reply *r); // 353 / 366
+/*
+** 353 / 366
+*/
+void	client_reply_get_users(t_client *t, t_rpl_cnt *c, const t_reply *r);
+void	client_reply_353(t_client *t, t_rpl_cnt *c);
+void	client_reply_366(t_client *t, t_rpl_cnt *c);
 
 #endif

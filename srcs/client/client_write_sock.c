@@ -10,20 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_chat_decr(t_visual *this)
+void			client_write_sock(t_client *this, char *to_print)
 {
-	if (this->index == 0)
+	static char	buffer[512];
+	static int	index = -1;
+	int			tp_index;
+
+	if (index == -1)
 	{
-		this->index = vector_len(this->channels) - 1;
+		ft_bzero(buffer, sizeof(buffer));
+		index = 0;
 	}
-	else
+	tp_index = 0;
+	while (!((index == 510) || (to_print[tp_index] == 0) ||
+		(to_print[tp_index] == '\n' || (to_print[tp_index] == '\r' &&
+			to_print[tp_index + 1] == '\n'))))
 	{
-		this->index = (this->index - 1) % vector_len(this->channels);
+		buffer[index] = to_print[tp_index];
+		index += 1;
+		tp_index += 1;
 	}
-	this->current = vector_get(this->channels, this->index);
-	visual_print_border(this);
-	redrawwin(this->current->chat);
-	wrefresh(this->current->chat);
+	if (index == 510 || to_print[tp_index] == '\n' ||
+			(to_print[tp_index] == '\r' && to_print[tp_index + 1] == '\n'))
+	{
+		buffer[index] = '\r';
+		buffer[index + 1] = '\n';
+		LOG_INFO("write(this->sock, \"%.*s\\r\\n\", %i);", index, buffer, index + 2);
+		write(this->sock, buffer, index + 2);
+		ft_bzero(buffer, sizeof(buffer));
+		index = 0;
+	}
 }

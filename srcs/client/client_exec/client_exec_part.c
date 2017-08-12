@@ -10,20 +10,52 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
+#include "array.h"
 
-void			visual_chat_decr(t_visual *this)
+static char		*set_channel(char *buffer, char *tmp, char *chan)
 {
-	if (this->index == 0)
+	if (!chan)
+		return (tmp);
+	while (tmp - buffer < 510 && *chan)
 	{
-		this->index = vector_len(this->channels) - 1;
+		if ((tmp[-1] == ',' || tmp[-1] == ' ') &&
+				*chan != ',' && *chan != '#' && *chan != '&')
+		{
+			*tmp = '#';
+			tmp += 1;
+		}
+		if ((tmp[-1] == ',' || tmp[-1] == ' ') && *chan == ',')
+			;
+		else
+		{
+			*tmp = *chan;
+			tmp += 1;
+			chan += 1;
+		}
 	}
-	else
+	return (tmp);
+}
+
+void			client_exec_part(t_client *this, char *s)
+{
+	char		**split;
+	char		buffer[512];
+	char		*tmp;
+
+	if (!this->connected)
+		return ; // TODO: Message d'erreur
+	split = ft_strsplit(s, ' ');
+	if (!split)
+		return ;
+	if (!split[0] || !split[1])
 	{
-		this->index = (this->index - 1) % vector_len(this->channels);
+		array_del(split);
+		return ;
 	}
-	this->current = vector_get(this->channels, this->index);
-	visual_print_border(this);
-	redrawwin(this->current->chat);
-	wrefresh(this->current->chat);
+	tmp = utils_concat(buffer, "PART ");
+	tmp = set_channel(buffer, tmp, split[1]);
+	client_write_sock(this, buffer);
+	client_write_sock(this, "\r\n");
+	array_del(split);
 }

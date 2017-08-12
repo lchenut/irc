@@ -12,18 +12,25 @@
 
 #include "visual.h"
 
-void			visual_chat_decr(t_visual *this)
+static bool		find_fn(void *data, void *ctx)
 {
-	if (this->index == 0)
+	return (ft_strcmp(((t_visual_channel *)data)->name, ctx) == 0);
+}
+
+void			visual_channel_del_by_name(t_visual *this, const char *chan)
+{
+	t_visual_channel	*channel;
+
+	if (ft_strcmp(chan, "HOME") == 0)
+		return ;
+	channel = vector_find_pop(this->channels, find_fn, (void *)chan);
+	if (channel == NULL)
+		return ;
+	if (channel == this->current)
 	{
-		this->index = vector_len(this->channels) - 1;
+		this->current = vector_get_first(this->channels);
 	}
-	else
-	{
-		this->index = (this->index - 1) % vector_len(this->channels);
-	}
-	this->current = vector_get(this->channels, this->index);
-	visual_print_border(this);
 	redrawwin(this->current->chat);
 	wrefresh(this->current->chat);
+	visual_channel_del(channel);
 }

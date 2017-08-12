@@ -10,20 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_chat_decr(t_visual *this)
+void			client_reply_353(t_client *this, t_rpl_cnt *content)
 {
-	if (this->index == 0)
+	t_visual_channel	*channel;
+	char				**users;
+	int					i;
+
+	channel = visual_get_visual_channel(this->visual,
+			vector_get_first(content->params));
+	if (channel == NULL)
+		return ;
+	users = ft_split(vector_get_last(content->params));
+	i = 0;
+	while (users[i])
 	{
-		this->index = vector_len(this->channels) - 1;
+		vector_push_back(channel->users, users[i]);
+		i += 1;
 	}
-	else
-	{
-		this->index = (this->index - 1) % vector_len(this->channels);
-	}
-	this->current = vector_get(this->channels, this->index);
-	visual_print_border(this);
-	redrawwin(this->current->chat);
-	wrefresh(this->current->chat);
+	free(users);
 }
