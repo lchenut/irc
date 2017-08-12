@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "command.h"
+#include "data.h"
 
 void			command_place_letter(t_command *this, char c)
 {
@@ -24,7 +25,7 @@ void			command_place_letter(t_command *this, char c)
 	this->current->size += 1;
 	line_realloc(this->current);
 }
-#include "data.h"
+
 static bool		find_fn(void *data, void *ctx)
 {
 	char		*needle;

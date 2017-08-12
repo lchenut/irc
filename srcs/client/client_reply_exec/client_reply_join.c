@@ -10,16 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_print_chat(t_visual *this, char *buf)
+void			client_reply_join(t_client *this, t_rpl_cnt *content,
+		const t_reply *reply)
 {
-	while (*buf)
+	if (content->nick && !ft_strcmp(content->nick, this->nick) &&
+			vector_get_first(content->params))
 	{
-		if (*buf == '\r' && buf[1] == '\n')
-			buf += 1;
-		waddch(this->current->chat, *buf);
-		buf += 1;
+		visual_channel_new(this->visual, vector_get_first(content->params));
 	}
-	wrefresh(this->current->chat);
+	else
+	{
+		// TODO: Trouver un moyen de tester l'arrive d'un autre pecnos sur un
+		// serveur pour voir la reaction du serveur
+		// et resoudre le probleme
+	}
+	(void)reply;
 }

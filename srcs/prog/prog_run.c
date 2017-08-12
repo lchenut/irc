@@ -56,7 +56,7 @@ void			prog_run(t_prog *this)
 	{
 		return ;
 	}
-	client = client_new();
+	client = client_singleton();
 	manage_client(this, client);
 	client_try_connect(client);
 	if (client->connected)

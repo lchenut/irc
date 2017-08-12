@@ -10,18 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "client.h"
 #include "visual.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+void			client_reply_topic(t_client *this,
+		t_rpl_cnt *content, const t_reply *reply)
 {
-	t_visual_channel	*channel;
+	char		*chan;
+	char		*topic;
 
-	channel = visual_get_visual_channel(this, chan);
-	if (channel == NULL)
+	if ((int)vector_len(content->params) == reply->args_number)
 	{
-		return ;
+		chan = vector_get_first(content->params);
+		topic = vector_get_last(content->params);
+		visual_dump_date(this->visual, chan);
+		if (!ft_strcmp(reply->command, "332"))
+		{
+			visual_print_green(this->visual, "Topic: ", chan);
+			visual_print_bold(this->visual, topic, chan);
+		}
+		else
+		{
+			visual_print_red(this->visual, topic, chan);
+		}
+		visual_print_newline(this->visual, chan);
 	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	(void)reply;
 }

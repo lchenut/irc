@@ -10,18 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+t_client			*client_singleton(void)
 {
-	t_visual_channel	*channel;
+	static t_client	*this = NULL;
 
-	channel = visual_get_visual_channel(this, chan);
-	if (channel == NULL)
+	if (this == NULL)
 	{
-		return ;
+		this = client_new();
 	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	return (this);
 }

@@ -10,14 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_print_home(t_visual *this, char *buf)
+void			client_print_chan(t_client *this,
+		void (*fn)(t_visual *, char *, char *), char *msg, char *chan)
 {
-	wprintw(((t_visual_channel *)vector_get_first(this->channels))->chat,
-			"%s\n", buf);
-	if (vector_get_first(this->channels) == this->current)
+	if (fn != NULL)
 	{
-		wrefresh(this->current->chat);
+		visual_dump_date(this->visual, chan);
+		fn(this->visual, msg, chan);
+		visual_print_newline(this->visual, chan);
+	}
+	if (this->command)
+	{
+		visual_print_prompt(this->visual,
+			command_get_line_scaled(this->command));
+		visual_move_curspos(this->visual, command_get_curspos(this->command));
 	}
 }

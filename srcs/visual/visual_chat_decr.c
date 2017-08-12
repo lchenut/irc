@@ -12,16 +12,11 @@
 
 #include "visual.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+void			visual_chat_decr(t_visual *this)
 {
-	t_visual_channel	*channel;
-
-	channel = visual_get_visual_channel(this, chan);
-	if (channel == NULL)
-	{
-		return ;
-	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	this->index = (this->index - 1) % vector_len(this->channels);
+	this->current = vector_get(this->channels, this->index);
+	visual_print_border(this);
+	redrawwin(this->current->chat);
+	wrefresh(this->current->chat);
 }

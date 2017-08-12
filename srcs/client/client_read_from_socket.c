@@ -19,6 +19,11 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 	const t_reply	*rep;
 
 	index = 0;
+	if (!content->command)
+	{
+		LOG_WARN("There's no command");
+		return ;
+	}
 	while (g_replies[index].command)
 	{
 		if (ft_strcmp(g_replies[index].command, content->command) == 0)
@@ -32,7 +37,10 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 		LOG_WARN("Command unknown");
 	}
 	else
+	{
+		client_reply_pop_params(this, content); // /!\ Peut-etre une connerie de laisser ca la.
 		rep->fn(this, content, rep);
+	}
 	(void)this;
 }
 

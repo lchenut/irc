@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "visual.h"
+#include <errno.h>
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+void			visual_print_red(t_visual *this, char *s, char *chan)
 {
 	t_visual_channel	*channel;
 
@@ -21,7 +22,7 @@ void			visual_print_bold(t_visual *this, char *s, char *chan)
 	{
 		return ;
 	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_RED));
 	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_RED));
 }

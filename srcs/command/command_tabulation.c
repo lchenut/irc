@@ -10,18 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "command.h"
+#include "client.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+void			command_tabulation(t_command *this)
 {
-	t_visual_channel	*channel;
-
-	channel = visual_get_visual_channel(this, chan);
-	if (channel == NULL)
-	{
-		return ;
-	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	visual_chat_incr(client_singleton()->visual);
+	(void)this;
 }

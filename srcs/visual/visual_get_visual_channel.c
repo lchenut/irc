@@ -12,16 +12,13 @@
 
 #include "visual.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+static bool				find_fn(void *data, void *context)
 {
-	t_visual_channel	*channel;
+	return (ft_strcmp(((t_visual_channel *)data)->name, context) == 0);
+}
 
-	channel = visual_get_visual_channel(this, chan);
-	if (channel == NULL)
-	{
-		return ;
-	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+t_visual_channel		*visual_get_visual_channel(t_visual *this,
+		const char *chan)
+{
+	return (vector_find(this->channels, find_fn, (void *)chan));
 }

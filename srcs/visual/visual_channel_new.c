@@ -16,11 +16,15 @@ void					visual_channel_new(t_visual *this, const char *name)
 {
 	t_visual_channel	*channel;
 
+	if (visual_get_visual_channel(this, name))
+	{
+		return ;
+	}
 	channel = ft_calloc(sizeof(t_visual_channel));
 	channel->name = ft_strdup(name);
 	channel->chat = newwin(CHAT_NB_LINES, CHAT_NB_COLS,
 			CHAT_START_LINES, CHAT_START_COLS);
-	wbkgd(channel->chat, COLOR_PAIR(3));
+	channel->users = vector_new();
 	scrollok(channel->chat, true);
 	vector_push_back(this->channels, channel);
 }

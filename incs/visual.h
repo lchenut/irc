@@ -40,6 +40,7 @@ typedef struct			s_visual_channel
 {
 	char				*name;
 	WINDOW				*chat;
+	t_vector			*users;
 }						t_visual_channel;
 
 typedef struct			s_visual
@@ -56,20 +57,34 @@ void					visual_del(t_visual *this);
 
 void					visual_channel_new(t_visual *this, const char *s);
 void					visual_channel_del(t_visual_channel *this);
+t_visual_channel		*visual_get_visual_channel(t_visual *this,
+		const char *chan);
 
-void					visual_dump_date(t_visual *this);
-void					visual_print_chat(t_visual *this, char *buf);
-void					visual_perror(t_visual *this, char *buf);
+void					visual_refresh_current(t_visual *this);
 
-void					visual_print_home(t_visual *this, char *buf);
-void					visual_print_red(t_visual *this, char *buf);
-void					visual_print_bold(t_visual *this, char *buf);
-void					visual_print_green(t_visual *this, char *buf);
+
 void					visual_print_border(t_visual *this);
 void					visual_print_prompt(t_visual *this, char *buf);
+void					visual_dump_date(t_visual *this, char *chan);
+void					visual_print_newline(t_visual *this, char *chan);
+
+// =============================================================================
+void					visual_print_channel(t_visual *this, char *buf, char *chan);
+void					visual_perror(t_visual *this, char *buf, char *chan);
+void					visual_print_bold(t_visual *this, char *buf, char *chan);
+void					visual_print_green(t_visual *this, char *buf, char *chan);
+void					visual_print_red(t_visual *this, char *buf, char *chan);
+
 void					visual_move_curspos(t_visual *this, int x);
 char					visual_get_char(t_visual *this);
 
+void					visual_dump_channel(t_visual *this,
+		char *chan, char *msg);
+
+void					visual_chat_incr(t_visual *this);
+void					visual_chat_decr(t_visual *this);
+
 void					visual_clear_prompt(t_visual *this);
+
 
 #endif

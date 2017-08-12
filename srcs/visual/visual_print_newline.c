@@ -12,7 +12,7 @@
 
 #include "visual.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+void			visual_print_newline(t_visual *this, char *chan)
 {
 	t_visual_channel	*channel;
 
@@ -21,7 +21,9 @@ void			visual_print_bold(t_visual *this, char *s, char *chan)
 	{
 		return ;
 	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	waddch(channel->chat, '\n');
+	if (channel == this->current)
+	{
+		wrefresh(channel->chat);
+	}
 }

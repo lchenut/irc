@@ -15,6 +15,7 @@
 static void			visual_init_pair(void)
 {
 	init_color(COLOR_BLACK, 0, 0, 0);
+	init_color(COLOR_WHITE, 0x2a8, 0x2a8, 0x2a8);
 	init_pair(7, COLOR_WHITE, COLOR_BLACK);
 	init_pair(VIS_COLOR_RED, 9, COLOR_BLACK);
 	init_pair(VIS_COLOR_BOLD, 15, COLOR_BLACK);
@@ -40,5 +41,6 @@ t_visual			*visual_new(void)
 			BORDER_START_LINES, BORDER_START_COLS);
 	visual_print_border(this);
 	wrefresh(this->prompt);
+	this->index = 0;
 	return (this);
 }

@@ -10,18 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "client.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+void			client_reply_ping(t_client *this, t_rpl_cnt *content,
+		const t_reply *reply)
 {
-	t_visual_channel	*channel;
-
-	channel = visual_get_visual_channel(this, chan);
-	if (channel == NULL)
-	{
-		return ;
-	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	write(this->sock, "PONG\r\n", 6);
+	(void)this;
+	(void)content;
+	(void)reply;
 }

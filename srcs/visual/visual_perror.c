@@ -13,12 +13,18 @@
 #include "visual.h"
 #include <errno.h>
 
-void			visual_perror(t_visual *this, char *s)
+void			visual_perror(t_visual *this, char *s, char *chan)
 {
-	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_RED));
+	t_visual_channel	*channel;
+
+	channel = visual_get_visual_channel(this, chan);
+	if (channel == NULL)
+	{
+		return ;
+	}
+	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_RED));
 	if (s != NULL)
-		wprintw(this->current->chat, "%s: %s\n", s, ft_strerror(errno));
+		wprintw(channel->chat, "%s: %s", s, ft_strerror(errno));
 	else
-		wprintw(this->current->chat, "%s\n", ft_strerror(errno));
-	wrefresh(this->current->chat);
+		wprintw(channel->chat, "%s", ft_strerror(errno));
 }

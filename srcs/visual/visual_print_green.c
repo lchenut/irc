@@ -12,10 +12,16 @@
 
 #include "visual.h"
 
-void			visual_print_green(t_visual *this, char *s)
+void			visual_print_green(t_visual *this, char *s, char *chan)
 {
-	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_GREEN));
-	wprintw(this->current->chat, "%s\n", s);
-	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_GREEN));
-	wrefresh(this->current->chat);
+	t_visual_channel	*channel;
+
+	channel = visual_get_visual_channel(this, chan);
+	if (channel == NULL)
+	{
+		return ;
+	}
+	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_GREEN));
+	wprintw(channel->chat, "%s", s);
+	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_GREEN));
 }

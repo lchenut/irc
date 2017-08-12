@@ -38,6 +38,8 @@ t_vector			*data_ctrl_mvmt(void)
 		vector_push_back(data, ctrlmv_new("\033[3~", command_del_right));
 		vector_push_back(data, ctrlmv_new("\001", command_move_home));
 		vector_push_back(data, ctrlmv_new("\005", command_move_end));
+		vector_push_back(data, ctrlmv_new("\011", command_tabulation));
+		vector_push_back(data, ctrlmv_new("\033[Z", command_shift_tabulation));
 	}
 	return (data);
 }

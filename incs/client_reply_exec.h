@@ -17,6 +17,17 @@
 
 typedef struct s_client	t_client;
 
+void	client_reply_pop_params(t_client *this, t_rpl_cnt *content);
+
 void	client_reply_exec_default(t_client *t, t_rpl_cnt *c, const t_reply *r);
+
+void	client_reply_print_all_params_to_home(t_client *t,
+		t_rpl_cnt *c, const t_reply *r);
+
+void	client_reply_ping(t_client *t, t_rpl_cnt *c, const t_reply *r);
+void	client_reply_join(t_client *t, t_rpl_cnt *c, const t_reply *r);
+
+void	client_reply_topic(t_client *t, t_rpl_cnt *c, const t_reply *r); // 331 / 332
+void	client_reply_get_users(t_client *t, t_rpl_cnt *c, const t_reply *r); // 353 / 366
 
 #endif

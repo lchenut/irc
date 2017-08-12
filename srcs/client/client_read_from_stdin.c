@@ -22,7 +22,7 @@ void			client_read_from_stdin(t_client *this)
 	else
 	{
 		command_push(this->command, c);
-		client_print_and_refresh(this, NULL, NULL);
+		client_print_chan(this, NULL, NULL, NULL);
 	}
 	if (ft_isprint(c))
 		LOG_DEBUG("%#hhx (%c)", c, c)

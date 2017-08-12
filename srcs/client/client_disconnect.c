@@ -18,5 +18,5 @@ void			client_disconnect(t_client *this)
 	close(this->sock);
 	this->sock = -1;
 	this->connected = false;
-	client_print_and_refresh(this, visual_print_bold, "Disconnected");
+	client_print_chan(this, visual_print_bold, "Disconnected", "HOME");
 }

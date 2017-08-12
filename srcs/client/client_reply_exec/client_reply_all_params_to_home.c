@@ -10,18 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "client_reply_exec.h"
+#include "client.h"
 #include "visual.h"
 
-void			visual_print_bold(t_visual *this, char *s, char *chan)
+static void		iter_fn(void *data, void *ctx)
 {
-	t_visual_channel	*channel;
-
-	channel = visual_get_visual_channel(this, chan);
-	if (channel == NULL)
+	if (**(char **)ctx)
 	{
-		return ;
+		*(char **)ctx = ft_strjoinfree(*(char **)ctx, " ", 'l');
 	}
-	wattron(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
-	wprintw(channel->chat, "%s", s);
-	wattroff(channel->chat, COLOR_PAIR(VIS_COLOR_BOLD));
+	*(char **)ctx = ft_strjoinfree(*(char **)ctx, data, 'l');
+}
+
+void			client_reply_print_all_params_to_home(t_client *this,
+		t_rpl_cnt *content, const t_reply *reply)
+{
+	char		*to_print;
+
+	client_reply_pop_params(this, content);
+	to_print = ft_strnew(0);
+	vector_iter(content->params, iter_fn, &to_print);
+	visual_dump_date(this->visual, "HOME");
+	visual_print_channel(this->visual, to_print, "HOME");
+	visual_print_newline(this->visual, "HOME");
+	visual_move_curspos(this->visual, command_get_curspos(this->command));
+	free(to_print);
+	(void)reply;
 }

@@ -42,6 +42,6 @@ void				client_try_connect_log(t_client *this, int af_family)
 	s = concat_str(s, this->address);
 	s = concat_str(s, " ");
 	concat_str(s, this->port);
-	client_print_and_refresh(this, visual_print_bold, tmp);
+	client_print_chan(this, visual_print_bold, tmp, "HOME");
 	free(tmp);
 }

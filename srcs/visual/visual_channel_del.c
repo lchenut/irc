@@ -18,5 +18,6 @@ void			visual_channel_del(t_visual_channel *this)
 		return ;
 	delwin(this->chat);
 	free(this->name);
+	vector_del(this->users, free);
 	free(this);
 }

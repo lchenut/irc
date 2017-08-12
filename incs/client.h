@@ -47,6 +47,7 @@ typedef struct		s_client
 
 t_client			*client_new(void);
 void				client_del(t_client *this);
+t_client			*client_singleton(void);
 
 void				client_set_address(t_client *this, char *address);
 void				client_set_port(t_client *this, char *port);
@@ -67,8 +68,8 @@ void				client_loop(t_client *this);
 
 void				client_read_from_stdin(t_client *this);
 void				client_read_from_socket(t_client *this, int fd);
-void				client_print_and_refresh(t_client *this,
-		void (*fn)(t_visual *, char *), char *s);
+void				client_print_chan(t_client *this,
+		void (*fn)(t_visual *, char *, char *), char *msg, char *chan);
 
 void                (*client_get_execute_fn(char *s))(t_client *, char *);
 void				client_exec(t_client *this);

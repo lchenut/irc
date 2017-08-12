@@ -10,13 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
-#include <errno.h>
+#include "client_reply_exec.h"
+#include "client.h"
 
-void			visual_print_red(t_visual *this, char *s)
+void			client_reply_pop_params(t_client *this, t_rpl_cnt *content)
 {
-	wattron(this->current->chat, COLOR_PAIR(VIS_COLOR_RED));
-	wprintw(this->current->chat, "%s\n", s);
-	wattroff(this->current->chat, COLOR_PAIR(VIS_COLOR_RED));
-	wrefresh(this->current->chat);
+	if (ft_strcmp(vector_get_first(content->params), this->nick) == 0)
+	{
+		free(vector_pop_front(content->params));
+		if (ft_strcmp(vector_get_first(content->params), "=") == 0)
+		{
+			free(vector_pop_front(content->params));
+		}
+	}
 }

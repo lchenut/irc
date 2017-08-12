@@ -19,8 +19,9 @@ void			client_reply_exec_default(t_client *this, t_rpl_cnt *content,
 	char		*to_print;
 
 	to_print = reply_to_string(content);
-	visual_dump_date(this->visual);
-	visual_print_home(this->visual, to_print);
+	visual_dump_date(this->visual, "HOME");
+	visual_print_channel(this->visual, to_print, "HOME");
+	visual_print_newline(this->visual, "HOME");
 	visual_move_curspos(this->visual, command_get_curspos(this->command));
 	free(to_print);
 	(void)reply;

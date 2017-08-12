@@ -18,7 +18,7 @@ static void				client_address_error(t_client *this, int error)
 	char				*err;
 
 	err = utils_gai_strerror(error);
-	client_print_and_refresh(this, visual_print_red, err);
+	client_print_chan(this, visual_print_red, err, "HOME");
 }
 
 void					client_try_connect(t_client *this)
@@ -48,11 +48,11 @@ void					client_try_connect(t_client *this)
 	client_try_connect_log(this, AF_INET);
 	if (!this->connected)
 	{
-		client_print_and_refresh(this, visual_perror, "connect");
+		client_print_chan(this, visual_perror, "connect", "HOME");
 		client_address_error(this, 8);
 	}
 	else
 	{
-		client_print_and_refresh(this, visual_print_green, "Connected");
+		client_print_chan(this, visual_print_green, "Connected", "HOME");
 	}
 }

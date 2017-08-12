@@ -10,20 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void			client_print_and_refresh(t_client *this,
-		void (*fn)(t_visual *, char *), char *s)
+void			visual_chat_incr(t_visual *this)
 {
-	if (fn != NULL)
-	{
-		visual_dump_date(this->visual);
-		fn(this->visual, s);
-	}
-	if (this->command)
-	{
-		visual_print_prompt(this->visual,
-			command_get_line_scaled(this->command));
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
-	}
+	this->index = (this->index + 1) % vector_len(this->channels);
+	this->current = vector_get(this->channels, this->index);
+	visual_print_border(this);
+	redrawwin(this->current->chat);
+	wrefresh(this->current->chat);
 }

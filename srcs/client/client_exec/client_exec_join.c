@@ -41,6 +41,8 @@ static char		*set_key(char *buffer, char *tmp, char *key)
 {
 	if (!key)
 		return (tmp);
+	*tmp = ' ';
+	tmp += 1;
 	while (tmp - buffer < 510 && *key)
 	{
 		*tmp = *key;
