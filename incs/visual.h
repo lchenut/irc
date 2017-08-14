@@ -63,6 +63,7 @@ void					visual_channel_new(t_visual *this, const char *s);
 void					visual_channel_del(t_visual_channel *this);
 void					visual_channel_del_by_name(t_visual *this,
 		const char *chan);
+void					visual_channel_disconnect(t_visual *this);
 t_visual_channel		*visual_get_visual_channel(t_visual *this,
 		const char *chan);
 

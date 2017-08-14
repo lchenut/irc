@@ -11,36 +11,24 @@
 /* ************************************************************************** */
 
 #include "client.h"
-#include "visual.h"
 
-void			client_reply_topic(t_client *this,
-		t_rpl_cnt *content, const t_reply *reply)
+void			client_exec_quit(t_client *this, char *s)
 {
-	char		*chan;
-	char		*topic;
-
-	client_reply_pop_params(this, content);
-	if ((int)vector_len(content->params) == reply->args_number)
+	if (!this->connected)
+		return ;
+	while (s[0] && s[0] != ' ')
+		s += 1;
+	while (s[0] && s[0] == ' ')
+		s += 1;
+	if (*s)
 	{
-		chan = vector_get_first(content->params);
-		topic = vector_get_last(content->params);
-		visual_dump_date(this->visual, chan);
-		if (!ft_strcmp(reply->command, "332"))
-		{
-			visual_print_green(this->visual, "Topic: ", chan);
-			visual_print_bold(this->visual, topic, chan);
-		}
-		else if (!ft_strcmp(reply->command, "TOPIC"))
-		{
-			visual_print_green(this->visual, content->nick, chan);
-			visual_print_green(this->visual, " set the channel topic: ", chan);
-			visual_print_bold(this->visual, topic, chan);
-		}
-		else
-		{
-			visual_print_red(this->visual, topic, chan);
-		}
-		visual_print_newline(this->visual, chan);
+		client_write_sock(this, "QUIT :");
+		client_write_sock(this, s);
 	}
-	(void)reply;
+	else
+	{
+		client_write_sock(this, "QUIT");
+	}
+	client_write_sock(this, "\r\n");
+	client_disconnect(this);
 }

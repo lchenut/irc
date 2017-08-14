@@ -10,37 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
 #include "visual.h"
 
-void			client_reply_topic(t_client *this,
-		t_rpl_cnt *content, const t_reply *reply)
+void			visual_channel_disconnect(t_visual *this)
 {
-	char		*chan;
-	char		*topic;
+	t_visual_channel	*channel;
 
-	client_reply_pop_params(this, content);
-	if ((int)vector_len(content->params) == reply->args_number)
+	this->current = vector_get_first(this->channels);
+	while (vector_len(this->channels) > 1)
 	{
-		chan = vector_get_first(content->params);
-		topic = vector_get_last(content->params);
-		visual_dump_date(this->visual, chan);
-		if (!ft_strcmp(reply->command, "332"))
-		{
-			visual_print_green(this->visual, "Topic: ", chan);
-			visual_print_bold(this->visual, topic, chan);
-		}
-		else if (!ft_strcmp(reply->command, "TOPIC"))
-		{
-			visual_print_green(this->visual, content->nick, chan);
-			visual_print_green(this->visual, " set the channel topic: ", chan);
-			visual_print_bold(this->visual, topic, chan);
-		}
-		else
-		{
-			visual_print_red(this->visual, topic, chan);
-		}
-		visual_print_newline(this->visual, chan);
+		channel = vector_pop_back(this->channels);
+		visual_channel_del(channel);
 	}
-	(void)reply;
+	redrawwin(this->current->chat);
+	wrefresh(this->current->chat);
 }

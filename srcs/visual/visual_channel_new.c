@@ -12,6 +12,18 @@
 
 #include "visual.h"
 
+static bool				insert_fn(void *data, void *ctx)
+{
+	t_visual_channel	*current;
+	t_visual_channel	*insert;
+
+	current = data;
+	insert = ctx;
+	if (!ft_strcmp(current->name, "HOME"))
+		return (false);
+	return (ft_strcmp(current->name, insert->name) > 0);
+}
+
 void					visual_channel_new(t_visual *this, const char *name)
 {
 	t_visual_channel	*channel;
@@ -26,5 +38,5 @@ void					visual_channel_new(t_visual *this, const char *name)
 			CHAT_START_LINES, CHAT_START_COLS);
 	channel->users = vector_new();
 	scrollok(channel->chat, true);
-	vector_push_back(this->channels, channel);
+	vector_insert_when_match(this->channels, channel, insert_fn);
 }

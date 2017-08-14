@@ -30,7 +30,7 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 			break ;
 		index += 1;
 	}
-	reply_dump(content);
+	//reply_dump(content);
 	rep = g_replies + index;
 	if (!rep->command)
 	{
@@ -62,6 +62,10 @@ void			client_read_from_socket(t_client *this, int fd)
 		else
 		{
 			content = rpl_tokenizer_tokenize(rep);
+			LOG_INFO("======================");
+			LOG_INFO("Current user: %s", this->nick);
+			LOG_INFO("%s", rep);
+			LOG_INFO("======================");
 			client_read(this, content);
 		}
 		free(rep);

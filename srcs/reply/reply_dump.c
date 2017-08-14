@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "replies.h"
+#include "client.h"
 
 static void			iter_fn(void *data, int index)
 {
@@ -20,6 +21,7 @@ static void			iter_fn(void *data, int index)
 void				reply_dump(t_rpl_cnt *this)
 {
 	LOG_INFO("======================");
+	LOG_INFO("Current user: %s", client_singleton()->nick);
 	if (this->servername)
 	{
 		LOG_INFO("servername: %s", this->servername);

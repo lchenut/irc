@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "visual.h"
+#include "client.h"
 
 void			visual_print_newline(t_visual *this, char *chan)
 {
@@ -26,4 +27,5 @@ void			visual_print_newline(t_visual *this, char *chan)
 	{
 		wrefresh(channel->chat);
 	}
+	visual_move_curspos(this, command_get_curspos(client_singleton()->command));
 }

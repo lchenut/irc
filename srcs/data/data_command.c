@@ -54,7 +54,7 @@ t_vector			*data_command(void)
 		vector_push_back(data, cmd_new("/ping", "PING", NULL));
 		vector_push_back(data, cmd_new("/pong", "PONG", NULL));
 		vector_push_back(data, cmd_new("/privmsg", "PRIVMSG", NULL));
-		vector_push_back(data, cmd_new("/quit", "QUIT", NULL));
+		vector_push_back(data, cmd_new("/quit", "QUIT", client_exec_quit));
 		vector_push_back(data, cmd_new("/rehash", "REHASH", NULL));
 		vector_push_back(data, cmd_new("/restart", "RESTART", NULL));
 		vector_push_back(data, cmd_new("/server", "SERVER", NULL));
@@ -62,7 +62,7 @@ t_vector			*data_command(void)
 		vector_push_back(data, cmd_new("/stats", "STATS", NULL));
 		vector_push_back(data, cmd_new("/summon", "SUMMON", NULL));
 		vector_push_back(data, cmd_new("/time", "TIME", NULL));
-		vector_push_back(data, cmd_new("/topic", "TOPIC", NULL));
+		vector_push_back(data, cmd_new("/topic", "TOPIC", client_exec_topic));
 		vector_push_back(data, cmd_new("/trace", "TRACE", NULL));
 		vector_push_back(data, cmd_new("/user", "USER", NULL));
 		vector_push_back(data, cmd_new("/userhost", "USERHOST", NULL));

@@ -168,7 +168,7 @@ const t_reply	g_replies[] =
 	{ false, "STATS", NULL, 2, client_reply_exec_default },
 	{ false, "SUMMON", NULL, 2, client_reply_exec_default },
 	{ false, "TIME", NULL, 1, client_reply_exec_default },
-	{ false, "TOPIC", NULL, 2, client_reply_exec_default },
+	{ false, "TOPIC", NULL, 2, client_reply_topic },
 	{ false, "TRACE", NULL, 1, client_reply_exec_default },
 	{ false, "USER", NULL, 4, client_reply_exec_default },
 	{ false, "USERHOST", NULL, 2, client_reply_exec_default },
