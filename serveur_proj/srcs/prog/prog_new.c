@@ -10,26 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PROG_H
-# define PROG_H
+#include "prog.h"
 
-# include "basics.h"
-# include "argparser/argparser.h"
-
-typedef struct			s_prog
+static t_argparser	*prog_argparser(void)
 {
-	int					ac;
-	char				**av;
-	t_argparser			*arg;
-	t_argparser_result	*res;
-	bool				should_exit;
-}						t_prog;
+	t_argparser		*arg;
 
-t_prog					*prog_new(int ac, char **av);
-void					prog_del(t_prog *this);
+	arg = argparser_new("serveur");
+	argparser_set_usage(arg, "[ Options... ] [ Port ]");
+	argparser_add_argument(arg,
+			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
+	argparser_add_argument(arg,
+			argparser_argument_new('?', "help", "Show help option", 1));
+	return (arg);
+}
 
-void					prog_run(t_prog *this);
-void					prog_dump(t_prog *this);
-void					prog_usage(t_prog *this);
+t_prog				*prog_new(int ac, char **av)
+{
+	t_prog			*this;
 
-#endif
+	this = ft_calloc(sizeof(t_prog));
+	this->ac = ac;
+	this->av = av;
+	this->arg = prog_argparser();
+	this->res = argparser_parse_from_arr(this->arg, this->av);
+	this->should_exit = false;
+	return (this);
+}
