@@ -10,18 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "server.h"
 
-# include "basics.h"
+t_channel		*server_create_or_get_channel(t_server *this,
+		char *name, char *key)
+{
+	t_channel	*channel;
 
-# define IRC_NAME "irc.42.fr"
-
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+	channel = server_get_channel_from_name(this, name);
+	if (channel)
+	{
+		return (channel);
+	}
+	if (vector_len(this->channels) > this->maxchannels)
+	{
+		return (NULL);
+	}
+	channel = channel_new(name, key);
+	if (!channel)
+	{
+		return (NULL);
+	}
+	vector_push_back(this->channels, channel);
+	return (channel);
+}

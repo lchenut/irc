@@ -44,6 +44,7 @@ typedef struct		s_server
 	bool			connected;
 	char			*err_msg;
 	char			*password;
+	size_t			maxchannels;
 	fd_set			read_set;
 	fd_set			write_set;
 	t_vector		*users;
@@ -61,5 +62,9 @@ void				server_loop(t_server *this);
 t_user				*server_get_user_from_socket(t_server *this, int csocket);
 t_user				*server_get_user_from_nick(t_server *this, char *nick);
 void				server_delete_user_from_socket(t_server *this, int csocket);
+
+t_channel			*server_create_or_get_channel(t_server *this,
+		char *name, char *key);
+t_channel			*server_get_channel_from_name(t_server *this, char *name);
 
 #endif

@@ -10,18 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "channel.h"
 
-# include "basics.h"
+static bool		exists_fn(void *data, void *context)
+{
+	return (data == context);
+}
 
-# define IRC_NAME "irc.42.fr"
-
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+bool			channel_is_user_joined(t_channel *this, t_user *user)
+{
+	return (vector_exists(this->users, exists_fn, user));
+}

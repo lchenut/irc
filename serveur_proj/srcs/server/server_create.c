@@ -35,6 +35,7 @@ void			server_create(t_server *this)
 		close(this->socket);
 		return ;
 	}
+	ft_bzero(&sin, sizeof(struct sockaddr_in6));
 	sin.sin6_family = AF_INET6;
 	sin.sin6_addr = in6addr_any;
 	sin.sin6_port = htons(this->port);

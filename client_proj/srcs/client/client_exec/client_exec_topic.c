@@ -31,26 +31,16 @@ static void		get_chan_and_message(char *s, char **chan, char **message)
 	*message = s;
 }
 
-void			client_exec_topic(t_client *this, char *s)
+static void		topic_two_args(t_client *this, char *s)
 {
 	char		*chan;
 	char		*message;
 
-	if (!this->connected)
-		return ; // TODO: Message d'erreur
 	get_chan_and_message(s, &chan, &message);
 	if (*chan != '#' && *chan != '&')
 	{
 		chan -= 1;
 		*chan = '#';
-	}
-	if (!visual_get_visual_channel(this->visual, chan))
-	{
-		visual_dump_date(this->visual, "HOME");
-		visual_print_red(this->visual, "There no such channel: ", "HOME");
-		visual_print_red(this->visual, chan, "HOME");
-		visual_print_newline(this->visual, "HOME");
-		return ;
 	}
 	client_write_sock(this, "TOPIC ");
 	client_write_sock(this, chan);
@@ -60,4 +50,30 @@ void			client_exec_topic(t_client *this, char *s)
 		client_write_sock(this, message);
 	}
 	client_write_sock(this, "\r\n");
+}
+
+void			client_exec_topic(t_client *this, char *s)
+{
+	char		*chan;
+
+	if (!this->connected)
+		return ; // TODO: Message d'erreur
+	chan = this->visual->current->name;
+	if (*chan != '#' && *chan != '&')
+		topic_two_args(this, s);
+	else
+	{
+		while (s[0] && s[0] != ' ')
+			s += 1;
+		while (s[0] && s[0] == ' ')
+			s += 1;
+		client_write_sock(this, "TOPIC ");
+		client_write_sock(this, chan);
+		if (*s)
+		{
+			client_write_sock(this, " :");
+			client_write_sock(this, s);
+		}
+		client_write_sock(this, "\r\n");
+	}
 }

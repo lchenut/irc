@@ -85,6 +85,5 @@ void			prog_run(t_prog *this)
 		ft_perror(serv->err_msg);
 		return ;
 	}
-	printf("sock: %i\n", serv->socket);
 	server_loop(serv);
 }

@@ -20,6 +20,7 @@ t_server		*server_new(void)
 	this->port = -1;
 	this->connected = false;
 	this->err_msg = NULL;
+	this->maxchannels = 100;
 	this->users = vector_new();
 	this->channels = vector_new();
 	this->querries = lst_new();

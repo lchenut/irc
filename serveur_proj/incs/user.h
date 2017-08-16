@@ -17,6 +17,7 @@
 # include "buffer.h"
 # include "utils.h"
 # include "cmd.h"
+# include "rpl.h"
 
 # include <sys/select.h>
 # include <netinet/in.h>
@@ -56,12 +57,14 @@ void			user_try_connect(t_user *this, t_server *server);
 void            user_exec_nick(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_user(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_pass(t_user *this, t_cmd *cmd, t_server *server);
+void            user_exec_join(t_user *this, t_cmd *cmd, t_server *server);
+void            user_exec_topic(t_user *this, t_cmd *cmd, t_server *server);
 
-void			rpl_welcome(t_user *this, t_server *server);
-void			rpl_yourhost(t_user *this, t_server *server);
-void			rpl_created(t_user *this, t_server *server);
-void			rpl_myinfo(t_user *this, t_server *server);
-
+void			err_nosuchchannel(t_user *this, char *chan, t_server *server);
+void			err_notonchannel(t_user *this, char *chan, t_server *server);
+void			err_channelisfull(t_user *this, char *chan, t_server *server);
+void			err_inviteonlychan(t_user *this, char *chan, t_server *server);
+void			err_badchannelkey(t_user *this, char *chan, t_server *server);
 void            err_nonicknamegiven(t_user *this, t_server *server);
 void            err_nickcollision(t_user *this, char *nick, t_server *server);
 void            err_nicknameinuse(t_user *this, char *nick, t_server *server);

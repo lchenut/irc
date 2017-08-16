@@ -69,7 +69,6 @@ t_visual_channel		*visual_get_visual_channel(t_visual *this,
 
 void					visual_refresh_current(t_visual *this);
 
-
 void					visual_print_border(t_visual *this);
 void					visual_print_prompt(t_visual *this, char *buf);
 void					visual_dump_date(t_visual *this, char *chan);

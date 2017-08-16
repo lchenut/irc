@@ -10,18 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "channel.h"
 
-# include "basics.h"
-
-# define IRC_NAME "irc.42.fr"
-
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+void			channel_del(t_channel *this)
+{
+	if (!this)
+		return ;
+	if (this->name)
+		free(this->name);
+	if (this->key)
+		free(this->key);
+	if (this->topic)
+		free(this->topic);
+	vector_del(this->users, NULL);
+}

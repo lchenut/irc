@@ -14,6 +14,8 @@
 
 bool			utils_is_valid_nickname(char *s)
 {
+	if (ft_strlen(s) > 9)
+		return (false);
 	if ((*s < 'A' || *s > 'Z') &&
 		(*s < 'a' || *s > 'z'))
 		return (false);

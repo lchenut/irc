@@ -10,18 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "stringft.h"
+#include "ctypeft.h"
 
-# include "basics.h"
-
-# define IRC_NAME "irc.42.fr"
-
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+bool			utils_is_valid_key(char *s)
+{
+	if (*s == 0 || ft_strlen(s) > 23)
+		return (false);
+	while (*s)
+	{
+		if (ft_isblank(*s) || *s >= 0x7F)
+			return (false);
+		s += 1;
+	}
+	return (true);
+}

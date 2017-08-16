@@ -10,18 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "server.h"
 
-# include "basics.h"
+static bool			find_fn(void *data, void *context)
+{
+	char			*chan;
+	char			*name;
 
-# define IRC_NAME "irc.42.fr"
+	chan = ((t_channel *)data)->name;
+	name = context;
+	while (*chan && *name)
+	{
+		if (ft_toupper(*chan) != ft_toupper(*name))
+			return (false);
+		chan += 1;
+		name += 1;
+	}
+	return (true);
+}
 
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+t_channel			*server_get_channel_from_name(t_server *this, char *name)
+{
+	return (vector_find(this->channels, find_fn, name));
+}

@@ -10,18 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "channel.h"
 
-# include "basics.h"
+t_channel		*channel_new(char *name, char *key)
+{
+	t_channel	*this;
 
-# define IRC_NAME "irc.42.fr"
-
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+	this = ft_calloc(sizeof(t_channel));
+	this->name = ft_strdup(name);
+	this->key = key ? ft_strdup(key) : key;
+	this->mode.private = false;
+	this->mode.secret = false;
+	this->mode.oninv = false;
+	this->mode.topiclock = false;
+	this->mode.msgrestricted = false;
+	this->mode.moderate = false;
+	this->limit = 10;
+	this->users = vector_new();
+	return (this);
+}

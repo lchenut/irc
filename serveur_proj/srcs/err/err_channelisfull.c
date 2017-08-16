@@ -10,18 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "user.h"
+#include "server.h"
 
-# include "basics.h"
+void			err_channelisfull(t_user *this, char *name, t_server *server)
+{
+	char		buf[512];
+	char		*tmp;
+	t_querry	*querry;
 
-# define IRC_NAME "irc.42.fr"
-
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+	querry = querry_new(this);
+	buf[0] = 0;
+	tmp = utils_concat(buf, ":");
+	tmp = utils_concat(tmp, IRC_NAME);
+	tmp = utils_concat(tmp, " 471 ");
+	tmp = utils_concat(tmp, name);
+	tmp = utils_concat(tmp, " :Cannot join channel (+l)\r\n");
+	querry->cmd = ft_strdup(buf);
+	lst_push_back(server->querries, querry);
+}

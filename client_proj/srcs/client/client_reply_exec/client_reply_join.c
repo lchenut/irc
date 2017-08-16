@@ -33,7 +33,6 @@ void			client_reply_join(t_client *this, t_rpl_cnt *content,
 	{
 		t_visual_channel	*channel;
 
-		LOG_DEBUG("-------------- HERE ---------------");
 		channel = visual_get_visual_channel(this->visual, vector_get_first(content->params));
 		if (!channel)
 			return ;
@@ -42,7 +41,7 @@ void			client_reply_join(t_client *this, t_rpl_cnt *content,
 		visual_print_red(this->visual, ": ", channel->name);
 		visual_print_channel(this->visual, "@", channel->name);
 		visual_print_channel(this->visual, content->nick, channel->name);
-		visual_print_channel(this->visual, "has joined the channel", channel->name);
+		visual_print_channel(this->visual, " has joined the channel", channel->name);
 		visual_print_newline(this->visual, channel->name);
 	}
 	(void)reply;

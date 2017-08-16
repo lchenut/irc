@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "client.h"
+#include <errno.h>
 
 void			client_loop(t_client *this)
 {
@@ -24,6 +25,8 @@ void			client_loop(t_client *this)
 			break ;
 		if (select(FD_SETSIZE, &read_fd, NULL, NULL, NULL) < 0)
 		{
+			if (errno == EINTR)
+				continue ;
 			ft_perror("select");
 			break ;
 		}

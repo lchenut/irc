@@ -12,13 +12,22 @@
 
 #include "server.h"
 
+static void	lol_fn(t_querry *querry, fd_set *set)
+{
+	if (!FD_ISSET(querry->user->socket, set))
+	{
+		FD_SET(querry->user->socket, set);
+	}
+}
+
 void		server_init_fd_set(t_server *this)
 {
 	FD_ZERO(&this->read_set);
+	FD_ZERO(&this->write_set);
 	FD_SET(this->socket, &this->read_set);
 	vector_iter(this->users, (void(*)(void*, void*))user_fd_set,
 			&this->read_set);
-	vector_iter(this->users, (void(*)(void*, void*))user_fd_set,
+	lst_iter(this->querries, (void(*)(void*, void*))lol_fn,
 			&this->write_set);
 }
 
@@ -76,15 +85,21 @@ void		server_read_from_user_socket(t_server *this, int csocket)
 		}
 		else
 		{
-			printf("Line red => %s", line);
 			user_exec_command(user, line, this);
 		}
 	}
 }
 
-static void	iter_fn(void *data)
+static void	iter_fn(void *data, void *ctx1, void *ctx2)
 {
-	printf("%s", ((t_querry *)data)->cmd);
+	(void)data;
+	(void)ctx1;
+	(void)ctx2;
+}
+
+static bool	find_fn(void *data, void *context)
+{
+	return (((t_querry *)data)->user->socket == *((int *)context));
 }
 
 void		server_loop(t_server *this)
@@ -110,13 +125,15 @@ void		server_loop(t_server *this)
 					server_read_from_user_socket(this, index);
 				}
 			}
-			querry = lst_pop_front(this->querries);
-			if (querry && FD_ISSET(querry->user->socket, &this->write_set))
+			if (FD_ISSET(index, &this->write_set))
 			{
-				ft_putstr_fd(querry->cmd, querry->user->socket);
+				querry = lst_find_pop(this->querries, find_fn, &index);
+				if (querry)
+				{
+					ft_putstr_fd(querry->cmd, querry->user->socket);
+					free(querry);
+				}
 			}
-//			if (querry)
-//				querry_del(querry);
 			index += 1;
 		}
 	}

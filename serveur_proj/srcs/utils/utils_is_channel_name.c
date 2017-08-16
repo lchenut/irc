@@ -10,18 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "utils.h"
 
-# include "basics.h"
+bool			utils_is_valid_channame(char *name)
+{
+	char		*tmp;
 
-# define IRC_NAME "irc.42.fr"
-
-char			*utils_concat(char *src, const char *dst);
-
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
-
-#endif
+	tmp = name;
+	while (*name)
+	{
+		if (*name == ',' || *name == '\a' || *name == '\r' ||
+				*name == '\n' || *name == ' ')
+			return (false);
+		name += 1;
+	}
+	return ((name - tmp) <= 50);
+}

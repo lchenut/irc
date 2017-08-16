@@ -10,18 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#ifndef RPL_H
+# define RPL_H
 
 # include "basics.h"
+# include "utils.h"
 
-# define IRC_NAME "irc.42.fr"
+typedef struct s_user		t_user;
+typedef struct s_server		t_server;
+typedef struct s_channel	t_channel;
 
-char			*utils_concat(char *src, const char *dst);
+void			rpl_welcome(t_user *this, t_server *server);
+void			rpl_yourhost(t_user *this, t_server *server);
+void			rpl_created(t_user *this, t_server *server);
+void			rpl_myinfo(t_user *this, t_server *server);
 
-bool			utils_is_valid_nickname(char *s);
-bool			utils_is_valid_key(char *s);
-bool			utils_is_valid_username(char *s);
-bool			utils_is_valid_channame(char *s);
+void			rpl_notopic(t_user *this, t_channel *channel, t_server *server);
+void			rpl_topic(t_user *this, t_channel *channel, t_server *server);
 
 #endif
