@@ -10,35 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "cmd.h"
 
-static t_argparser	*prog_argparser(void)
+static void			iter_fn(void *data, int index)
 {
-	t_argparser		*arg;
-
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
+	printf("param[%i]: %s\n", index, data);
 }
 
-t_prog				*prog_new(int ac, char **av)
+void				cmd_dump(t_cmd *this)
 {
-	t_prog			*this;
-
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	printf("======================\n");
+	if (this->servername)
+	{
+		printf("servername: %s\n", this->servername);
+	}
+	else
+	{
+		printf("nick: %s\n", this->nick);
+		printf("user: %s\n", this->user);
+		printf("host: %s\n", this->host);
+	}
+	printf("command: %s\n", this->command);
+	vector_iteri0(this->params, iter_fn);
+	printf("======================\n");
 }

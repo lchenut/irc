@@ -16,6 +16,6 @@ void			prog_usage(t_prog *this)
 {
 	ft_putstr_fd("usage reminder: ", 2);
 	ft_putstr_fd(this->av[0], 2);
-	ft_putstr_fd(" [ address [ port ] ]\n", 2);
+	ft_putstr_fd(" [ Options... ] [ port ]\n", 2);
 	(void)this;
 }

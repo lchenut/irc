@@ -23,19 +23,9 @@ static void		client_exec_user_register(t_client *this, struct passwd *pw)
 	client_write_sock(this, pw->pw_name);
 	client_write_sock(this, " ");
 	client_write_sock(this, this->address);
-	client_write_sock(this, " ");
+	client_write_sock(this, " :");
 	client_write_sock(this, pw->pw_gecos);
 	client_write_sock(this, "\r\n");
-//	tmp = utils_concat(buffer, "USER ");
-//	tmp = utils_concat(tmp, pw->pw_name);
-//	tmp = utils_concat(tmp, " ");
-//	tmp = utils_concat(tmp, pw->pw_name);
-//	tmp = utils_concat(tmp, " ");
-//	tmp = utils_concat(tmp, this->address);
-//	tmp = utils_concat(tmp, " :");
-//	tmp = utils_concat(tmp, pw->pw_gecos);
-//	tmp = utils_concat(tmp, "\r\n");
-//	write(this->sock, buffer, tmp - buffer);
 }
 
 void			client_exec_user(t_client *this, char *s)

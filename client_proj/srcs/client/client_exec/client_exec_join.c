@@ -72,6 +72,7 @@ void			client_exec_join(t_client *this, char *s)
 	tmp = set_channel(buffer, tmp, split[1]);
 	if (split[2])
 		tmp = set_key(buffer, tmp, split[2]);
+	*tmp = 0;
 	client_write_sock(this, buffer);
 	client_write_sock(this, "\r\n");
 	array_del(split);

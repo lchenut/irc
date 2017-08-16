@@ -15,13 +15,14 @@
 
 # include "basics.h"
 # include "argparser/argparser.h"
+# include "utils.h"
 
 typedef struct			s_prog
 {
 	int					ac;
 	char				**av;
 	t_argparser			*arg;
-	t_arparser_result	*res;
+	t_argparser_result	*res;
 	bool				should_exit;
 }						t_prog;
 

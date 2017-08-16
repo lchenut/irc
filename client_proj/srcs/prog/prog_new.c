@@ -29,7 +29,7 @@ static t_argparser	*prog_argparser(void)
 	argparser_add_argument(arg,
 			argparser_argument_new('w', "password", "Autoconnect password", 2));
 	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 1));
+			argparser_argument_new('?', "help", "Show help option", 0));
 	return (arg);
 }
 

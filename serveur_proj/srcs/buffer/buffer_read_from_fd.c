@@ -10,35 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "buffer.h"
+#include <sys/types.h>
+#include <sys/uio.h>
 
-static t_argparser	*prog_argparser(void)
+int				buffer_read_from_fd(t_buffer *this, int fd)
 {
-	t_argparser		*arg;
+	int			read_ret;
+	int			size;
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
-}
-
-t_prog				*prog_new(int ac, char **av)
-{
-	t_prog			*this;
-
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	size = (this->end < this->start) ?
+		this->start - this->end : this->total - this->end;
+	read_ret = read(fd, this->buffer + this->end, size);
+	if (read_ret <= 0)
+		return (read_ret);
+	this->size += read_ret;
+	if (this->end + read_ret == this->total)
+		this->end = 0;
+	else
+		this->end += read_ret;
+	return (read_ret);
 }

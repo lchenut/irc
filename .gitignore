@@ -3,6 +3,9 @@
 *.out
 objs
 /client
+/client_proj/client
+/serveur
+/serveur_proj/serveur
 serveur
 *.DSYM
 .DS_Store

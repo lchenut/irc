@@ -10,35 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#ifndef CHANNEL_H
+# define CHANNEL_H
 
-static t_argparser	*prog_argparser(void)
+# include "basics.h"
+# include "user.h"
+# include "utils.h"
+
+typedef struct		s_channel
 {
-	t_argparser		*arg;
+	char			*name;
+	char			*topic;
+	t_vector		*users;
+}					t_channel;
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
-}
+t_channel			*channel_new(char *name);
+void				channel_del(t_channel *this);
 
-t_prog				*prog_new(int ac, char **av)
-{
-	t_prog			*this;
-
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
-}
+#endif

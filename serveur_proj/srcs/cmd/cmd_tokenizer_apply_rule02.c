@@ -10,35 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "cmd.h"
 
-static t_argparser	*prog_argparser(void)
+t_cmd_status		cmd_tokenizer_apply_rule02(t_cmd_tokenizer *this)
 {
-	t_argparser		*arg;
+	char			c;
+	t_cmd_type		type;
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
-}
-
-t_prog				*prog_new(int ac, char **av)
-{
-	t_prog			*this;
-
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	if (this->index_input == 0 && this->input[this->index_input] == ':')
+	{
+		type = CMD_TYPE_SERVERNAME;
+		this->index_input += 1;
+		while (true)
+		{
+			c = this->input[this->index_input];
+			if (c == ' ' || c == '\0')
+			{
+				cmd_tokenizer_delimit(this, type);
+				return (CMD_STATUS_APPLIED);
+			}
+			if (c == '!')
+			{
+				cmd_tokenizer_delimit(this, CMD_TYPE_NICK);
+				this->index_input += 1;
+				type = CMD_TYPE_USER;
+			}
+			if (c == '@' && type == CMD_TYPE_USER)
+			{
+				cmd_tokenizer_delimit(this, type);
+				this->index_input += 1;
+				type = CMD_TYPE_HOST;
+			}
+			else
+			{
+				cmd_tokenizer_addone(this);
+			}
+		}
+	}
+	return (CMD_STATUS_NOT_APPLIED);
 }

@@ -10,35 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "buffer.h"
 
-static t_argparser	*prog_argparser(void)
+static char		*pop_line(t_buffer *this, size_t count)
 {
-	t_argparser		*arg;
+	char		*ret;
+	int			index;
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
+	ret = ft_strnew(count);
+	index = 0;
+	this->size -= count;
+	while (count)
+	{
+		ret[index] = this->buffer[this->start];
+		index += 1;
+		if ((this->start += 1) == this->total)
+			this->start = 0;
+		count -= 1;
+	}
+	return (ret);
 }
 
-t_prog				*prog_new(int ac, char **av)
+char			*buffer_pop_line(t_buffer *this)
 {
-	t_prog			*this;
+	size_t		index;
+	size_t		count;
 
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	index = this->start;
+	count = 0;
+	while (this->buffer[index] != '\n' && count != this->size)
+	{
+		index += 1;
+		count += 1;
+		if (index == this->total)
+			index = 0;
+	}
+	if (this->buffer[index] != '\n' && count < this->total)
+		return (NULL);
+	if (this->buffer[index] == '\n' && count == this->size)
+		return (NULL);
+	return (pop_line(this, this->buffer[index] != '\n' ? count : count + 1));
 }

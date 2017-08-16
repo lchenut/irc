@@ -10,35 +10,38 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "server.h"
 
-static t_argparser	*prog_argparser(void)
+static bool	find_fn(void *data, void *context)
 {
-	t_argparser		*arg;
-
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
+	return (((t_user *)data)->socket == *(int *)context);
 }
 
-t_prog				*prog_new(int ac, char **av)
+static void	print_address_port(struct sockaddr_in6 *sin)
 {
-	t_prog			*this;
+	char	address[INET6_ADDRSTRLEN];
 
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	if (!inet_ntop(AF_INET6, &sin->sin6_addr, address, sizeof(address)))
+	{
+		return ;
+	}
+	ft_putstr("\033[31mlogout from ");
+	ft_putstr(address);
+	ft_putstr(" (port: ");
+	ft_putnbr(sin->sin6_port);
+	ft_putstr(")\033[0m\n");
+}
+
+void		server_delete_user_from_socket(t_server *this, int csocket)
+{
+	t_user	*user;
+
+	if (this == NULL)
+		return ;
+	user = vector_find_pop(this->users, find_fn, &csocket);
+	if (user)
+	{
+		print_address_port(&user->sin);
+		user_del(user);
+	}
 }

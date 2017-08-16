@@ -10,35 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "server.h"
 
-static t_argparser	*prog_argparser(void)
+void			server_create(t_server *this)
 {
-	t_argparser		*arg;
+	struct sockaddr_in6	sin;
+	struct protoent		*pe;
+	int					opt;
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
-}
-
-t_prog				*prog_new(int ac, char **av)
-{
-	t_prog			*this;
-
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	if (!(pe = getprotobyname("tcp")))
+	{
+		this->err_msg = "getprotobyname";
+		return ;
+	}
+	if ((this->socket = socket(PF_INET6, SOCK_STREAM, pe->p_proto)) == -1)
+	{
+		this->err_msg = "socket";
+		return ;
+	}
+	opt = 1;
+	if (setsockopt(this->socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int)) == -1)
+	{
+		this->err_msg = "setsockopt";
+		close(this->socket);
+		return ;
+	}
+	sin.sin6_family = AF_INET6;
+	sin.sin6_addr = in6addr_any;
+	sin.sin6_port = htons(this->port);
+	if (bind(this->socket, (struct sockaddr *)&sin, sizeof(sin)) == -1)
+	{
+		close(this->socket);
+		this->err_msg = "bind";
+		return ;
+	}
+	if (listen(this->socket, 50) == -1)
+	{
+		close(this->socket);
+		this->err_msg = "listen";
+	}
+	this->connected = true;
 }

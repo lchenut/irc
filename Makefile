@@ -19,8 +19,8 @@ SERVEUR     = serveur_proj
 all:
 	@make -j8 -C $(CLIENT)
 	@make -j8 -C $(SERVEUR)
-	@mv $(CLIENT)/client .
-	@mv $(SERVEUR)/serveur .
+	@cp $(CLIENT)/client .
+	@cp $(SERVEUR)/serveur .
 
 clean:
 	@make -C $(CLIENT) clean 

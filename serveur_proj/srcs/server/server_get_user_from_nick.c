@@ -10,35 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "server.h"
 
-static t_argparser	*prog_argparser(void)
+static bool	find_fn(void *data, void *context)
 {
-	t_argparser		*arg;
-
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
+	if (((t_user *)data)->nick == NULL)
+		return (false);
+	return (ft_strcmp(((t_user *)data)->nick, context) == 0);
 }
 
-t_prog				*prog_new(int ac, char **av)
+t_user		*server_get_user_from_nick(t_server *this, char *nick)
 {
-	t_prog			*this;
-
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	if (this == NULL || nick == NULL)
+		return (NULL);
+	return (vector_find(this->users, find_fn, nick));
 }

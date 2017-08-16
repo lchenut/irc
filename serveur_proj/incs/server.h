@@ -1,0 +1,65 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_norris_loves_the_norminette.c                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chuck <chuck@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2042/02/30 42:00:00 by chuck             #+#    #+#             */
+/*   Updated: 2042/02/30 41:59:59 by chuck            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SERVER_H
+# define SERVER_H
+
+# define DFL_PORT 6667
+
+# include "basics.h"
+# include "user.h"
+# include "channel.h"
+# include "lst.h"
+# include "utils.h"
+
+# include <sys/types.h>
+# include <sys/select.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <netdb.h>
+
+typedef struct		s_querry
+{
+	t_user			*user;
+	char			*cmd;
+}					t_querry;
+
+t_querry			*querry_new(t_user *user);
+void				querry_del(t_querry *this);
+
+typedef struct		s_server
+{
+	int				port;
+	int				socket;
+	bool			connected;
+	char			*err_msg;
+	char			*password;
+	fd_set			read_set;
+	fd_set			write_set;
+	t_vector		*users;
+	t_vector		*channels;
+	t_lst			*querries;
+}					t_server;
+
+t_server			*server_new(void);
+void				server_del(t_server *this);
+
+void				server_create(t_server *this);
+
+void				server_loop(t_server *this);
+
+t_user				*server_get_user_from_socket(t_server *this, int csocket);
+t_user				*server_get_user_from_nick(t_server *this, char *nick);
+void				server_delete_user_from_socket(t_server *this, int csocket);
+
+#endif

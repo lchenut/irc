@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "prog.h"
-#include "client.h"
+#include "server.h"
 #include "argparser/argparser.h"
 
 static void		manage_error(t_prog *this)
@@ -28,41 +28,63 @@ static void		manage_error(t_prog *this)
 	}
 }
 
-static void		manage_client(t_prog *this, t_client *client)
+static void		not_valid_port_value(t_prog *this, char *value)
 {
-	if (lst_first(this->res->remainders))
-		client_set_address(client, lst_first(this->res->remainders));
-	if (lst_get(this->res->remainders, 1))
-		client_set_port(client, lst_get(this->res->remainders, 1));
-	if (argparser_result_opt_is_set(this->res, "s"))
-		client_set_address(client,
-				argparser_result_opt_get_arg(this->res, "s"));
+	ft_putstr_fd("server: ", 2);
+	ft_putstr_fd(value, 2);
+	ft_putendl_fd(" is not a valid port value", 2);
+	argparser_print_help(this->arg);
+	this->should_exit = true;
+}
+
+static void		set_port(t_prog *this, t_server *serv)
+{
+	char		*rem;
+	char		*opt;
+
+	rem = lst_first(this->res->remainders);
+	opt = NULL;
 	if (argparser_result_opt_is_set(this->res, "p"))
-		client_set_port(client, argparser_result_opt_get_arg(this->res, "p"));
+		opt = argparser_result_opt_get_arg(this->res, "p");
+	if (!rem && !opt)
+		serv->port = 6667;
+	else if (!opt && (!ft_strisnum(rem) || ft_atoi(rem) <= 0))
+		not_valid_port_value(this, rem);
+	else if (!opt)
+		serv->port = ft_atoi(rem);
+	else if (!ft_strisnum(opt) || ft_atoi(opt) <= 0)
+		not_valid_port_value(this, opt);
+	else
+		serv->port = ft_atoi(opt);
+}
+
+static void		set_password(t_prog *this, t_server *serv)
+{
 	if (argparser_result_opt_is_set(this->res, "w"))
-		client_set_password(client,
-				argparser_result_opt_get_arg(this->res, "w"));
-	if (argparser_result_opt_is_set(this->res, "n"))
-		client_set_nick(client,
-				argparser_result_opt_get_arg(this->res, "n"));
+		serv->password =
+			ft_strdup(argparser_result_opt_get_arg(this->res, "w"));
+	else
+		serv->password = NULL;
 }
 
 void			prog_run(t_prog *this)
 {
-	t_client	*client;
+	t_server	*serv;
 
 	manage_error(this);
 	if (this->should_exit)
 	{
 		return ;
 	}
-	client = client_singleton();
-	manage_client(this, client);
-	client_try_connect(client);
-	if (client->connected)
+	serv = server_new();
+	set_port(this, serv);
+	set_password(this, serv);
+	server_create(serv);
+	if (serv->err_msg)
 	{
-		client_register(client);
+		ft_perror(serv->err_msg);
+		return ;
 	}
-	client_loop(client);
-	client_del(client);
+	printf("sock: %i\n", serv->socket);
+	server_loop(serv);
 }

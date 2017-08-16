@@ -10,35 +10,38 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "cmd.h"
 
-static t_argparser	*prog_argparser(void)
+t_cmd_tokenizer_fn	g_cmd_tokenizer_fn[] =
 {
-	t_argparser		*arg;
+	cmd_tokenizer_apply_rule01,
+	cmd_tokenizer_apply_rule02,
+	cmd_tokenizer_apply_rule03,
+	cmd_tokenizer_apply_rule04,
+	cmd_tokenizer_apply_rule05,
+	NULL
+};
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
-}
-
-t_prog				*prog_new(int ac, char **av)
+t_cmd			*cmd_tokenizer_tokenize(const char *input)
 {
-	t_prog			*this;
+	t_cmd_tokenizer	*this;
+	t_cmd_status	type;
+	t_cmd			*ret;
+	int				index;
 
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	this = cmd_tokenizer_new(input);
+	index = 0;
+	while (g_cmd_tokenizer_fn[index])
+	{
+		type = g_cmd_tokenizer_fn[index](this);
+		if (type == CMD_STATUS_APPLIED)
+			index = 0;
+		else if (type == CMD_STATUS_NOT_APPLIED)
+			index += 1;
+		else
+			break ;
+	}
+	ret = this->content;
+	this->content = NULL;
+	return (ret);
 }

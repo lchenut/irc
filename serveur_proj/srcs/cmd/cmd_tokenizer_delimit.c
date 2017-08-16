@@ -10,35 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "cmd.h"
 
-static t_argparser	*prog_argparser(void)
+static char			*inner_delimit(t_cmd_tokenizer *this)
 {
-	t_argparser		*arg;
+	char			*ret;
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
+	ret = ft_strdup(this->to_push);
+	ft_bzero(this->to_push, this->index_to_push);
+	this->index_to_push = 0;
+	return (ret);
 }
 
-t_prog				*prog_new(int ac, char **av)
+void				cmd_tokenizer_delimit(t_cmd_tokenizer *this, t_cmd_type type)
 {
-	t_prog			*this;
+	char			*to_push;
 
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	to_push = inner_delimit(this);
+	if (type == CMD_TYPE_SERVERNAME)
+		this->content->servername = to_push;
+	else if (type == CMD_TYPE_NICK)
+		this->content->nick = to_push;
+	else if (type == CMD_TYPE_USER)
+		this->content->user = to_push;
+	else if (type == CMD_TYPE_HOST)
+		this->content->host = to_push;
+	else if (type == CMD_TYPE_COMMAND)
+		this->content->command = to_push;
+	else if (type == CMD_TYPE_PARAM)
+		vector_push_back(this->content->params, to_push);
 }

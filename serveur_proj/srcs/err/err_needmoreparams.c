@@ -10,35 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "prog.h"
+#include "user.h"
+#include "server.h"
 
-static t_argparser	*prog_argparser(void)
+void			err_needmoreparams(t_user *this, t_cmd *cmd, t_server *server)
 {
-	t_argparser		*arg;
+	char		buf[512];
+	char		*tmp;
+	t_querry	*querry;
 
-	arg = argparser_new("server");
-	argparser_set_usage(arg, "[ Options... ] [ Port ]");
-	argparser_add_argument(arg,
-			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
-	argparser_add_argument(arg, argparser_argument_new('w', "password",
-				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
-	argparser_add_argument(arg,
-			argparser_argument_new('?', "help", "Show help option", 0));
-	return (arg);
-}
-
-t_prog				*prog_new(int ac, char **av)
-{
-	t_prog			*this;
-
-	this = ft_calloc(sizeof(t_prog));
-	this->ac = ac;
-	this->av = av;
-	this->arg = prog_argparser();
-	this->res = argparser_parse_from_arr(this->arg, this->av);
-	this->should_exit = false;
-	return (this);
+	querry = querry_new(this);
+	buf[0] = 0;
+	tmp = utils_concat(buf, ":");
+	tmp = utils_concat(tmp, IRC_NAME);
+	tmp = utils_concat(tmp, " 461 ");
+	tmp = utils_concat(tmp, this->nick);
+	tmp = utils_concat(tmp, " ");
+	tmp = utils_concat(tmp, cmd->command);
+	tmp = utils_concat(tmp, " :Not enough parameters\r\n");
+	querry->cmd = ft_strdup(buf);
+	lst_push_back(server->querries, querry);
 }

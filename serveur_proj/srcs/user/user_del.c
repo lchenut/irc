@@ -10,29 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVEUR_H
-# define SERVEUR_H
+#include "user.h"
 
-# define DFL_PORT 6667
-
-# include "basics.h"
-
-# include <sys/types.h>
-# include <sys/select.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <arpa/inet.h>
-# include <netdb.h>
-
-typedef struct		s_serveur
+void			user_del(t_user *this)
 {
-	int				port;
-	fd_set			set;
-	t_users			*users;
-	t_channels		*channels;
-}					t_serveur;
-
-t_serveur			*serveur_new(void);
-void				serveur_del(t_serveur *this);
-
-#endif
+	if (this->nick != NULL)
+	{
+		free(this->nick);
+	}
+	buffer_del(this->buffer);
+	close(this->socket);
+	free(this);
+}
