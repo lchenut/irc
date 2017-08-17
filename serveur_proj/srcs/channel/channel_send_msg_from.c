@@ -10,44 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNEL_H
-# define CHANNEL_H
+#include "channel.h"
+#include "server.h"
 
-# include "basics.h"
-# include "user.h"
-# include "utils.h"
-
-typedef struct s_server	t_server;
-
-typedef struct		s_mode
+static bool		find_fn(void *data, void *context)
 {
-	bool			private;
-	bool			secret;
-	bool			oninv;
-	bool			topiclock;
-	bool			msgrestricted;
-	bool			moderate;
-}					t_mode;
+	return (data != context);
+}
 
-typedef struct		s_channel
+static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
-	char			*name;
-	char			*key;
-	char			*topic;
-	size_t			limit;
-	t_mode			mode;
-	t_vector		*users;
-}					t_channel;
+	t_querry	*querry;
 
-t_channel			*channel_new(char *name, char *key);
-void				channel_del(t_channel *this);
+	querry = querry_new(data);
+	querry->cmd = ft_strdup(ctx1);
+	lst_push_back(((t_server *)ctx2)->querries, querry);
+}
 
-void				channel_new_user(t_channel *this,
-		t_user *user, t_server *server);
+void			channel_send_msg_from(t_channel *this, t_user *user,
+		char *msg, t_server *server)
+{
+	t_vector	*clone;
 
-bool				channel_is_user_joined(t_channel *this, t_user *user);
-
-void				channel_send_msg_from(t_channel *this, t_user *user,
-		char *msg, t_server *server);
-
-#endif
+	clone = vector_find_all(this->users, find_fn, user);
+	vector_iter2(clone, iter_fn, msg, server);
+	vector_del(clone, NULL);
+}

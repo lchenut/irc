@@ -20,6 +20,7 @@ static void		client_reply_privmsg_user(t_client *this, t_rpl_cnt *content)
 	chan = content->nick ? content->nick : content->servername;
 	if (!chan)
 		return ;
+	// TODO message viens d'un channel dans lequel on est pas... pourquoi pas
 	channel = visual_get_visual_channel(this->visual, chan);
 	if (!channel)
 	{

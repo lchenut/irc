@@ -10,44 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNEL_H
-# define CHANNEL_H
+#include "user.h"
+#include "server.h"
 
-# include "basics.h"
-# include "user.h"
-# include "utils.h"
-
-typedef struct s_server	t_server;
-
-typedef struct		s_mode
+void			err_toomanytargets(t_user *this, char *dest, t_server *server)
 {
-	bool			private;
-	bool			secret;
-	bool			oninv;
-	bool			topiclock;
-	bool			msgrestricted;
-	bool			moderate;
-}					t_mode;
+	char		buf[512];
+	char		*tmp;
+	t_querry	*querry;
 
-typedef struct		s_channel
-{
-	char			*name;
-	char			*key;
-	char			*topic;
-	size_t			limit;
-	t_mode			mode;
-	t_vector		*users;
-}					t_channel;
-
-t_channel			*channel_new(char *name, char *key);
-void				channel_del(t_channel *this);
-
-void				channel_new_user(t_channel *this,
-		t_user *user, t_server *server);
-
-bool				channel_is_user_joined(t_channel *this, t_user *user);
-
-void				channel_send_msg_from(t_channel *this, t_user *user,
-		char *msg, t_server *server);
-
-#endif
+	querry = querry_new(this);
+	buf[0] = 0;
+	tmp = utils_concat(buf, ":");
+	tmp = utils_concat(tmp, IRC_NAME);
+	tmp = utils_concat(tmp, " 407 ");
+	tmp = utils_concat(tmp, this->nick);
+	tmp = utils_concat(tmp, " ");
+	tmp = utils_concat(tmp, dest);
+	tmp = utils_concat(tmp, " :Duplicate recipients. No message delivered\r\n");
+	querry->cmd = ft_strdup(buf);
+	lst_push_back(server->querries, querry);
+}

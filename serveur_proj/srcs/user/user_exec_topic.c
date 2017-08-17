@@ -10,44 +10,39 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNEL_H
-# define CHANNEL_H
+#include "user.h"
+#include "server.h"
 
-# include "basics.h"
-# include "user.h"
-# include "utils.h"
-
-typedef struct s_server	t_server;
-
-typedef struct		s_mode
+void			user_exec_topic(t_user *this, t_cmd *cmd, t_server *server)
 {
-	bool			private;
-	bool			secret;
-	bool			oninv;
-	bool			topiclock;
-	bool			msgrestricted;
-	bool			moderate;
-}					t_mode;
+	t_channel	*channel;
+	char		*topic;
 
-typedef struct		s_channel
-{
-	char			*name;
-	char			*key;
-	char			*topic;
-	size_t			limit;
-	t_mode			mode;
-	t_vector		*users;
-}					t_channel;
-
-t_channel			*channel_new(char *name, char *key);
-void				channel_del(t_channel *this);
-
-void				channel_new_user(t_channel *this,
-		t_user *user, t_server *server);
-
-bool				channel_is_user_joined(t_channel *this, t_user *user);
-
-void				channel_send_msg_from(t_channel *this, t_user *user,
-		char *msg, t_server *server);
-
-#endif
+	if (!this->connected)
+		return ;
+	if (vector_len(cmd->params) == 0)
+	{
+		err_needmoreparams(this, cmd, server);
+		return ;
+	}
+	channel = server_get_channel_from_name(server, vector_get_first(cmd->params));
+	if (channel == NULL)
+		return ;
+	if (!channel_is_user_joined(channel, this))
+	{
+		err_notonchannel(this, channel->name, server);
+		return ;
+	}
+	if (vector_len(cmd->params) > 1)
+	{
+		// topiclock
+		topic = vector_get(cmd->params, 1);
+		if (channel->topic)
+			free(channel->topic);
+		channel->topic = ft_strdup(topic);
+	}
+	else if (channel->topic)
+		rpl_topic(this, channel, server);
+	else
+		rpl_notopic(this, channel, server);
+}

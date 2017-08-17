@@ -12,10 +12,16 @@
 
 #include "server.h"
 
-static bool	find_fn(void *data, void *context)
+static bool	find_user(void *data, void *context)
 {
 	return (((t_user *)data)->socket == *(int *)context);
 }
+
+static bool	find_querry(void *data, void *context)
+{
+	return (((t_querry *)data)->user == context);
+}
+
 
 static void	print_address_port(struct sockaddr_in6 *sin)
 {
@@ -38,10 +44,12 @@ void		server_delete_user_from_socket(t_server *this, int csocket)
 
 	if (this == NULL)
 		return ;
-	user = vector_find_pop(this->users, find_fn, &csocket);
+	user = vector_find_pop(this->users, find_user, &csocket);
 	if (user)
 	{
 		print_address_port(&user->sin);
+		lst_clear_if(this->querries, (void(*)(void *))querry_del,
+				find_querry, user);
 		user_del(user);
 	}
 }
