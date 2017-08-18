@@ -17,9 +17,9 @@ static bool	find_user(void *data, void *context)
 	return (((t_user *)data)->socket == *(int *)context);
 }
 
-static bool	find_querry(void *data, void *context)
+static bool	find_query(void *data, void *context)
 {
-	return (((t_querry *)data)->user == context);
+	return (((t_query *)data)->user == context);
 }
 
 
@@ -48,8 +48,8 @@ void		server_delete_user_from_socket(t_server *this, int csocket)
 	if (user)
 	{
 		print_address_port(&user->sin);
-		lst_clear_if(this->querries, (void(*)(void *))querry_del,
-				find_querry, user);
+		lst_clear_if(this->querries, (void(*)(void *))query_del,
+				find_query, user);
 		user_del(user);
 	}
 }

@@ -10,15 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "user.h"
+#include "rpl.h"
 #include "server.h"
+#include "user.h"
+#include "channel.h"
+#include "xstdlib.h"
 
-void			err_alreadyregistred(t_user *this, t_server *server)
+void			rpl_list(t_user *this, t_channel *channel, t_server *server)
 {
-	t_query	*query;
+	t_query		*query;
+	char		*nb;
 
 	query = query_new(this);
-	query->cmd = utils_concat(":%s 462 %s :You may not reregister",
-			IRC_NAME, this->nick);
+	nb = ft_itoa(vector_len(channel->users));
+	query->cmd = utils_concat(":%s 322 %s %s %s :%s", IRC_NAME, this->nick,
+			"<TODO VISIBILITY>", nb, channel->topic ? channel->topic : "");
+	free(nb);
 	lst_push_back(server->querries, query);
 }

@@ -10,15 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "user.h"
+#include "rpl.h"
 #include "server.h"
+#include "user.h"
 
-void			err_alreadyregistred(t_user *this, t_server *server)
+void			rpl_liststart(t_user *this, t_server *server)
 {
 	t_query	*query;
 
 	query = query_new(this);
-	query->cmd = utils_concat(":%s 462 %s :You may not reregister",
+	query->cmd = utils_concat(":%s 321 %s Channel :Users Name",
 			IRC_NAME, this->nick);
 	lst_push_back(server->querries, query);
 }

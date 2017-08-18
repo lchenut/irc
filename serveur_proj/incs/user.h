@@ -32,6 +32,7 @@ typedef struct			s_user
 	int					timeout;
 	int					socket;
 	bool				connected;
+	bool				flush_sock;
 	t_buffer			*buffer;
 	struct sockaddr_in6	sin;
 }						t_user;
@@ -60,6 +61,7 @@ void            user_exec_pass(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_join(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_topic(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_privmsg(t_user *this, t_cmd *cmd, t_server *server);
+void            user_exec_list(t_user *this, t_cmd *cmd, t_server *server);
 
 void			err_norecipient(t_user *this, char *cmd, t_server *server);
 void			err_notextsend(t_user *this, t_server *server);
@@ -67,6 +69,7 @@ void			err_toomanytargets(t_user *this, char *dest, t_server *server);
 void			err_cannotsendtochan(t_user *this, char *s, t_server *server);
 
 
+void			err_nosuchnick(t_user *this, char *chan, t_server *server);
 void			err_nosuchchannel(t_user *this, char *chan, t_server *server);
 void			err_notonchannel(t_user *this, char *chan, t_server *server);
 void			err_channelisfull(t_user *this, char *chan, t_server *server);

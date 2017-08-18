@@ -13,19 +13,12 @@
 #include "user.h"
 #include "server.h"
 
-void			err_nickcollision(t_user *this, char *nick, t_server *server)
+void			err_nickcollision(t_user *this, char *name, t_server *server)
 {
-	char		buf[512];
-	char		*tmp;
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(this);
-	buf[0] = 0;
-	tmp = utils_concat(buf, ":");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " 436 ");
-	tmp = utils_concat(tmp, nick);
-	tmp = utils_concat(tmp, " :Nickname collision KILL\r\n");
-	querry->cmd = ft_strdup(buf);
-	lst_push_back(server->querries, querry);
+	query = query_new(this);
+	query->cmd = utils_concat(":%s 436 %s :Nickname collision KILL",
+			IRC_NAME, name);
+	lst_push_back(server->querries, query);
 }

@@ -15,17 +15,10 @@
 
 void			err_cannotsendtochan(t_user *this, char *name, t_server *server)
 {
-	char		buf[512];
-	char		*tmp;
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(this);
-	buf[0] = 0;
-	tmp = utils_concat(buf, ":");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " 404 ");
-	tmp = utils_concat(tmp, name);
-	tmp = utils_concat(tmp, " :Cannot send to channel\r\n");
-	querry->cmd = ft_strdup(buf);
-	lst_push_back(server->querries, querry);
+	query = query_new(this);
+	query->cmd = utils_concat(":%s 404 %s :Cannot send to channel",
+			IRC_NAME, name);
+	lst_push_back(server->querries, query);
 }

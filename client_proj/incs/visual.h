@@ -74,7 +74,6 @@ void					visual_print_prompt(t_visual *this, char *buf);
 void					visual_dump_date(t_visual *this, char *chan);
 void					visual_print_newline(t_visual *this, char *chan);
 
-// =============================================================================
 void					visual_print_channel(t_visual *this, char *buf, char *chan);
 void					visual_perror(t_visual *this, char *buf, char *chan);
 void					visual_print_bold(t_visual *this, char *buf, char *chan);
@@ -91,6 +90,5 @@ void					visual_chat_incr(t_visual *this);
 void					visual_chat_decr(t_visual *this);
 
 void					visual_clear_prompt(t_visual *this);
-
 
 #endif

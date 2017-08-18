@@ -13,12 +13,12 @@
 #include "user.h"
 #include "server.h"
 
-void			err_alreadyregistred(t_user *this, t_server *server)
+void			err_nosuchnick(t_user *this, char *name, t_server *server)
 {
 	t_query	*query;
 
 	query = query_new(this);
-	query->cmd = utils_concat(":%s 462 %s :You may not reregister",
-			IRC_NAME, this->nick);
+	query->cmd = utils_concat(":%s 401 %s %s :No such nick/channel",
+			IRC_NAME, this->nick, name);
 	lst_push_back(server->querries, query);
 }

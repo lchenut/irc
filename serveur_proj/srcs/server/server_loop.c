@@ -12,11 +12,11 @@
 
 #include "server.h"
 
-static void	lol_fn(t_querry *querry, fd_set *set)
+static void	lol_fn(t_query *query, fd_set *set)
 {
-	if (!FD_ISSET(querry->user->socket, set))
+	if (!FD_ISSET(query->user->socket, set))
 	{
-		FD_SET(querry->user->socket, set);
+		FD_SET(query->user->socket, set);
 	}
 }
 
@@ -72,7 +72,22 @@ void		server_read_from_user_socket(t_server *this, int csocket)
 	user = server_get_user_from_socket(this, csocket);
 	if (user == NULL)
 		return ;
-	if (!buffer_read_from_fd(user->buffer, user->socket))
+	if (user->flush_sock)
+	{
+		int	flush_ret;
+
+		flush_ret = buffer_flush_fd(user->buffer, user->socket);
+		if (flush_ret <= 0)
+		{
+			server_delete_user_from_socket(this, csocket);
+			return ;
+		}
+		else if (flush_ret == 1)
+			user->flush_sock = false;
+		else
+			return ;
+	}
+	else if (!buffer_read_from_fd(user->buffer, user->socket))
 	{
 		server_delete_user_from_socket(this, csocket);
 		return ;
@@ -81,7 +96,7 @@ void		server_read_from_user_socket(t_server *this, int csocket)
 	{
 		if (!ft_strchr(line, '\n'))
 		{
-			buffer_flush_fd(user->buffer, user->socket);
+			user->flush_sock = true;
 		}
 		else
 		{
@@ -99,13 +114,13 @@ static void	iter_fn(void *data, void *ctx1, void *ctx2)
 
 static bool	find_fn(void *data, void *context)
 {
-	return (((t_querry *)data)->user->socket == *((int *)context));
+	return (((t_query *)data)->user->socket == *((int *)context));
 }
 
 void		server_loop(t_server *this)
 {
 	int		index;
-	t_querry	*querry;
+	t_query	*query;
 
 	while (1)
 	{
@@ -127,11 +142,12 @@ void		server_loop(t_server *this)
 			}
 			if (FD_ISSET(index, &this->write_set))
 			{
-				querry = lst_find_pop(this->querries, find_fn, &index);
-				if (querry)
+				query = lst_find_pop(this->querries, find_fn, &index);
+				if (query)
 				{
-					ft_putstr_fd(querry->cmd, querry->user->socket);
-					free(querry);
+					printf("Send to %s: %s", query->user->nick, query->cmd);
+					ft_putstr_fd(query->cmd, query->user->socket);
+					free(query);
 				}
 			}
 			index += 1;

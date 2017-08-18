@@ -28,4 +28,8 @@ void			rpl_myinfo(t_user *this, t_server *server);
 void			rpl_notopic(t_user *this, t_channel *channel, t_server *server);
 void			rpl_topic(t_user *this, t_channel *channel, t_server *server);
 
+void			rpl_liststart(t_user *this, t_server *server);
+void			rpl_list(t_user *this, t_channel *channel, t_server *server);
+void			rpl_listend(t_user *this, t_server *server);
+
 #endif

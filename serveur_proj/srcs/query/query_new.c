@@ -12,12 +12,11 @@
 
 #include "server.h"
 
-void			querry_del(t_querry *this)
+t_query		*query_new(t_user *user)
 {
-	if (!this)
-		return ;
-	if (this->cmd)
-		free(this->cmd);
-	this->user = NULL;
-	free(this);
+	t_query	*this;
+
+	this = ft_calloc(sizeof(t_query));
+	this->user = user;
+	return (this);
 }

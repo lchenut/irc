@@ -13,21 +13,12 @@
 #include "user.h"
 #include "server.h"
 
-void			err_notonchannel(t_user *this, char *chan, t_server *server)
+void			err_notonchannel(t_user *this, char *name, t_server *server)
 {
-	char		buf[512];
-	char		*tmp;
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(this);
-	buf[0] = 0;
-	tmp = utils_concat(buf, ":");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " 442 ");
-	tmp = utils_concat(tmp, this->nick);
-	tmp = utils_concat(tmp, " ");
-	tmp = utils_concat(tmp, chan);
-	tmp = utils_concat(tmp, " :You're not on that channel\r\n");
-	querry->cmd = ft_strdup(buf);
-	lst_push_back(server->querries, querry);
+	query = query_new(this);
+	query->cmd = utils_concat(":%s 442 %s %s :You're not on that channel",
+			IRC_NAME, this->nick, name);
+	lst_push_back(server->querries, query);
 }

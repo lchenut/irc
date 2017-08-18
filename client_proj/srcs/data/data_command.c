@@ -53,7 +53,7 @@ t_vector			*data_command(void)
 		vector_push_back(data, cmd_new("/pass", "PASS", NULL));
 		vector_push_back(data, cmd_new("/ping", "PING", NULL));
 		vector_push_back(data, cmd_new("/pong", "PONG", NULL));
-		vector_push_back(data, cmd_new("/privmsg", "PRIVMSG", NULL));
+		vector_push_back(data, cmd_new("/privmsg", "PRIVMSG", client_exec_privmsg));
 		vector_push_back(data, cmd_new("/quit", "QUIT", client_exec_quit));
 		vector_push_back(data, cmd_new("/rehash", "REHASH", NULL));
 		vector_push_back(data, cmd_new("/restart", "RESTART", NULL));

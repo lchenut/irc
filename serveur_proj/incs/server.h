@@ -28,14 +28,14 @@
 # include <arpa/inet.h>
 # include <netdb.h>
 
-typedef struct		s_querry
+typedef struct		s_query
 {
 	t_user			*user;
 	char			*cmd;
-}					t_querry;
+}					t_query;
 
-t_querry			*querry_new(t_user *user);
-void				querry_del(t_querry *this);
+t_query			*query_new(t_user *user);
+void				query_del(t_query *this);
 
 typedef struct		s_server
 {

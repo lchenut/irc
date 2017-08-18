@@ -15,31 +15,23 @@
 
 static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(data);
-	querry->cmd = ft_strdup(ctx1);
-	lst_push_back(((t_server *)ctx2)->querries, querry);
+	query = query_new(data);
+	query->cmd = ft_strdup(ctx1);
+	lst_push_back(((t_server *)ctx2)->querries, query);
 }
 
 void			channel_new_user(t_channel *this, t_user *user,
 		t_server *server)
 {
-	char		cmd[512];
-	char		*tmp;
+	char		*cmd;
 
 	vector_push_back(this->users, user);
-	*cmd = 0;
-	tmp = utils_concat(cmd, ":");
-	tmp = utils_concat(tmp, user->nick);
-	tmp = utils_concat(tmp, "!");
-	tmp = utils_concat(tmp, user->user);
-	tmp = utils_concat(tmp, "@");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " JOIN ");
-	tmp = utils_concat(tmp, this->name);
-	tmp = utils_concat(tmp, "\r\n");
+	cmd = utils_concat(":%s!%s@%s JOIN %s", user->nick, user->user, IRC_NAME,
+			this->name);
 	vector_iter2(this->users, iter_fn, cmd, server);
+	free(cmd);
 	if (this->topic)
 		rpl_topic(user, this, server);
 	else

@@ -16,17 +16,11 @@
 
 void			rpl_created(t_user *this, t_server *server)
 {
-	char		buf[512];
-	char		*tmp;
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(this);
-	buf[0] = 0;
-	tmp = utils_concat(buf, ":");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " 003 ");
-	tmp = utils_concat(tmp, this->nick);
-	tmp = utils_concat(tmp, " :This server was created wed, 19 jul 2017\r\n");
-	querry->cmd = ft_strdup(buf);
-	lst_push_back(server->querries, querry);
+	query = query_new(this);
+	query->cmd = utils_concat(
+			":%s 003 %s :This server was created wed, 19 jul 2017",
+			IRC_NAME, this->nick);
+	lst_push_back(server->querries, query);
 }

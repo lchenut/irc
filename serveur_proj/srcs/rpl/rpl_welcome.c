@@ -16,19 +16,11 @@
 
 void			rpl_welcome(t_user *this, t_server *server)
 {
-	char		buf[512];
-	char		*tmp;
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(this);
-	buf[0] = 0;
-	tmp = utils_concat(buf, ":");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " 001 ");
-	tmp = utils_concat(tmp, this->nick);
-	tmp = utils_concat(tmp, " :Welcome to Internet Relay Network ");
-	tmp = utils_concat(tmp, this->nick);
-	tmp = utils_concat(tmp, "!\r\n");
-	querry->cmd = ft_strdup(buf);
-	lst_push_back(server->querries, querry);
+	query = query_new(this);
+	query->cmd = utils_concat(
+			":%s 001 %s :Welcome to Internet Relay Network %s!",
+			IRC_NAME, this->nick, this->nick);
+	lst_push_back(server->querries, query);
 }

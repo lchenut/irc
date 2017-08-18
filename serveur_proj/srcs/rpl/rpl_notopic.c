@@ -17,19 +17,10 @@
 
 void			rpl_notopic(t_user *this, t_channel *channel, t_server *server)
 {
-	char		buf[512];
-	char		*tmp;
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(this);
-	buf[0] = 0;
-	tmp = utils_concat(buf, ":");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " 331 ");
-	tmp = utils_concat(tmp, this->nick);
-	tmp = utils_concat(tmp, " ");
-	tmp = utils_concat(tmp, channel->name);
-	tmp = utils_concat(tmp, " :No topic set\r\n");
-	querry->cmd = ft_strdup(buf);
-	lst_push_back(server->querries, querry);
+	query = query_new(this);
+	query->cmd = utils_concat(":%s 331 %s %s :No topic set",
+			IRC_NAME, this->nick, channel->name);
+	lst_push_back(server->querries, query);
 }

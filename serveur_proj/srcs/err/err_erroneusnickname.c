@@ -13,19 +13,12 @@
 #include "user.h"
 #include "server.h"
 
-void			err_erroneusnickname(t_user *this, char *nick, t_server *server)
+void			err_erroneusnickname(t_user *this, char *name, t_server *server)
 {
-	char		buf[512];
-	char		*tmp;
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(this);
-	buf[0] = 0;
-	tmp = utils_concat(buf, ":");
-	tmp = utils_concat(tmp, IRC_NAME);
-	tmp = utils_concat(tmp, " 432 ");
-	tmp = utils_concat(tmp, nick);
-	tmp = utils_concat(tmp, " :Erroneus nickname\r\n");
-	querry->cmd = ft_strdup(buf);
-	lst_push_back(server->querries, querry);
+	query = query_new(this);
+	query->cmd = utils_concat(":%s 432 %s :Erroneus nickname",
+			IRC_NAME, name);
+	lst_push_back(server->querries, query);
 }

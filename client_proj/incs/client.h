@@ -80,6 +80,7 @@ void				client_exec_nick(t_client *this, char *cmd);
 void				client_exec_user(t_client *this, char *cmd);
 void				client_exec_connect(t_client *this, char *cmd);
 void				client_exec_join(t_client *this, char *cmd);
+void				client_exec_privmsg(t_client *this, char *cmd);
 void				client_exec_part(t_client *this, char *cmd);
 void				client_exec_quit(t_client *this, char *cmd);
 void				client_exec_topic(t_client *this, char *cmd);

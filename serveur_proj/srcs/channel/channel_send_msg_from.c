@@ -20,11 +20,11 @@ static bool		find_fn(void *data, void *context)
 
 static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
-	t_querry	*querry;
+	t_query	*query;
 
-	querry = querry_new(data);
-	querry->cmd = ft_strdup(ctx1);
-	lst_push_back(((t_server *)ctx2)->querries, querry);
+	query = query_new(data);
+	query->cmd = ft_strdup(ctx1);
+	lst_push_back(((t_server *)ctx2)->querries, query);
 }
 
 void			channel_send_msg_from(t_channel *this, t_user *user,
