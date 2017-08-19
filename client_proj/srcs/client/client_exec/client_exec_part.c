@@ -13,6 +13,10 @@
 #include "client.h"
 #include "array.h"
 
+/*
+** TODO: Message d'erreur en cas de non connection
+*/
+
 static char		*set_channel(char *buffer, char *tmp, char *chan)
 {
 	if (!chan)
@@ -44,7 +48,7 @@ void			client_exec_part(t_client *this, char *s)
 	char		*tmp;
 
 	if (!this->connected)
-		return ; // TODO: Message d'erreur
+		return ;
 	split = ft_strsplit(s, ' ');
 	if (!split)
 		return ;

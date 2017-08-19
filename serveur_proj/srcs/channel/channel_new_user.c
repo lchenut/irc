@@ -13,6 +13,11 @@
 #include "channel.h"
 #include "server.h"
 
+static bool		exists_fn(void *data, void *context)
+{
+	return (data == context);
+}
+
 static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
 	t_query	*query;
@@ -27,6 +32,8 @@ void			channel_new_user(t_channel *this, t_user *user,
 {
 	char		*cmd;
 
+	if (vector_exists(this->users, exists_fn, user))
+		return ;
 	vector_push_back(this->users, user);
 	cmd = utils_concat(":%s!%s@%s JOIN %s", user->nick, user->user, IRC_NAME,
 			this->name);

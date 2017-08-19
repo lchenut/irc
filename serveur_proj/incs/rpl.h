@@ -32,4 +32,7 @@ void			rpl_liststart(t_user *this, t_server *server);
 void			rpl_list(t_user *this, t_channel *channel, t_server *server);
 void			rpl_listend(t_user *this, t_server *server);
 
+void			rpl_namreply(t_user *this, t_channel *chan, t_server *server);
+void			rpl_endofnames(t_user *this, t_channel *chan, t_server *server);
+
 #endif

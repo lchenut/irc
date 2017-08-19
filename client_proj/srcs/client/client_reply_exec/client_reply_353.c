@@ -21,7 +21,9 @@ void			client_reply_353(t_client *this, t_rpl_cnt *content)
 	channel = visual_get_visual_channel(this->visual,
 			vector_get_first(content->params));
 	if (channel == NULL)
-		return ;
+	{
+		channel = vector_get_first(this->visual->channels);
+	}
 	users = ft_split(vector_get_last(content->params));
 	i = 0;
 	while (users[i])

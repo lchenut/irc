@@ -23,6 +23,8 @@ t_client			*client_new(void)
 	this->should_quit = false;
 	this->visual = visual_new();
 	this->command = command_new();
+	this->socket_buf = buffer_new();
+	this->flush_sock = false;
 	FD_ZERO(&(this->active_set));
 	FD_SET(0, &(this->active_set));
 	return (this);

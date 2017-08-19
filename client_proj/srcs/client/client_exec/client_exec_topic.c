@@ -12,6 +12,10 @@
 
 #include "client.h"
 
+/*
+** TODO: Message d'erreur en cas de non connection
+*/
+
 static void		get_chan_and_message(char *s, char **chan, char **message)
 {
 	while (s[0] && s[0] != ' ')
@@ -57,7 +61,7 @@ void			client_exec_topic(t_client *this, char *s)
 	char		*chan;
 
 	if (!this->connected)
-		return ; // TODO: Message d'erreur
+		return ;
 	chan = this->visual->current->name;
 	if (*chan != '#' && *chan != '&')
 		topic_two_args(this, s);

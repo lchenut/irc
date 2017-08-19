@@ -10,17 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "buffer.h"
+#include "client.h"
 
-t_buffer			*buffer_new(void)
+void			client_exec_privmsg_soft(t_client *this, char *cmd)
 {
-	t_buffer		*this;
+	t_visual_channel	*channel;
 
-	this = ft_calloc(sizeof(t_buffer));
-	this->buffer = ft_strnew(DFL_BUFFER_SIZE);
-	this->total = DFL_BUFFER_SIZE;
-	this->start = 0;
-	this->end = 0;
-	this->size = 0;
-	return (this);
+	channel = this->visual->current;
+	if (!ft_strcmp(channel->name, "HOME"))
+	{
+		visual_dump_date(this->visual, "HOME");
+		visual_print_red(this->visual, "Cannot send message in HOME", "HOME");
+		visual_print_newline(this->visual, "HOME");
+		return ;
+	}
+	client_write_sock(this, "PRIVMSG ");
+	client_write_sock(this, channel->name);
+	client_write_sock(this, " :");
+	client_write_sock(this, cmd);
+	client_write_sock(this, "\r\n");
+	visual_dump_date(this->visual, channel->name);
+	visual_print_green(this->visual, this->nick, channel->name);
+	visual_print_green(this->visual, ": ", channel->name);
+	visual_print_channel(this->visual, cmd, channel->name);
+	visual_print_newline(this->visual, channel->name);
 }

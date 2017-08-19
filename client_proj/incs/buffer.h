@@ -19,7 +19,6 @@
 
 typedef struct		s_buffer
 {
-	int				index;
 	char			*buffer;
 	size_t			total;
 	size_t			start;
@@ -27,7 +26,7 @@ typedef struct		s_buffer
 	size_t			size;
 }					t_buffer;
 
-t_buffer			*buffer_new(int fd);
+t_buffer			*buffer_new(void);
 void				buffer_del(t_buffer *this);
 
 int					buffer_read_from_fd(t_buffer *this, int fd);

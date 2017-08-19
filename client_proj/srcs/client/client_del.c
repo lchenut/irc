@@ -28,5 +28,7 @@ void			client_del(t_client *this)
 		visual_del(this->visual);
 	if (this->quit_msg)
 		ft_putendl(this->quit_msg);
+	if (this->socket_buf)
+		buffer_del(this->socket_buf);
 	free(this);
 }

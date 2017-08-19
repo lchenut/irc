@@ -35,7 +35,7 @@ typedef struct		s_query
 }					t_query;
 
 t_query			*query_new(t_user *user);
-void				query_del(t_query *this);
+void			query_del(t_query *this);
 
 typedef struct		s_server
 {

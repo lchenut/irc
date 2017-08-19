@@ -79,15 +79,22 @@ void			client_reply_366(t_client *this, t_rpl_cnt *content)
 	channel = visual_get_visual_channel(this->visual,
 			vector_get_first(content->params));
 	if (channel == NULL)
-		return ;
+		channel = vector_get_first(this->visual->channels);
+	if (channel->namreply)
+		free(channel->namreply);
+	channel->namreply = vector_get_first(content->params);
 	visual_dump_date(this->visual, channel->name);
 	visual_print_green(this->visual, "Users: ", channel->name);
-	visual_print_green(this->visual, channel->name, channel->name);
+	visual_print_green(this->visual, channel->namreply, channel->name);
 	visual_print_newline(this->visual, channel->name);
-	vector_sortq(channel->users, (int(*)(const void *, const void *))ft_strcmp);
-	vector_iter(channel->users, find_longest_string_fn,
-			&(channel->longest_users_name));
-	channel->current_line = 0;
-	vector_iter2(channel->users, iter_fn, channel, this->visual);
-	visual_print_newline(this->visual, channel->name);
+	if (vector_len(channel->users) > 0)
+	{
+		vector_sortq(channel->users,
+				(int(*)(const void *, const void *))ft_strcmp);
+		vector_iter(channel->users, find_longest_string_fn,
+				&(channel->longest_users_name));
+		channel->current_line = 0;
+		vector_iter2(channel->users, iter_fn, channel, this->visual);
+		visual_print_newline(this->visual, channel->name);
+	}
 }

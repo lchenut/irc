@@ -25,27 +25,51 @@ t_exec_cmd		g_exec_cmd[] =
 	{ "TOPIC", user_exec_topic },
 	{ "PRIVMSG", user_exec_privmsg },
 	{ "LIST", user_exec_list },
+	{ "NAMES", user_exec_names },
 	{ NULL, NULL }
 };
 
 static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
-	rpl_list(ctx1, data, ctx2);
+	// TODO: Si prive ou secret
+	rpl_namreply(ctx1, data, ctx2);
+	rpl_endofnames(ctx1, data, ctx2);
 }
 
-void			user_exec_list(t_user *this, t_cmd *cmd, t_server *server)
+static void		exec_names_with_args(t_user *this, t_cmd *cmd, t_server *server)
+{
+	t_channel	*channel;
+	char		**split;
+	int			index;
+
+	split = ft_strsplit(vector_get_first(cmd->params), ',');
+	index = 0;
+	while (split[index])
+	{
+		channel = server_get_channel_from_name(server, split[index]);
+		if (channel != NULL)
+		{
+			// TODO: Si prive ou secret
+			rpl_namreply(this, channel, server);
+			rpl_endofnames(this, channel, server);
+		}
+		index += 1;
+	}
+	array_del(split);
+}
+
+void			user_exec_names(t_user *this, t_cmd *cmd, t_server *server)
 {
 	if (!this->connected)
 		return ;
-	rpl_liststart(this, server);
 	if (vector_len(cmd->params) == 0)
 	{
 		vector_iter2(server->channels, iter_fn, this, server);
 	}
 	else
 	{
+		exec_names_with_args(this, cmd, server);
 	}
-	rpl_listend(this, server);
 }
 
 void			user_exec_command(t_user *this, char *line, t_server *server)

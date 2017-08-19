@@ -10,17 +10,47 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "buffer.h"
+#include "user.h"
+#include "server.h"
+#include "array.h"
 
-t_buffer			*buffer_new(void)
+static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
-	t_buffer		*this;
+	rpl_list(ctx1, data, ctx2);
+}
 
-	this = ft_calloc(sizeof(t_buffer));
-	this->buffer = ft_strnew(DFL_BUFFER_SIZE);
-	this->total = DFL_BUFFER_SIZE;
-	this->start = 0;
-	this->end = 0;
-	this->size = 0;
-	return (this);
+static void		exec_list_with_args(t_user *this, t_cmd *cmd, t_server *server)
+{
+	t_channel	*channel;
+	char		**split;
+	int			index;
+
+	split = ft_strsplit(vector_get_first(cmd->params), ',');
+	index = 0;
+	while (split[index])
+	{
+		channel = server_get_channel_from_name(server, split[index]);
+		if (channel != NULL)
+		{
+			rpl_list(this, channel, server);
+		}
+		index += 1;
+	}
+	array_del(split);
+}
+
+void			user_exec_list(t_user *this, t_cmd *cmd, t_server *server)
+{
+	if (!this->connected)
+		return ;
+	rpl_liststart(this, server);
+	if (vector_len(cmd->params) == 0)
+	{
+		vector_iter2(server->channels, iter_fn, this, server);
+	}
+	else
+	{
+		exec_list_with_args(this, cmd, server);
+	}
+	rpl_listend(this, server);
 }

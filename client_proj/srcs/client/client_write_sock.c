@@ -15,14 +15,9 @@
 void			client_write_sock(t_client *this, char *to_print)
 {
 	static char	buffer[512];
-	static int	index = -1;
+	static int	index = 0;
 	int			tp_index;
 
-	if (index == -1)
-	{
-		ft_bzero(buffer, sizeof(buffer));
-		index = 0;
-	}
 	tp_index = 0;
 	while (!((index == 510) || (to_print[tp_index] == 0) ||
 		(to_print[tp_index] == '\n' || (to_print[tp_index] == '\r' &&
@@ -37,7 +32,8 @@ void			client_write_sock(t_client *this, char *to_print)
 	{
 		buffer[index] = '\r';
 		buffer[index + 1] = '\n';
-		LOG_INFO("write(this->sock, \"%.*s\\r\\n\", %i);", index, buffer, index + 2);
+		LOG_INFO("write(this->sock, \"%.*s\\r\\n\", %i);",
+				index, buffer, index + 2);
 		write(this->sock, buffer, index + 2);
 		ft_bzero(buffer, sizeof(buffer));
 		index = 0;

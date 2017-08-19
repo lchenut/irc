@@ -30,7 +30,6 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 			break ;
 		index += 1;
 	}
-	//reply_dump(content);
 	rep = g_replies + index;
 	if (!rep->command)
 	{
@@ -43,22 +42,15 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 	(void)this;
 }
 
-void			client_read_from_socket(t_client *this, int fd)
+static void			client_pop_line(t_client *this)
 {
-	char		*rep;
-	t_rpl_cnt	*content;
+	char			*rep;
+	t_rpl_cnt		*content;
 
-	if (!this->socket_buf)
-		this->socket_buf = buffer_new(fd);
-	if (!buffer_read_from_fd(this->socket_buf, fd))
-	{
-		client_disconnect(this);
-		return ;
-	}
 	while ((rep = buffer_pop_line(this->socket_buf)))
 	{
 		if (rep && !ft_strchr(rep, '\n'))
-			buffer_flush_fd(this->socket_buf, fd);
+			this->flush_sock = true;
 		else
 		{
 			content = rpl_tokenizer_tokenize(rep);
@@ -70,4 +62,29 @@ void			client_read_from_socket(t_client *this, int fd)
 		}
 		free(rep);
 	}
+}
+
+void				client_read_from_socket(t_client *this, int fd)
+{
+	int				flush_ret;
+
+	if (this->flush_sock == true)
+	{
+		flush_ret = buffer_flush_fd(this->socket_buf, fd);
+		if (flush_ret <= 0)
+		{
+			client_disconnect(this);
+			return ;
+		}
+		else if (flush_ret == 1)
+			this->flush_sock = false;
+		else
+			return ;
+	}
+	if (!buffer_read_from_fd(this->socket_buf, fd))
+	{
+		client_disconnect(this);
+		return ;
+	}
+	client_pop_line(this);
 }

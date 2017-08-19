@@ -10,17 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "buffer.h"
+#include "rpl.h"
+#include "server.h"
+#include "user.h"
+#include "channel.h"
 
-t_buffer			*buffer_new(void)
+void		rpl_endofnames(t_user *this, t_channel *channel, t_server *server)
 {
-	t_buffer		*this;
+	t_query	*query;
 
-	this = ft_calloc(sizeof(t_buffer));
-	this->buffer = ft_strnew(DFL_BUFFER_SIZE);
-	this->total = DFL_BUFFER_SIZE;
-	this->start = 0;
-	this->end = 0;
-	this->size = 0;
-	return (this);
+	query = query_new(this);
+	query->cmd = utils_concat(":%s 366 %s %s :End of /NAMES list",
+			IRC_NAME, this->nick, channel->name);
+	lst_push_back(server->querries, query);
 }

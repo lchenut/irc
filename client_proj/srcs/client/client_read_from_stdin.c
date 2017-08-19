@@ -15,7 +15,7 @@
 void			client_read_from_stdin(t_client *this)
 {
 	char		c;
-	
+
 	c = visual_get_char(this->visual);
 	if (c == '\n')
 		client_exec(this);
@@ -24,8 +24,4 @@ void			client_read_from_stdin(t_client *this)
 		command_push(this->command, c);
 		client_print_chan(this, NULL, NULL, NULL);
 	}
-//	if (ft_isprint(c))
-//		LOG_DEBUG("%#hhx (%c)", c, c)
-//	else
-//		LOG_DEBUG("%#hhx", c)
 }

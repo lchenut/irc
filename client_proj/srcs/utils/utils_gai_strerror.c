@@ -81,6 +81,5 @@ char			*utils_gai_strerror(int error)
 		error = 0;
 	}
 	ft_strcat(g_gai_strerror_ret, g_gai_strerror[error]);
-	LOG_DEBUG("%s", g_gai_strerror_ret);
 	return (g_gai_strerror_ret);
 }

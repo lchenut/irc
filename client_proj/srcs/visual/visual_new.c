@@ -77,7 +77,6 @@ t_visual			*visual_new(void)
 	visual_init_pair();
 	this->channels = vector_new();
 	visual_channel_new(this, "HOME");
-	LOG_DEBUG("%zu", (size_t)BORDER_START_LINES);
 	this->current = vector_get_first(this->channels);
 	this->prompt = newwin(PROMPT_NB_LINES, PROMPT_NB_COLS,
 			PROMPT_START_LINES, PROMPT_START_COLS);

@@ -17,67 +17,72 @@
 ** TODO: Message d'erreur en cas de non connection
 */
 
-static char		*set_channel(char *buffer, char *tmp, char *chan)
+static char		*fill_buffer(char *start, char *end, char *channel)
 {
-	if (!chan)
-		return (tmp);
-	while (tmp - buffer < 510 && *chan)
+	int			index;
+
+	if (channel[0] == 0)
+		return (end);
+	if (start != end)
 	{
-		if ((tmp[-1] == ',' || tmp[-1] == ' ') &&
-				*chan != ',' && *chan != '#' && *chan != '&')
-		{
-			*tmp = '#';
-			tmp += 1;
-		}
-		if ((tmp[-1] == ',' || tmp[-1] == ' ') && *chan == ',')
-			;
-		else
-		{
-			*tmp = *chan;
-			tmp += 1;
-			chan += 1;
-		}
+		*end = ',';
+		end += 1;
 	}
-	return (tmp);
+	if (channel[0] != '#' && channel[0] != '&')
+	{
+		*end = '#';
+		end += 1;
+	}
+	index = 0;
+	while (end - start < 510 && channel[index])
+	{
+		*end = channel[index];
+		end += 1;
+		index += 1;
+	}
+	return (end);
 }
 
-static char		*set_key(char *buffer, char *tmp, char *key)
-{
-	if (!key)
-		return (tmp);
-	*tmp = ' ';
-	tmp += 1;
-	while (tmp - buffer < 510 && *key)
-	{
-		*tmp = *key;
-		tmp += 1;
-		key += 1;
-	}
-	return (tmp);
-}
-
-void			client_exec_join(t_client *this, char *s)
+static void		exec_list_with_arg(t_client *this, char *channels)
 {
 	char		**split;
+	int			index;
 	char		buffer[512];
 	char		*tmp;
 
-	if (!this->connected)
-		return ;
-	split = ft_strsplit(s, ' ');
+	split = ft_strsplit(channels, ',');
+	buffer[0] = 0;
+	tmp = buffer;
 	if (!split)
 		return ;
-	if (!split[0] || !split[1])
+	index = 0;
+	while (split[index])
 	{
-		array_del(split);
-		return ;
+		fill_buffer(buffer, tmp, split[index]);
+		index += 1;
 	}
-	tmp = utils_concat(buffer, "JOIN ");
-	tmp = set_channel(buffer, tmp, split[1]);
-	if (split[2])
-		tmp = set_key(buffer, tmp, split[2]);
 	*tmp = 0;
+	array_del(split);
+	client_write_sock(this, "LIST ");
 	client_write_sock(this, buffer);
 	client_write_sock(this, "\r\n");
-	array_del(split);
+}
+
+void			client_exec_list(t_client *this, char *cmd)
+{
+	char		**split;
+
+	if (!this->connected)
+		return ;
+	split = ft_strsplit(cmd, ' ');
+	if (!split)
+		return ;
+	if (split[0] && !split[1])
+	{
+		client_write_sock(this, "LIST\r\n");
+	}
+	else if (split[0] && split[1])
+	{
+		exec_list_with_arg(this, split[1]);
+	}
 }

@@ -22,28 +22,12 @@ static char		*get_first_word(char *cmd)
 	return (ft_strndup(cmd, len));
 }
 
-void			client_exec_privmsg_soft(t_client *this, char *cmd)
+static void		print_error_msg(t_client *this, char *first_word)
 {
-	t_visual_channel	*channel;
-	
-	channel = this->visual->current;
-	if (!ft_strcmp(channel->name, "HOME"))
-	{
-		visual_dump_date(this->visual, "HOME");
-		visual_print_red(this->visual, "Cannot send message in HOME", "HOME");
-		visual_print_newline(this->visual, "HOME");
-		return ;
-	}
-	client_write_sock(this, "PRIVMSG ");
-	client_write_sock(this, channel->name);
-	client_write_sock(this, " :");
-	client_write_sock(this, cmd);
-	client_write_sock(this, "\r\n");
-	visual_dump_date(this->visual, channel->name);
-	visual_print_green(this->visual, this->nick, channel->name);
-	visual_print_green(this->visual, ": ", channel->name);
-	visual_print_channel(this->visual, cmd, channel->name);
-	visual_print_newline(this->visual, channel->name);
+	visual_dump_date(this->visual, "HOME");
+	visual_print_red(this->visual, first_word, "HOME");
+	visual_print_red(this->visual, ": Unknown command", "HOME");
+	visual_print_newline(this->visual, "HOME");
 }
 
 void			client_exec(t_client *this)
@@ -52,7 +36,7 @@ void			client_exec(t_client *this)
 	char		*begin;
 	char		*first_word;
 	void		(*fn)(t_client *, char *);
-	
+
 	if (!(command = command_get_line(this->command)))
 		return ;
 	begin = command;
@@ -60,20 +44,12 @@ void			client_exec(t_client *this)
 		begin += 1;
 	command_history_push(this->command);
 	first_word = get_first_word(begin);
-	fn = client_get_execute_fn(first_word);
-	if (fn)
+	if ((fn = client_get_execute_fn(first_word)))
 		fn(this, command);
 	else if (first_word[0] == '/')
-	{
-		visual_dump_date(this->visual, "HOME");
-		visual_print_red(this->visual, first_word, "HOME");
-		visual_print_red(this->visual, ": Unknown command", "HOME");
-		visual_print_newline(this->visual, "HOME");
-	}
+		print_error_msg(this, first_word);
 	else if (this->connected && *command)
-	{
 		client_exec_privmsg_soft(this, command);
-	}
 	visual_clear_prompt(this->visual);
 	free(first_word);
 	free(command);

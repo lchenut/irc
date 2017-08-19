@@ -26,6 +26,15 @@ static char		*find_msg(char *msg)
 	return (msg);
 }
 
+static void		starting_query(t_client *this, char *chan)
+{
+	visual_channel_new(this->visual, chan);
+	visual_dump_date(this->visual, chan);
+	visual_print_bold(this->visual, "Starting query with ", chan);
+	visual_print_red(this->visual, chan, chan);
+	visual_print_newline(this->visual, chan);
+}
+
 static void		create_user_chan(t_client *this, char *channame, char *msg)
 {
 	t_visual_channel	*channel;
@@ -41,11 +50,7 @@ static void		create_user_chan(t_client *this, char *channame, char *msg)
 			channel = visual_get_visual_channel(this->visual, split[index]);
 			if (!channel)
 			{
-				visual_channel_new(this->visual, split[index]);
-				visual_dump_date(this->visual, split[index]);
-				visual_print_bold(this->visual, "Starting query with ", split[index]);
-				visual_print_red(this->visual, split[index], split[index]);
-				visual_print_newline(this->visual, split[index]);
+				starting_query(this, split[index]);
 			}
 			visual_dump_date(this->visual, split[index]);
 			visual_print_green(this->visual, this->nick, split[index]);

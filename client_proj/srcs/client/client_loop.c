@@ -18,16 +18,13 @@ void			client_loop(t_client *this)
 	fd_set		read_fd;
 	int			fd;
 
-	while (1)
+	while (!this->should_quit)
 	{
 		read_fd = this->active_set;
-		if (this->should_quit)
-			break ;
 		if (select(FD_SETSIZE, &read_fd, NULL, NULL, NULL) < 0)
 		{
 			if (errno == EINTR)
 				continue ;
-			ft_perror("select");
 			break ;
 		}
 		fd = 0;

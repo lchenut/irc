@@ -39,6 +39,7 @@ typedef struct		s_client
 	unsigned short	us_port;
 	char			*password;
 	int				sock;
+	bool			flush_sock;
 	fd_set			active_set;
 	t_buffer		*socket_buf;
 	t_visual		*visual;
@@ -81,8 +82,11 @@ void				client_exec_user(t_client *this, char *cmd);
 void				client_exec_connect(t_client *this, char *cmd);
 void				client_exec_join(t_client *this, char *cmd);
 void				client_exec_privmsg(t_client *this, char *cmd);
+void				client_exec_privmsg_soft(t_client *this, char *cmd);
 void				client_exec_part(t_client *this, char *cmd);
 void				client_exec_quit(t_client *this, char *cmd);
 void				client_exec_topic(t_client *this, char *cmd);
+void				client_exec_list(t_client *this, char *cmd);
+void				client_exec_names(t_client *this, char *cmd);
 
 #endif

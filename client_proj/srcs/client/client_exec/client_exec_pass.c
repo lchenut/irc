@@ -12,6 +12,10 @@
 
 #include "client.h"
 
+/*
+** TODO: Apparemment, il faut gerer les 'autres cas', a voir
+*/
+
 static void		client_exec_pass_register(t_client *this)
 {
 	char		*buffer;
@@ -47,5 +51,4 @@ void			client_exec_pass(t_client *this, char *s)
 		client_exec_pass_register(this);
 		return ;
 	}
-	// TODO: l'autre cas :3
 }
