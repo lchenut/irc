@@ -13,16 +13,18 @@
 #include "client.h"
 
 /*
-** srcs/reply/reply_dump.c                 : 29 [INFO-]: >nick: pouet<
-** srcs/reply/reply_dump.c                 : 30 [INFO-]: >user: pouet<
-** srcs/reply/reply_dump.c                 : 31 [INFO-]: >host: irc.tinyspeck.com<
-** srcs/reply/reply_dump.c                 : 33 [INFO-]: >command: JOIN<
-** srcs/reply/reply_dump.c                 : 17 [INFO-]: >param[0]: #chan1__<
+** srcs/reply/reply_dump.c         : 29 [INFO-]: >nick: pouet<
+** srcs/reply/reply_dump.c         : 30 [INFO-]: >user: pouet<
+** srcs/reply/reply_dump.c         : 31 [INFO-]: >host: irc.tinyspeck.com<
+** srcs/reply/reply_dump.c         : 33 [INFO-]: >command: JOIN<
+** srcs/reply/reply_dump.c         : 17 [INFO-]: >param[0]: #chan1__<
 */
 
 void			client_reply_join(t_client *this, t_rpl_cnt *content,
 		const t_reply *reply)
 {
+	t_visual_channel	*channel;
+
 	client_reply_pop_params(this, content);
 	if (content->nick && !ft_strcmp(content->nick, this->nick) &&
 			vector_get_first(content->params))
@@ -31,9 +33,8 @@ void			client_reply_join(t_client *this, t_rpl_cnt *content,
 	}
 	else
 	{
-		t_visual_channel	*channel;
-
-		channel = visual_get_visual_channel(this->visual, vector_get_first(content->params));
+		channel = visual_get_visual_channel(this->visual,
+				vector_get_first(content->params));
 		if (!channel)
 			return ;
 		visual_dump_date(this->visual, channel->name);
@@ -41,7 +42,8 @@ void			client_reply_join(t_client *this, t_rpl_cnt *content,
 		visual_print_red(this->visual, ": ", channel->name);
 		visual_print_channel(this->visual, "@", channel->name);
 		visual_print_channel(this->visual, content->nick, channel->name);
-		visual_print_channel(this->visual, " has joined the channel", channel->name);
+		visual_print_channel(this->visual,
+				" has joined the channel", channel->name);
 		visual_print_newline(this->visual, channel->name);
 	}
 	(void)reply;

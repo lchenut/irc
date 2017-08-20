@@ -16,12 +16,15 @@
 #include "channel.h"
 #include "xstdlib.h"
 
+/*
+** TODO: SI PRIVE OU SECRET...
+*/
+
 void			rpl_list(t_user *this, t_channel *channel, t_server *server)
 {
 	t_query		*query;
 	char		*nb;
 
-	// TODO: SI PRIVE OU SECRET...
 	query = query_new(this);
 	nb = ft_itoa(vector_len(channel->users));
 	query->cmd = utils_concat(":%s 322 %s %s %s %s :%s", IRC_NAME, this->nick,

@@ -10,27 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "server.h"
 
-/*
-** TODO: Trouver un moyen de tester le depart d'un autre pecnos sur un
-** serveur pour voir la reaction du serveur
-** et resoudre le probleme
-*/
-
-void			client_reply_part(t_client *this, t_rpl_cnt *content,
-		const t_reply *reply)
+static void	fd_write_set_init_fn(t_query *query, fd_set *set)
 {
-	client_reply_pop_params(this, content);
-	if (content->nick && !ft_strcmp(content->nick, this->nick) &&
-			vector_get_first(content->params))
+	if (!FD_ISSET(query->user->socket, set))
 	{
-		visual_channel_del_by_name(this->visual,
-				vector_get_first(content->params));
+		FD_SET(query->user->socket, set);
 	}
-	else
-	{
-		;
-	}
-	(void)reply;
+}
+
+void		server_init_fd_set(t_server *this)
+{
+	FD_ZERO(&this->read_set);
+	FD_ZERO(&this->write_set);
+	FD_SET(this->socket, &this->read_set);
+	vector_iter(this->users, (void(*)(void*, void*))user_fd_set,
+			&this->read_set);
+	lst_iter(this->querries, (void(*)(void*, void*))fd_write_set_init_fn,
+			&this->write_set);
 }

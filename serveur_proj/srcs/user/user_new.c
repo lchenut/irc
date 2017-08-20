@@ -20,6 +20,7 @@ t_user			*user_new(int socket, struct sockaddr_in6 *sin)
 	this->nick = NULL;
 	this->socket = socket;
 	this->buffer = buffer_new();
+	this->timeout = 2;
 	this->connected = false;
 	this->flush_sock = false;
 	ft_memmove(&this->sin, sin, sizeof(struct sockaddr_in6));

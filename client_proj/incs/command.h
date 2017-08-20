@@ -35,6 +35,9 @@ char				*command_get_line(t_command *this);
 char				*command_get_line_scaled(t_command *this);
 size_t				command_get_curspos(t_command *this);
 
+void				command_ctrl_mvmt(t_command *this, char buf);
+void				command_place_letter(t_command *this, char buf);
+
 void				command_move_left(t_command *this);
 void				command_move_right(t_command *this);
 void				command_del_left(t_command *this);

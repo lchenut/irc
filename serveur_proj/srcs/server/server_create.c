@@ -12,29 +12,38 @@
 
 #include "server.h"
 
-void			server_create(t_server *this)
+static bool		server_init_and_continue(t_server *this)
 {
-	struct sockaddr_in6	sin;
 	struct protoent		*pe;
 	int					opt;
 
 	if (!(pe = getprotobyname("tcp")))
 	{
 		this->err_msg = "getprotobyname";
-		return ;
+		return (false);
 	}
 	if ((this->socket = socket(PF_INET6, SOCK_STREAM, pe->p_proto)) == -1)
 	{
 		this->err_msg = "socket";
-		return ;
+		return (false);
 	}
 	opt = 1;
-	if (setsockopt(this->socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int)) == -1)
+	if (setsockopt(this->socket, SOL_SOCKET,
+				SO_REUSEADDR, &opt, sizeof(int)) == -1)
 	{
 		this->err_msg = "setsockopt";
 		close(this->socket);
-		return ;
+		return (false);
 	}
+	return (true);
+}
+
+void			server_create(t_server *this)
+{
+	struct sockaddr_in6	sin;
+
+	if (!server_init_and_continue(this))
+		return ;
 	ft_bzero(&sin, sizeof(struct sockaddr_in6));
 	sin.sin6_family = AF_INET6;
 	sin.sin6_addr = in6addr_any;

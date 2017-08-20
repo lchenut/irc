@@ -24,6 +24,7 @@ void			user_try_connect(t_user *this, t_server *server)
 		this->connected = true;
 	if (this->connected)
 	{
+		this->timeout = 2;
 		rpl_welcome(this, server);
 		rpl_yourhost(this, server);
 		rpl_created(this, server);

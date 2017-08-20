@@ -23,7 +23,7 @@ static t_ctrl_mvmt_data	*ctrlmv_new(char *sequence, void (*fn)(t_command *))
 	return (data);
 }
 
-t_vector			*data_ctrl_mvmt(void)
+t_vector				*data_ctrl_mvmt(void)
 {
 	static t_vector	*data = NULL;
 

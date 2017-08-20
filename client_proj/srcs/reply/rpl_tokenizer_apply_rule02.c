@@ -12,6 +12,26 @@
 
 #include "replies.h"
 
+static t_rpl_status	apply_rule02_end(t_rpl_tokenizer *this, t_rpl_type type)
+{
+	rpl_tokenizer_delimit(this, type);
+	return (RPL_STATUS_APPLIED);
+}
+
+static void			apply_rule02_user(t_rpl_tokenizer *this, t_rpl_type *type)
+{
+	rpl_tokenizer_delimit(this, RPL_TYPE_NICK);
+	this->index_input += 1;
+	*type = RPL_TYPE_USER;
+}
+
+static void			apply_rule02_host(t_rpl_tokenizer *this, t_rpl_type *type)
+{
+	rpl_tokenizer_delimit(this, *type);
+	this->index_input += 1;
+	*type = RPL_TYPE_HOST;
+}
+
 t_rpl_status		rpl_tokenizer_apply_rule02(t_rpl_tokenizer *this)
 {
 	char			c;
@@ -25,26 +45,13 @@ t_rpl_status		rpl_tokenizer_apply_rule02(t_rpl_tokenizer *this)
 		{
 			c = this->input[this->index_input];
 			if (c == ' ' || c == '\0')
-			{
-				rpl_tokenizer_delimit(this, type);
-				return (RPL_STATUS_APPLIED);
-			}
+				return (apply_rule02_end(this, type));
 			if (c == '!')
-			{
-				rpl_tokenizer_delimit(this, RPL_TYPE_NICK);
-				this->index_input += 1;
-				type = RPL_TYPE_USER;
-			}
+				apply_rule02_user(this, &type);
 			if (c == '@' && type == RPL_TYPE_USER)
-			{
-				rpl_tokenizer_delimit(this, type);
-				this->index_input += 1;
-				type = RPL_TYPE_HOST;
-			}
+				apply_rule02_host(this, &type);
 			else
-			{
 				rpl_tokenizer_addone(this);
-			}
 		}
 	}
 	return (RPL_STATUS_NOT_APPLIED);

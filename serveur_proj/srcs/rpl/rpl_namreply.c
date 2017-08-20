@@ -18,6 +18,8 @@
 
 static char		*rpl_namreply_concat(char *start, char *end, const char *s)
 {
+	if (start == end)
+		start[0] = 0;
 	if (end - start + ft_strlen(s) > 400)
 		return (NULL);
 	if (start != end)
@@ -43,7 +45,6 @@ void			rpl_namreply(t_user *this, t_channel *channel, t_server *server)
 	char		*tmp;
 	t_query		*query;
 
-	buf[0] = 0;
 	tmp = buf;
 	users = vector_copy(channel->users);
 	while ((user = vector_pop_back(users)))
@@ -54,7 +55,6 @@ void			rpl_namreply(t_user *this, t_channel *channel, t_server *server)
 			query->cmd = utils_concat(":%s 353 %s = %s :%s",
 					IRC_NAME, this->nick, channel->name, buf);
 			lst_push_back(server->querries, query);
-			buf[0] = 0;
 			tmp = rpl_namreply_concat(buf, buf, user->nick);
 		}
 	}

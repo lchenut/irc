@@ -16,7 +16,6 @@ void			client_reply_ping(t_client *this, t_rpl_cnt *content,
 		const t_reply *reply)
 {
 	client_write_sock(this, "PONG\r\n");
-	//write(this->sock, "PONG\r\n", 6);
 	(void)this;
 	(void)content;
 	(void)reply;

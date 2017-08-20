@@ -10,59 +10,51 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "user.h"
 #include "server.h"
-#include "cmd.h"
-#include "array.h"
-#include "channel.h"
 
-t_exec_cmd		g_exec_cmd[] =
+static void	server_read_loop(t_server *this, t_user *user)
 {
-	{ "NICK", user_exec_nick },
-	{ "USER", user_exec_user },
-	{ "PASS", user_exec_pass },
-	{ "JOIN", user_exec_join },
-	{ "TOPIC", user_exec_topic },
-	{ "PRIVMSG", user_exec_privmsg },
-	{ "LIST", user_exec_list },
-	{ "NAMES", user_exec_names },
-	{ "PONG", user_exec_pong },
-	{ NULL, NULL }
-};
+	char	*line;
 
-void			user_exec_pong(t_user *this, t_cmd *cmd, t_server *server)
-{
-	if (!this->connected)
-		return ;
-	this->timeout = 2;
-	(void)cmd;
-	(void)server;
-}
-
-void			user_exec_command(t_user *this, char *line, t_server *server)
-{
-	t_cmd		*cmd;
-	int			i;
-
-	printf("Recv from %s: %s", this->nick, line);
-	cmd = cmd_tokenizer_tokenize(line);
-	if (!cmd->command)
+	while ((line = buffer_pop_line(user->buffer)))
 	{
-		cmd_del(cmd);
-		return ;
-	}
-	i = 0;
-	while (g_exec_cmd[i].cmd)
-	{
-		if (!ft_strcmp(g_exec_cmd[i].cmd, cmd->command))
+		if (!ft_strchr(line, '\n'))
 		{
+			user->flush_sock = true;
 			break ;
 		}
-		i += 1;
+		else
+		{
+			user_exec_command(user, line, this);
+		}
 	}
-	if (g_exec_cmd[i].cmd)
+}
+
+void		server_read_from_user_socket(t_server *this, int csocket)
+{
+	t_user	*user;
+	int		flush_ret;
+
+	user = server_get_user_from_socket(this, csocket);
+	if (user == NULL)
+		return ;
+	if (user->flush_sock)
 	{
-		g_exec_cmd[i].fn(this, cmd, server);
+		flush_ret = buffer_flush_fd(user->buffer, user->socket);
+		if (flush_ret <= 0)
+		{
+			server_delete_user_from_socket(this, csocket);
+			return ;
+		}
+		else if (flush_ret == 1)
+			user->flush_sock = false;
+		else
+			return ;
 	}
-	cmd_del(cmd);
+	else if (!buffer_read_from_fd(user->buffer, user->socket))
+	{
+		server_delete_user_from_socket(this, csocket);
+		return ;
+	}
+	server_read_loop(this, user);
 }

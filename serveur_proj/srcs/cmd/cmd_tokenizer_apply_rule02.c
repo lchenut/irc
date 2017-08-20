@@ -12,6 +12,26 @@
 
 #include "cmd.h"
 
+static t_cmd_status	apply_rule02_end(t_cmd_tokenizer *this, t_cmd_type type)
+{
+	cmd_tokenizer_delimit(this, type);
+	return (CMD_STATUS_APPLIED);
+}
+
+static void			apply_rule02_user(t_cmd_tokenizer *this, t_cmd_type *type)
+{
+	cmd_tokenizer_delimit(this, CMD_TYPE_NICK);
+	this->index_input += 1;
+	*type = CMD_TYPE_USER;
+}
+
+static void			apply_rule02_host(t_cmd_tokenizer *this, t_cmd_type *type)
+{
+	cmd_tokenizer_delimit(this, *type);
+	this->index_input += 1;
+	*type = CMD_TYPE_HOST;
+}
+
 t_cmd_status		cmd_tokenizer_apply_rule02(t_cmd_tokenizer *this)
 {
 	char			c;
@@ -25,26 +45,13 @@ t_cmd_status		cmd_tokenizer_apply_rule02(t_cmd_tokenizer *this)
 		{
 			c = this->input[this->index_input];
 			if (c == ' ' || c == '\0')
-			{
-				cmd_tokenizer_delimit(this, type);
-				return (CMD_STATUS_APPLIED);
-			}
+				return (apply_rule02_end(this, type));
 			if (c == '!')
-			{
-				cmd_tokenizer_delimit(this, CMD_TYPE_NICK);
-				this->index_input += 1;
-				type = CMD_TYPE_USER;
-			}
+				apply_rule02_user(this, &type);
 			if (c == '@' && type == CMD_TYPE_USER)
-			{
-				cmd_tokenizer_delimit(this, type);
-				this->index_input += 1;
-				type = CMD_TYPE_HOST;
-			}
+				apply_rule02_host(this, &type);
 			else
-			{
 				cmd_tokenizer_addone(this);
-			}
 		}
 	}
 	return (CMD_STATUS_NOT_APPLIED);

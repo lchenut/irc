@@ -22,7 +22,8 @@ static char			*inner_delimit(t_cmd_tokenizer *this)
 	return (ret);
 }
 
-void				cmd_tokenizer_delimit(t_cmd_tokenizer *this, t_cmd_type type)
+void				cmd_tokenizer_delimit(t_cmd_tokenizer *this,
+		t_cmd_type type)
 {
 	char			*to_push;
 

@@ -22,7 +22,8 @@ static char			*inner_delimit(t_rpl_tokenizer *this)
 	return (ret);
 }
 
-void				rpl_tokenizer_delimit(t_rpl_tokenizer *this, t_rpl_type type)
+void				rpl_tokenizer_delimit(t_rpl_tokenizer *this,
+		t_rpl_type type)
 {
 	char			*to_push;
 

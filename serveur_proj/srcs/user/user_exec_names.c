@@ -16,53 +16,47 @@
 #include "array.h"
 #include "channel.h"
 
-t_exec_cmd		g_exec_cmd[] =
-{
-	{ "NICK", user_exec_nick },
-	{ "USER", user_exec_user },
-	{ "PASS", user_exec_pass },
-	{ "JOIN", user_exec_join },
-	{ "TOPIC", user_exec_topic },
-	{ "PRIVMSG", user_exec_privmsg },
-	{ "LIST", user_exec_list },
-	{ "NAMES", user_exec_names },
-	{ "PONG", user_exec_pong },
-	{ NULL, NULL }
-};
+/*
+** TODO: Si le channel est prive ou secret
+*/
 
-void			user_exec_pong(t_user *this, t_cmd *cmd, t_server *server)
+static void		iter_fn(void *data, void *ctx1, void *ctx2)
+{
+	rpl_namreply(ctx1, data, ctx2);
+	rpl_endofnames(ctx1, data, ctx2);
+}
+
+static void		exec_names_with_args(t_user *this, t_cmd *cmd, t_server *server)
+{
+	t_channel	*channel;
+	char		**split;
+	int			index;
+
+	split = ft_strsplit(vector_get_first(cmd->params), ',');
+	index = 0;
+	while (split[index])
+	{
+		channel = server_get_channel_from_name(server, split[index]);
+		if (channel != NULL)
+		{
+			rpl_namreply(this, channel, server);
+			rpl_endofnames(this, channel, server);
+		}
+		index += 1;
+	}
+	array_del(split);
+}
+
+void			user_exec_names(t_user *this, t_cmd *cmd, t_server *server)
 {
 	if (!this->connected)
 		return ;
-	this->timeout = 2;
-	(void)cmd;
-	(void)server;
-}
-
-void			user_exec_command(t_user *this, char *line, t_server *server)
-{
-	t_cmd		*cmd;
-	int			i;
-
-	printf("Recv from %s: %s", this->nick, line);
-	cmd = cmd_tokenizer_tokenize(line);
-	if (!cmd->command)
+	if (vector_len(cmd->params) == 0)
 	{
-		cmd_del(cmd);
-		return ;
+		vector_iter2(server->channels, iter_fn, this, server);
 	}
-	i = 0;
-	while (g_exec_cmd[i].cmd)
+	else
 	{
-		if (!ft_strcmp(g_exec_cmd[i].cmd, cmd->command))
-		{
-			break ;
-		}
-		i += 1;
+		exec_names_with_args(this, cmd, server);
 	}
-	if (g_exec_cmd[i].cmd)
-	{
-		g_exec_cmd[i].fn(this, cmd, server);
-	}
-	cmd_del(cmd);
 }

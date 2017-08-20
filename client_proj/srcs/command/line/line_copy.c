@@ -12,9 +12,9 @@
 
 #include "line.h"
 
-t_line          *line_copy(t_line *this)
+t_line			*line_copy(t_line *this)
 {
-	t_line      *copy;
+	t_line		*copy;
 
 	copy = ft_calloc(sizeof(t_line));
 	copy->copy = ft_strdup(this->line);

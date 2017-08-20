@@ -22,7 +22,6 @@ static bool	find_query(void *data, void *context)
 	return (((t_query *)data)->user == context);
 }
 
-
 static void	print_address_port(struct sockaddr_in6 *sin)
 {
 	char	address[INET6_ADDRSTRLEN];

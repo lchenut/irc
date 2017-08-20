@@ -13,20 +13,33 @@
 #include "user.h"
 #include "server.h"
 
-void			user_exec_topic(t_user *this, t_cmd *cmd, t_server *server)
+/*
+** TODO: Gerer le topic lock (mode)
+*/
+
+static t_channel	*exec_topic_get_channel(t_user *this, t_cmd *cmd,
+		t_server *server)
 {
-	t_channel	*channel;
-	char		*topic;
+	t_channel		*channel;
 
 	if (!this->connected)
-		return ;
+		return (NULL);
 	if (vector_len(cmd->params) == 0)
 	{
 		err_needmoreparams(this, cmd, server);
-		return ;
+		return (NULL);
 	}
-	channel = server_get_channel_from_name(server, vector_get_first(cmd->params));
-	if (channel == NULL)
+	channel = server_get_channel_from_name(server,
+			vector_get_first(cmd->params));
+	return (channel);
+}
+
+void				user_exec_topic(t_user *this, t_cmd *cmd, t_server *server)
+{
+	t_channel		*channel;
+	char			*topic;
+
+	if ((channel = exec_topic_get_channel(this, cmd, server)) == NULL)
 		return ;
 	if (!channel_is_user_joined(channel, this))
 	{
@@ -35,7 +48,6 @@ void			user_exec_topic(t_user *this, t_cmd *cmd, t_server *server)
 	}
 	if (vector_len(cmd->params) > 1)
 	{
-		// topiclock
 		topic = vector_get(cmd->params, 1);
 		if (channel->topic)
 			free(channel->topic);

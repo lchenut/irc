@@ -55,6 +55,11 @@ typedef struct		s_server
 t_server			*server_new(void);
 void				server_del(t_server *this);
 
+void				server_init_fd_set(t_server *this);
+void				server_accept(t_server *this);
+void				server_read_from_user_socket(t_server *this, int csocket);
+void				server_ping_timeout(t_server *this);
+
 void				server_create(t_server *this);
 
 void				server_loop(t_server *this);

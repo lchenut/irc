@@ -22,9 +22,6 @@ static t_argparser	*prog_argparser(void)
 			argparser_argument_new('p', "port", "Port (default: 6667)", 2));
 	argparser_add_argument(arg, argparser_argument_new('w', "password",
 				"Set a connection password", 2));
-//	argparser_add_argument(arg,
-//			argparser_argument_new('6', "ipv6",
-//				"Force server to use IPv6 addresses only", 0));
 	argparser_add_argument(arg,
 			argparser_argument_new('?', "help", "Show help option", 0));
 	return (arg);

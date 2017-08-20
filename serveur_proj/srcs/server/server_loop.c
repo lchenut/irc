@@ -10,106 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <time.h>
 #include "server.h"
 
-static void	lol_fn(t_query *query, fd_set *set)
+static void	read_fd_isset(t_server *this, int index)
 {
-	if (!FD_ISSET(query->user->socket, set))
+	if (index == this->socket)
 	{
-		FD_SET(query->user->socket, set);
+		server_accept(this);
 	}
-}
-
-void		server_init_fd_set(t_server *this)
-{
-	FD_ZERO(&this->read_set);
-	FD_ZERO(&this->write_set);
-	FD_SET(this->socket, &this->read_set);
-	vector_iter(this->users, (void(*)(void*, void*))user_fd_set,
-			&this->read_set);
-	lst_iter(this->querries, (void(*)(void*, void*))lol_fn,
-			&this->write_set);
-}
-
-static void	print_address_port(struct sockaddr_in6 *sin)
-{
-	char	address[INET6_ADDRSTRLEN];
-
-	if (!inet_ntop(AF_INET6, &sin->sin6_addr, address, sizeof(address)))
+	else
 	{
-		return ;
+		server_read_from_user_socket(this, index);
 	}
-	ft_putstr("\033[32maccept from ");
-	ft_putstr(address);
-	ft_putstr(" (port: ");
-	ft_putnbr(sin->sin6_port);
-	ft_putstr(")\033[0m\n");
-}
-
-void		server_accept(t_server *this)
-{
-	struct sockaddr_in6	sin;
-	unsigned			cslen;
-	int					fd;
-
-	bzero(&sin, sizeof(sin));
-	cslen = sizeof(sin);
-	fd = accept(this->socket, (struct sockaddr *)&sin, &cslen);
-	if (fd == -1)
-	{
-		ft_perror("accept");
-		return ;
-	}
-	print_address_port(&sin);
-	vector_push_back(this->users, user_new(fd, &sin));
-}
-
-void		server_read_from_user_socket(t_server *this, int csocket)
-{
-	t_user	*user;
-	char	*line;
-
-	user = server_get_user_from_socket(this, csocket);
-	if (user == NULL)
-		return ;
-	if (user->flush_sock)
-	{
-		int	flush_ret;
-
-		flush_ret = buffer_flush_fd(user->buffer, user->socket);
-		if (flush_ret <= 0)
-		{
-			server_delete_user_from_socket(this, csocket);
-			return ;
-		}
-		else if (flush_ret == 1)
-			user->flush_sock = false;
-		else
-			return ;
-	}
-	else if (!buffer_read_from_fd(user->buffer, user->socket))
-	{
-		server_delete_user_from_socket(this, csocket);
-		return ;
-	}
-	while ((line = buffer_pop_line(user->buffer)))
-	{
-		if (!ft_strchr(line, '\n'))
-		{
-			user->flush_sock = true;
-		}
-		else
-		{
-			user_exec_command(user, line, this);
-		}
-	}
-}
-
-static void	iter_fn(void *data, void *ctx1, void *ctx2)
-{
-	(void)data;
-	(void)ctx1;
-	(void)ctx2;
 }
 
 static bool	find_fn(void *data, void *context)
@@ -117,41 +30,64 @@ static bool	find_fn(void *data, void *context)
 	return (((t_query *)data)->user->socket == *((int *)context));
 }
 
+static void	write_fd_isset(t_server *this, int index)
+{
+	t_query	*query;
+
+	query = lst_find_pop(this->querries, find_fn, &index);
+	if (query)
+	{
+		printf("Send to %s: %s", query->user->nick, query->cmd);
+		ft_putstr_fd(query->cmd, query->user->socket);
+		query_del(query);
+	}
+}
+
+static int	server_select(t_server *this)
+{
+	struct timeval	tv;
+	time_t			t;
+	time_t			i;
+
+	t = time(NULL);
+	i = 1;
+	while ((t + i) % 60)
+	{
+		i += 1;
+	}
+	tv.tv_sec = i;
+	tv.tv_usec = 0;
+	return (select(FD_SETSIZE, &this->read_set, &this->write_set, NULL, &tv));
+}
+
 void		server_loop(t_server *this)
 {
 	int		index;
-	t_query	*query;
+	int		select_ret;
 
 	while (1)
 	{
 		server_init_fd_set(this);
-		select(FD_SETSIZE, &this->read_set, &this->write_set, NULL, NULL);
+		select_ret = server_select(this);
+		if (select_ret == -1)
+			break ;
+		if (select_ret == 0)
+		{
+			server_ping_timeout(this);
+			continue ;
+		}
 		index = 0;
 		while (index < FD_SETSIZE)
 		{
 			if (FD_ISSET(index, &this->read_set))
 			{
-				if (index == this->socket)
-				{
-					server_accept(this);
-				}
-				else
-				{
-					server_read_from_user_socket(this, index);
-				}
+				read_fd_isset(this, index);
 			}
 			if (FD_ISSET(index, &this->write_set))
 			{
-				query = lst_find_pop(this->querries, find_fn, &index);
-				if (query)
-				{
-					printf("Send to %s: %s", query->user->nick, query->cmd);
-					ft_putstr_fd(query->cmd, query->user->socket);
-					free(query);
-				}
+				write_fd_isset(this, index);
 			}
 			index += 1;
 		}
 	}
-	(void)iter_fn;
 }

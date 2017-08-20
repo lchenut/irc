@@ -37,9 +37,7 @@ void			client_reply_topic(t_client *this,
 			visual_print_bold(this->visual, topic, chan);
 		}
 		else
-		{
 			visual_print_red(this->visual, topic, chan);
-		}
 		visual_print_newline(this->visual, chan);
 	}
 	(void)reply;

@@ -25,6 +25,30 @@ static bool		exists_fn(void *data, void *context)
 	return (ft_strcmp(user_data->nick, user_context->nick) == 0);
 }
 
+static bool		user_exec_nick_error(t_user *this, t_cmd *cmd,
+		t_server *server, char *user_nick)
+{
+	if (!user_nick && vector_exists(server->users, exists_fn, this))
+	{
+		this->nick = user_nick;
+		err_nickcollision(this, vector_get_first(cmd->params), server);
+		return (true);
+	}
+	else if (vector_exists(server->users, exists_fn, this))
+	{
+		this->nick = user_nick;
+		err_nicknameinuse(this, vector_get_first(cmd->params), server);
+		return (true);
+	}
+	else if (!utils_is_valid_nickname(this->nick))
+	{
+		this->nick = user_nick;
+		err_erroneusnickname(this, vector_get_first(cmd->params), server);
+		return (true);
+	}
+	return (false);
+}
+
 void			user_exec_nick(t_user *this, t_cmd *cmd, t_server *server)
 {
 	char		*user_nick;
@@ -36,29 +60,13 @@ void			user_exec_nick(t_user *this, t_cmd *cmd, t_server *server)
 	}
 	user_nick = this->nick;
 	this->nick = vector_get_first(cmd->params);
-	if (!user_nick && vector_exists(server->users, exists_fn, this))
+	if (user_exec_nick_error(this, cmd, server, user_nick))
+		return ;
+	if (user_nick)
+		free(user_nick);
+	this->nick = ft_strdup(this->nick);
+	if (this->nick && this->user)
 	{
-		this->nick = user_nick;
-		err_nickcollision(this, vector_get_first(cmd->params), server);
-	}
-	else if (vector_exists(server->users, exists_fn, this))
-	{
-		this->nick = user_nick;
-		err_nicknameinuse(this, vector_get_first(cmd->params), server);
-	}
-	else if (!utils_is_valid_nickname(this->nick))
-	{
-		this->nick = user_nick;
-		err_erroneusnickname(this, vector_get_first(cmd->params), server);
-	}
-	else
-	{
-		if (user_nick)
-			free(user_nick);
-		this->nick = ft_strdup(this->nick);
-		if (this->nick && this->user)
-		{
-			user_try_connect(this, server);
-		}
+		user_try_connect(this, server);
 	}
 }
