@@ -34,6 +34,12 @@ typedef struct		s_query
 	char			*cmd;
 }					t_query;
 
+typedef struct		s_cmd_lst
+{
+	t_user			*user;
+	char			*line;
+}					t_cmd_lst;
+
 t_query			*query_new(t_user *user);
 void			query_del(t_query *this);
 
@@ -50,6 +56,7 @@ typedef struct		s_server
 	t_vector		*users;
 	t_vector		*channels;
 	t_lst			*querries;
+	t_lst			*cmd_lst;
 }					t_server;
 
 t_server			*server_new(void);
@@ -67,6 +74,9 @@ void				server_loop(t_server *this);
 t_user				*server_get_user_from_socket(t_server *this, int csocket);
 t_user				*server_get_user_from_nick(t_server *this, char *nick);
 void				server_delete_user_from_socket(t_server *this, int csocket);
+void				server_delete_user(t_server *this, t_user *user);
+void				server_clear_user_querries(t_server *this, t_user *user);
+void				server_clear_user_cmd_lst(t_server *this, t_user *user);
 
 t_channel			*server_create_or_get_channel(t_server *this,
 		char *name, char *key);

@@ -18,6 +18,10 @@ void			user_del(t_user *this)
 	{
 		free(this->nick);
 	}
+	if (this->user != NULL)
+	{
+		free(this->user);
+	}
 	buffer_del(this->buffer);
 	close(this->socket);
 	free(this);

@@ -43,5 +43,6 @@ t_cmd			*cmd_tokenizer_tokenize(const char *input)
 	}
 	ret = this->content;
 	this->content = NULL;
+	cmd_tokenizer_del(this);
 	return (ret);
 }

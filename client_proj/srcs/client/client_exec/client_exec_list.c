@@ -58,7 +58,7 @@ static void		exec_list_with_arg(t_client *this, char *channels)
 	index = 0;
 	while (split[index])
 	{
-		fill_buffer(buffer, tmp, split[index]);
+		tmp = fill_buffer(buffer, tmp, split[index]);
 		index += 1;
 	}
 	*tmp = 0;

@@ -11,23 +11,48 @@
 /* ************************************************************************** */
 
 #include "server.h"
+#include "user.h"
+
+static void	cmd_lst_push_back(t_server *this, t_user *user, char *line)
+{
+	t_cmd_lst	*cmd_lst;
+
+	cmd_lst = ft_calloc(sizeof(t_cmd_lst));
+	cmd_lst->user = user;
+	cmd_lst->line = ft_strdup(line);
+	lst_push_back(this->cmd_lst, cmd_lst);
+}
+
+static void	exec_loop(t_server *this, t_user *user)
+{
+	t_cmd_lst	*cmd_lst;
+
+	while ((cmd_lst = lst_pop_front(this->cmd_lst)))
+	{
+		user_exec_command(user, cmd_lst->line, this);
+		free(cmd_lst->line);
+		free(cmd_lst);
+	}
+}
 
 static void	server_read_loop(t_server *this, t_user *user)
 {
-	char	*line;
+	char			*line;
 
+	line = NULL;
 	while ((line = buffer_pop_line(user->buffer)))
 	{
 		if (!ft_strchr(line, '\n'))
 		{
 			user->flush_sock = true;
+			free(line);
 			break ;
 		}
-		else
-		{
-			user_exec_command(user, line, this);
-		}
+		user->msg_nb += 1;
+		cmd_lst_push_back(this, user, line);
+		free(line);
 	}
+	exec_loop(this, user);
 }
 
 void		server_read_from_user_socket(t_server *this, int csocket)
@@ -53,7 +78,7 @@ void		server_read_from_user_socket(t_server *this, int csocket)
 	}
 	else if (!buffer_read_from_fd(user->buffer, user->socket))
 	{
-		server_delete_user_from_socket(this, csocket);
+		user_exec_quit(user, NULL, this);
 		return ;
 	}
 	server_read_loop(this, user);

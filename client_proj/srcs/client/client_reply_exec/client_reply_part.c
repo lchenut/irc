@@ -12,15 +12,11 @@
 
 #include "client.h"
 
-/*
-** TODO: Trouver un moyen de tester le depart d'un autre pecnos sur un
-** serveur pour voir la reaction du serveur
-** et resoudre le probleme
-*/
-
 void			client_reply_part(t_client *this, t_rpl_cnt *content,
 		const t_reply *reply)
 {
+	t_visual_channel	*chan;
+
 	client_reply_pop_params(this, content);
 	if (content->nick && !ft_strcmp(content->nick, this->nick) &&
 			vector_get_first(content->params))
@@ -28,9 +24,20 @@ void			client_reply_part(t_client *this, t_rpl_cnt *content,
 		visual_channel_del_by_name(this->visual,
 				vector_get_first(content->params));
 	}
-	else
+	else if (content->nick)
 	{
-		;
+		chan = visual_get_visual_channel(this->visual,
+				vector_get_first(content->params));
+		if (!chan)
+			return ;
+		visual_dump_date(this->visual, chan->name);
+		visual_print_red(this->visual, content->nick, chan->name);
+		visual_print_red(this->visual, ": ", chan->name);
+		visual_print_channel(this->visual, "@", chan->name);
+		visual_print_channel(this->visual, content->nick, chan->name);
+		visual_print_channel(this->visual, " has left the channel", chan->name);
+		visual_print_newline(this->visual, chan->name);
 	}
+	visual_move_curspos(this->visual, command_get_curspos(this->command));
 	(void)reply;
 }

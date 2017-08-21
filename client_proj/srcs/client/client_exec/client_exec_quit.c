@@ -31,4 +31,5 @@ void			client_exec_quit(t_client *this, char *s)
 	}
 	client_write_sock(this, "\r\n");
 	client_disconnect(this);
+	this->should_quit = true;
 }

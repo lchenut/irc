@@ -21,7 +21,7 @@ void			visual_channel_del_by_name(t_visual *this, const char *chan)
 {
 	t_visual_channel	*channel;
 
-	if (ft_strcmp(chan, "HOME") == 0)
+	if (ft_strcmp(chan, " HOME ") == 0)
 		return ;
 	channel = vector_find_pop(this->channels, find_fn, (void *)chan);
 	if (channel == NULL)
@@ -32,5 +32,6 @@ void			visual_channel_del_by_name(t_visual *this, const char *chan)
 	}
 	redrawwin(this->current->chat);
 	wrefresh(this->current->chat);
+	visual_print_border(this);
 	visual_channel_del(channel);
 }

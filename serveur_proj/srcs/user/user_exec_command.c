@@ -27,16 +27,27 @@ t_exec_cmd		g_exec_cmd[] =
 	{ "LIST", user_exec_list },
 	{ "NAMES", user_exec_names },
 	{ "PONG", user_exec_pong },
+	{ "PART", user_exec_part },
+	{ "QUIT", user_exec_quit },
 	{ NULL, NULL }
 };
 
-void			user_exec_pong(t_user *this, t_cmd *cmd, t_server *server)
+static void		flood_timeout(t_user *this, t_server *server)
 {
-	if (!this->connected)
+	char		address[INET6_ADDRSTRLEN];
+
+	if (!inet_ntop(AF_INET6, &(this->sin.sin6_addr), address, sizeof(address)))
+	{
+		server_delete_user(server, this);
 		return ;
-	this->timeout = 2;
-	(void)cmd;
-	(void)server;
+	}
+	ft_putstr("\033[34;1mflood timeout from ");
+	ft_putstr(address);
+	ft_putstr(" (port: ");
+	ft_putnbr(this->sin.sin6_port);
+	ft_putstr(")\033[0m\n");
+	write(this->socket, "ERROR: Flood timeout\r\n", 22);
+	server_delete_user(server, this);
 }
 
 void			user_exec_command(t_user *this, char *line, t_server *server)
@@ -44,6 +55,11 @@ void			user_exec_command(t_user *this, char *line, t_server *server)
 	t_cmd		*cmd;
 	int			i;
 
+	if (this->msg_nb >= 30)
+	{
+		flood_timeout(this, server);
+		return ;
+	}
 	printf("Recv from %s: %s", this->nick, line);
 	cmd = cmd_tokenizer_tokenize(line);
 	if (!cmd->command)

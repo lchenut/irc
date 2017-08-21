@@ -10,31 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client_reply_exec.h"
 #include "client.h"
-#include "visual.h"
 
-static void		iter_fn(void *data, void *ctx)
+void			client_reply_quit(t_client *this, t_rpl_cnt *content,
+		const t_reply *reply)
 {
-	if (**(char **)ctx)
+	if (content->nick)
 	{
-		*(char **)ctx = ft_strjoinfree(*(char **)ctx, " ", 'l');
+		visual_dump_date(this->visual, " HOME ");
+		visual_print_red(this->visual, content->nick, " HOME ");
+		visual_print_channel(this->visual, " QUIT: ", " HOME ");
+		if (vector_len(content->params) > 0)
+		{
+			visual_print_channel(this->visual,
+					vector_get_first(content->params), " HOME ");
+		}
+		else
+		{
+			visual_print_channel(this->visual, "Disconnected", " HOME ");
+		}
+		visual_print_newline(this->visual, " HOME ");
 	}
-	*(char **)ctx = ft_strjoinfree(*(char **)ctx, data, 'l');
-}
-
-void			client_reply_print_all_params_to_home(t_client *this,
-		t_rpl_cnt *content, const t_reply *reply)
-{
-	char		*to_print;
-
-	client_reply_pop_params(this, content);
-	to_print = ft_strnew(0);
-	vector_iter(content->params, iter_fn, &to_print);
-	visual_dump_date(this->visual, " HOME ");
-	visual_print_channel(this->visual, to_print, " HOME ");
-	visual_print_newline(this->visual, " HOME ");
-	visual_move_curspos(this->visual, command_get_curspos(this->command));
-	free(to_print);
 	(void)reply;
 }

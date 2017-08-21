@@ -22,6 +22,8 @@ static bool		exists_fn(void *data, void *context)
 		return (false);
 	user_data = data;
 	user_context = context;
+	if (user_data->nick == NULL)
+		return (false);
 	return (ft_strcmp(user_data->nick, user_context->nick) == 0);
 }
 

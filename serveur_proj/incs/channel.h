@@ -44,6 +44,9 @@ void				channel_del(t_channel *this);
 
 void				channel_new_user(t_channel *this,
 		t_user *user, t_server *server);
+void				channel_del_user(t_channel *this, t_user *user);
+void				channel_user_part(t_channel *this, t_user *user,
+		t_server *server);
 
 bool				channel_is_user_joined(t_channel *this, t_user *user);
 

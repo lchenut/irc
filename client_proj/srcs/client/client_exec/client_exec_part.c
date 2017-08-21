@@ -17,49 +17,65 @@
 ** TODO: Message d'erreur en cas de non connection
 */
 
-static char		*set_channel(char *buffer, char *tmp, char *chan)
+static void	exec_part_current_channel(t_client *this)
 {
-	if (!chan)
-		return (tmp);
-	while (tmp - buffer < 510 && *chan)
+	char	*current;
+
+	current = this->visual->current->name;
+	if (*current == '#' || *current == '&')
 	{
-		if ((tmp[-1] == ',' || tmp[-1] == ' ') &&
-				*chan != ',' && *chan != '#' && *chan != '&')
-		{
-			*tmp = '#';
-			tmp += 1;
-		}
-		if ((tmp[-1] == ',' || tmp[-1] == ' ') && *chan == ',')
-			;
-		else
-		{
-			*tmp = *chan;
-			tmp += 1;
-			chan += 1;
-		}
+		client_write_sock(this, "PART ");
+		client_write_sock(this, current);
+		client_write_sock(this, "\r\n");
 	}
-	return (tmp);
+	else
+	{
+		client_write_sock(this, "PART\r\n");
+	}
 }
 
-void			client_exec_part(t_client *this, char *s)
+static void	exec_part_args(t_client *this, char *s)
 {
-	char		**split;
-	char		buffer[512];
-	char		*tmp;
+	char	buffer[512];
+	size_t	index;
 
+	client_write_sock(this, "PART ");
+	while (*s)
+	{
+		index = 0;
+		while (*s && *s == ',')
+			s += 1;
+		while (s[index] && s[index] != ',')
+		{
+			buffer[index] = s[index];
+			index += 1;
+		}
+		buffer[index] = 0;
+		if (buffer[0] && buffer[0] != '#' && buffer[0] != '&')
+			client_write_sock(this, "#");
+		if (buffer[0])
+			client_write_sock(this, buffer);
+		if (buffer[0] && s[index])
+			client_write_sock(this, ",");
+		s += index;
+	}
+	client_write_sock(this, "\r\n");
+}
+
+void		client_exec_part(t_client *this, char *s)
+{
 	if (!this->connected)
 		return ;
-	split = ft_strsplit(s, ' ');
-	if (!split)
-		return ;
-	if (!split[0] || !split[1])
+	while (*s && *s != ' ')
+		s += 1;
+	while (*s && *s == ' ')
+		s += 1;
+	if (!*s)
 	{
-		array_del(split);
-		return ;
+		exec_part_current_channel(this);
 	}
-	tmp = utils_concat(buffer, "PART ");
-	tmp = set_channel(buffer, tmp, split[1]);
-	client_write_sock(this, buffer);
-	client_write_sock(this, "\r\n");
-	array_del(split);
+	else
+	{
+		exec_part_args(this, s);
+	}
 }

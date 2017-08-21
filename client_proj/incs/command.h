@@ -48,6 +48,7 @@ void				command_history_up(t_command *this);
 void				command_history_down(t_command *this);
 void				command_tabulation(t_command *this);
 void				command_shift_tabulation(t_command *this);
+void				command_ctrl_d(t_command *this);
 
 void				command_history_push(t_command *this);
 

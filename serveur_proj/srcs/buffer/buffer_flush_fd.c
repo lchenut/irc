@@ -26,8 +26,10 @@ int				buffer_flush_fd(t_buffer *this, int fd)
 	if (this->buffer[index] == '\n')
 	{
 		index += 1;
-		this->start = ((size_t)read_ret == this->total &&
-				(size_t)read_ret == index) ? 0 : read_ret;
+		if (read_ret == (int)this->total && read_ret == (int)index)
+			this->start = 0;
+		else
+			this->start = index;
 		this->end = ((size_t)read_ret == this->total) ? 0 : read_ret;
 		this->size = read_ret - index;
 		return (1);

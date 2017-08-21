@@ -17,11 +17,6 @@ static bool	find_user(void *data, void *context)
 	return (((t_user *)data)->socket == *(int *)context);
 }
 
-static bool	find_query(void *data, void *context)
-{
-	return (((t_query *)data)->user == context);
-}
-
 static void	print_address_port(struct sockaddr_in6 *sin)
 {
 	char	address[INET6_ADDRSTRLEN];
@@ -47,8 +42,10 @@ void		server_delete_user_from_socket(t_server *this, int csocket)
 	if (user)
 	{
 		print_address_port(&user->sin);
-		lst_clear_if(this->querries, (void(*)(void *))query_del,
-				find_query, user);
+		server_clear_user_querries(this, user);
+		server_clear_user_cmd_lst(this, user);
+		vector_iter(this->channels,
+				(void(*)(void *, void *))channel_del_user, user);
 		user_del(user);
 	}
 }

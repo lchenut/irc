@@ -30,6 +30,7 @@ typedef struct			s_user
 	char				*user;
 	char				*pass;
 	int					timeout;
+	int					msg_nb;
 	int					socket;
 	bool				connected;
 	bool				flush_sock;
@@ -64,15 +65,16 @@ void            user_exec_privmsg(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_list(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_names(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_pong(t_user *this, t_cmd *cmd, t_server *server);
+void            user_exec_part(t_user *this, t_cmd *cmd, t_server *server);
+void            user_exec_quit(t_user *this, t_cmd *cmd, t_server *server);
 
 void			err_norecipient(t_user *this, char *cmd, t_server *server);
 void			err_notextsend(t_user *this, t_server *server);
 void			err_toomanytargets(t_user *this, char *dest, t_server *server);
 void			err_cannotsendtochan(t_user *this, char *s, t_server *server);
 
-
-void			err_nosuchnick(t_user *this, char *chan, t_server *server);
 void			err_nosuchchannel(t_user *this, char *chan, t_server *server);
+void			err_nosuchnick(t_user *this, char *nick, t_server *server);
 void			err_notonchannel(t_user *this, char *chan, t_server *server);
 void			err_channelisfull(t_user *this, char *chan, t_server *server);
 void			err_inviteonlychan(t_user *this, char *chan, t_server *server);

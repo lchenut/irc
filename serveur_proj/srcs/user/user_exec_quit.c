@@ -10,31 +10,39 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client_reply_exec.h"
-#include "client.h"
-#include "visual.h"
+#include "user.h"
+#include "server.h"
+#include "cmd.h"
 
-static void		iter_fn(void *data, void *ctx)
+static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
-	if (**(char **)ctx)
-	{
-		*(char **)ctx = ft_strjoinfree(*(char **)ctx, " ", 'l');
-	}
-	*(char **)ctx = ft_strjoinfree(*(char **)ctx, data, 'l');
+	t_query		*query;
+
+	query = query_new(data);
+	query->cmd = ft_strdup(ctx1);
+	lst_push_back(((t_server *)ctx2)->querries, query);
 }
 
-void			client_reply_print_all_params_to_home(t_client *this,
-		t_rpl_cnt *content, const t_reply *reply)
+void			user_exec_quit(t_user *this, t_cmd *cmd, t_server *server)
 {
-	char		*to_print;
+	char		*to_send;
 
-	client_reply_pop_params(this, content);
-	to_print = ft_strnew(0);
-	vector_iter(content->params, iter_fn, &to_print);
-	visual_dump_date(this->visual, " HOME ");
-	visual_print_channel(this->visual, to_print, " HOME ");
-	visual_print_newline(this->visual, " HOME ");
-	visual_move_curspos(this->visual, command_get_curspos(this->command));
-	free(to_print);
-	(void)reply;
+	if (!this->connected)
+	{
+		server_delete_user_from_socket(server, this->socket);
+		return ;
+	}
+	if (cmd && vector_len(cmd->params) > 0)
+	{
+		to_send = utils_concat(":%s!%s@%s QUIT :%s", this->nick, this->user,
+				IRC_NAME, vector_get_first(cmd->params));
+	}
+	else
+	{
+		to_send = utils_concat(":%s!%s@%s QUIT :Disconnected",
+			this->nick, this->user, IRC_NAME);
+	}
+	vector_iter2(server->users, iter_fn, to_send, server);
+	free(to_send);
+	server_delete_user_from_socket(server, this->socket);
 }

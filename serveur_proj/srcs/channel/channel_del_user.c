@@ -10,31 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client_reply_exec.h"
-#include "client.h"
-#include "visual.h"
+#include "channel.h"
 
-static void		iter_fn(void *data, void *ctx)
+static bool	find_fn(void *data, void *context)
 {
-	if (**(char **)ctx)
-	{
-		*(char **)ctx = ft_strjoinfree(*(char **)ctx, " ", 'l');
-	}
-	*(char **)ctx = ft_strjoinfree(*(char **)ctx, data, 'l');
+	return (data == context);
 }
 
-void			client_reply_print_all_params_to_home(t_client *this,
-		t_rpl_cnt *content, const t_reply *reply)
+void		channel_del_user(t_channel *this, t_user *user)
 {
-	char		*to_print;
-
-	client_reply_pop_params(this, content);
-	to_print = ft_strnew(0);
-	vector_iter(content->params, iter_fn, &to_print);
-	visual_dump_date(this->visual, " HOME ");
-	visual_print_channel(this->visual, to_print, " HOME ");
-	visual_print_newline(this->visual, " HOME ");
-	visual_move_curspos(this->visual, command_get_curspos(this->command));
-	free(to_print);
-	(void)reply;
+	vector_find_pop(this->users, find_fn, user);
 }

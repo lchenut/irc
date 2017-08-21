@@ -19,7 +19,7 @@ static bool				insert_fn(void *data, void *ctx)
 
 	current = data;
 	insert = ctx;
-	if (!ft_strcmp(current->name, "HOME"))
+	if (!ft_strcmp(current->name, " HOME "))
 		return (false);
 	return (ft_strcmp(current->name, insert->name) > 0);
 }

@@ -24,5 +24,6 @@ t_server		*server_new(void)
 	this->users = vector_new();
 	this->channels = vector_new();
 	this->querries = lst_new();
+	this->cmd_lst = lst_new();
 	return (this);
 }

@@ -10,31 +10,35 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client_reply_exec.h"
 #include "client.h"
-#include "visual.h"
 
-static void		iter_fn(void *data, void *ctx)
+void			client_reply_401(t_client *this, t_rpl_cnt *content,
+		const t_reply *reply)
 {
-	if (**(char **)ctx)
-	{
-		*(char **)ctx = ft_strjoinfree(*(char **)ctx, " ", 'l');
-	}
-	*(char **)ctx = ft_strjoinfree(*(char **)ctx, data, 'l');
-}
-
-void			client_reply_print_all_params_to_home(t_client *this,
-		t_rpl_cnt *content, const t_reply *reply)
-{
-	char		*to_print;
+	t_visual_channel	*channel;
 
 	client_reply_pop_params(this, content);
-	to_print = ft_strnew(0);
-	vector_iter(content->params, iter_fn, &to_print);
-	visual_dump_date(this->visual, " HOME ");
-	visual_print_channel(this->visual, to_print, " HOME ");
-	visual_print_newline(this->visual, " HOME ");
+	channel = visual_get_visual_channel(this->visual,
+			vector_get_first(content->params));
+	if (channel == NULL)
+	{
+		channel = vector_get_first(this->visual->channels);
+		visual_dump_date(this->visual, channel->name);
+		visual_print_channel(this->visual, vector_get_last(content->params),
+				channel->name);
+		visual_print_newline(this->visual, channel->name);
+	}
+	else
+	{
+		visual_dump_date(this->visual, channel->name);
+		visual_print_channel(this->visual, vector_get_last(content->params),
+				channel->name);
+		visual_print_newline(this->visual, channel->name);
+		visual_dump_date(this->visual, channel->name);
+		visual_print_channel(this->visual, "You should leave the channel "
+				"using CTRL-D", channel->name);
+		visual_print_newline(this->visual, channel->name);
+	}
 	visual_move_curspos(this->visual, command_get_curspos(this->command));
-	free(to_print);
 	(void)reply;
 }

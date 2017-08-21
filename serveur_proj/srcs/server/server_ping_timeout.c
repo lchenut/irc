@@ -23,6 +23,7 @@ static void		exec_ping(t_user *this, t_server *server)
 
 static void		iter_fn(void *data, void *context)
 {
+	((t_user *)data)->msg_nb = 0;
 	if (((t_user *)data)->connected && ((t_user *)data)->timeout == 2)
 	{
 		exec_ping(data, context);
@@ -35,7 +36,7 @@ static bool		find_fn(void *data)
 	return (((t_user *)data)->timeout == 0);
 }
 
-static void		del_fn(void *data)
+static void		iter_del_fn(void *data, void *context)
 {
 	t_user		*user;
 	char		address[INET6_ADDRSTRLEN];
@@ -43,7 +44,7 @@ static void		del_fn(void *data)
 	user = data;
 	if (!inet_ntop(AF_INET6, &(user->sin.sin6_addr), address, sizeof(address)))
 	{
-		user_del(user);
+		server_delete_user(context, user);
 		return ;
 	}
 	if (!user->connected)
@@ -60,11 +61,15 @@ static void		del_fn(void *data)
 	ft_putstr(" (port: ");
 	ft_putnbr(user->sin.sin6_port);
 	ft_putstr(")\033[0m\n");
-	user_del(user);
+	server_delete_user(context, user);
 }
 
 void			server_ping_timeout(t_server *this)
 {
+	t_vector	*user_to_del;
+
 	vector_iter(this->users, iter_fn, this);
-	vector_del(vector_find0_all_pop(this->users, find_fn), del_fn);
+	user_to_del = vector_find0_all_pop(this->users, find_fn);
+	vector_iter(user_to_del, iter_del_fn, this);
+	vector_del(user_to_del, NULL);
 }

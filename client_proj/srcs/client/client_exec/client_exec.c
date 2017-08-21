@@ -24,10 +24,10 @@ static char		*get_first_word(char *cmd)
 
 static void		print_error_msg(t_client *this, char *first_word)
 {
-	visual_dump_date(this->visual, "HOME");
-	visual_print_red(this->visual, first_word, "HOME");
-	visual_print_red(this->visual, ": Unknown command", "HOME");
-	visual_print_newline(this->visual, "HOME");
+	visual_dump_date(this->visual, " HOME ");
+	visual_print_red(this->visual, first_word, " HOME ");
+	visual_print_red(this->visual, ": Unknown command", " HOME ");
+	visual_print_newline(this->visual, " HOME ");
 }
 
 void			client_exec(t_client *this)
