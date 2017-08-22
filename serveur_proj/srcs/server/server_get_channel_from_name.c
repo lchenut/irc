@@ -19,7 +19,7 @@ static bool			find_fn(void *data, void *context)
 
 	chan = ((t_channel *)data)->name;
 	name = context;
-	while (*chan && *name)
+	while (*chan || *name)
 	{
 		if (ft_toupper(*chan) != ft_toupper(*name))
 			return (false);

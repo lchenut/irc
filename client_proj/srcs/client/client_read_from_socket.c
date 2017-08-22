@@ -59,6 +59,7 @@ static void			client_pop_line(t_client *this)
 			LOG_INFO("%s", rep);
 			LOG_INFO("======================");
 			client_read(this, content);
+			reply_del(content);
 		}
 		free(rep);
 	}

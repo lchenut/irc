@@ -14,6 +14,7 @@
 
 void			client_exec_quit(t_client *this, char *s)
 {
+	this->should_quit = true;
 	if (!this->connected)
 		return ;
 	while (s[0] && s[0] != ' ')
@@ -31,5 +32,4 @@ void			client_exec_quit(t_client *this, char *s)
 	}
 	client_write_sock(this, "\r\n");
 	client_disconnect(this);
-	this->should_quit = true;
 }

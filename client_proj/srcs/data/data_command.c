@@ -41,7 +41,7 @@ static void				data_command_push01(t_vector *data)
 	vector_push_back(data, cmd_new("/list", "LIST", client_exec_list));
 	vector_push_back(data, cmd_new("/mode", "MODE", NULL));
 	vector_push_back(data, cmd_new("/names", "NAMES", client_exec_names));
-	vector_push_back(data, cmd_new("/nick", "NICK", NULL));
+	vector_push_back(data, cmd_new("/nick", "NICK", client_exec_nick));
 	vector_push_back(data, cmd_new("/notice", "NOTICE", NULL));
 	vector_push_back(data, cmd_new("/oper", "OPER", NULL));
 	vector_push_back(data, cmd_new("/part", "PART", client_exec_part));

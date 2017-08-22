@@ -41,6 +41,11 @@ static void		topic_two_args(t_client *this, char *s)
 	char		*message;
 
 	get_chan_and_message(s, &chan, &message);
+	if (!*chan)
+	{
+		client_write_sock(this, "TOPIC\r\n");
+		return ;
+	}
 	if (*chan != '#' && *chan != '&')
 	{
 		chan -= 1;

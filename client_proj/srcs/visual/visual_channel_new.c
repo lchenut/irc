@@ -39,4 +39,5 @@ void					visual_channel_new(t_visual *this, const char *name)
 	channel->users = vector_new();
 	scrollok(channel->chat, true);
 	vector_insert_when_match(this->channels, channel, insert_fn);
+	this->index = vector_get_index(this->channels, this->current);
 }

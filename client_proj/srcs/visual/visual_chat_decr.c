@@ -14,6 +14,10 @@
 
 void			visual_chat_decr(t_visual *this)
 {
+	if (vector_len(this->channels) == 1)
+	{
+		return ;
+	}
 	if (this->index == 0)
 	{
 		this->index = vector_len(this->channels) - 1;

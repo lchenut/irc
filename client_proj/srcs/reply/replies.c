@@ -154,7 +154,7 @@ const t_reply	g_replies[] =
 	{ false, "LIST", NULL, 2, client_reply_exec_default },
 	{ false, "MODE", NULL, 10, client_reply_exec_default },
 	{ false, "NAMES", NULL, 1, client_reply_exec_default },
-	{ false, "NICK", NULL, 1, client_reply_exec_default },
+	{ false, "NICK", NULL, 1, client_reply_nick },
 	{ false, "NOTICE", NULL, 2, client_reply_exec_default },
 	{ false, "OPER", NULL, 2, client_reply_exec_default },
 	{ false, "PART", NULL, 2, client_reply_part },

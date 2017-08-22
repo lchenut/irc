@@ -10,24 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "visual.h"
 
-void			client_print_chan(t_client *this,
-		void (*fn)(t_visual *, char *, char *), char *msg, char *chan)
+static int		sort_fn(const void *data1, const void *data2)
 {
-	char		*cmd;
+	if (!ft_strcmp(((t_visual_channel *)data1)->name, " HOME "))
+		return (-1);
+	if (!ft_strcmp(((t_visual_channel *)data2)->name, " HOME "))
+		return (1);
+	return (ft_strcmp(((t_visual_channel *)data1)->name,
+				((t_visual_channel *)data2)->name));
+}
 
-	if (fn != NULL)
+void			visual_channel_rename(t_visual *this, char *old, char *new)
+{
+	t_visual_channel	*channel;
+
+	channel = visual_get_visual_channel(this, old);
+	if (channel == NULL)
 	{
-		visual_dump_date(this->visual, chan);
-		fn(this->visual, msg, chan);
-		visual_print_newline(this->visual, chan);
+		return ;
 	}
-	if (this->command)
-	{
-		cmd = command_get_line_scaled(this->command);
-		visual_print_prompt(this->visual, cmd);
-		free(cmd);
-		visual_move_curspos(this->visual, command_get_curspos(this->command));
-	}
+	free(channel->name);
+	channel->name = ft_strdup(new);
+	vector_sortq(this->channels, sort_fn);
+	this->index = vector_get_index(this->channels, this->current);
 }

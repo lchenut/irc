@@ -30,5 +30,9 @@ void			client_del(t_client *this)
 		ft_putendl(this->quit_msg);
 	if (this->socket_buf)
 		buffer_del(this->socket_buf);
+	if (this->command)
+		command_del(this->command);
+	if (this->nick)
+		free(this->nick);
 	free(this);
 }

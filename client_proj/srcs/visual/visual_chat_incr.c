@@ -14,6 +14,10 @@
 
 void			visual_chat_incr(t_visual *this)
 {
+	if (vector_len(this->channels) == 1)
+	{
+		return ;
+	}
 	this->index = (this->index + 1) % vector_len(this->channels);
 	this->current = vector_get(this->channels, this->index);
 	visual_print_border(this);

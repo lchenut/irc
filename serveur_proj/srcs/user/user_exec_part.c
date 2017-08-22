@@ -13,6 +13,7 @@
 #include "user.h"
 #include "server.h"
 #include "cmd.h"
+#include "array.h"
 
 void			user_exec_part(t_user *this, t_cmd *cmd, t_server *server)
 {

@@ -31,6 +31,10 @@ static t_channel	*exec_topic_get_channel(t_user *this, t_cmd *cmd,
 	}
 	channel = server_get_channel_from_name(server,
 			vector_get_first(cmd->params));
+	if (channel == NULL)
+	{
+		err_nosuchchannel(this, vector_get_first(cmd->params), server);
+	}
 	return (channel);
 }
 

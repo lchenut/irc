@@ -24,6 +24,7 @@ void	client_reply_exec_default(t_client *t, t_rpl_cnt *c, const t_reply *r);
 void	client_reply_print_all_params_to_home(t_client *t,
 		t_rpl_cnt *c, const t_reply *r);
 
+void	client_reply_nick(t_client *t, t_rpl_cnt *c, const t_reply *r);
 void	client_reply_ping(t_client *t, t_rpl_cnt *c, const t_reply *r);
 void	client_reply_join(t_client *t, t_rpl_cnt *c, const t_reply *r);
 void	client_reply_part(t_client *t, t_rpl_cnt *c, const t_reply *r);

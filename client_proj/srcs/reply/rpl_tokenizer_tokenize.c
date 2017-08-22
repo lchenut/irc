@@ -43,5 +43,6 @@ t_rpl_cnt			*rpl_tokenizer_tokenize(const char *input)
 	}
 	ret = this->content;
 	this->content = NULL;
+	rpl_tokenizer_del(this);
 	return (ret);
 }

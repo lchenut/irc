@@ -43,6 +43,28 @@ static void		client_exec_nick_register(t_client *this)
 	client_write_sock(this, "\r\n");
 }
 
+static void		client_exec_change_nick(t_client *this, char *s)
+{
+	char		*new_nick;
+
+	while (*s && *s != ' ')
+		s += 1;
+	while (*s && *s == ' ')
+		s += 1;
+	if (!*s)
+	{
+		client_write_sock(this, "NICK\r\n");
+		return ;
+	}
+	new_nick = s;
+	while (*s && *s != ' ')
+		s += 1;
+	s = 0;
+	client_write_sock(this, "NICK ");
+	client_write_sock(this, new_nick);
+	client_write_sock(this, "\r\n");
+}
+
 void			client_exec_nick(t_client *this, char *s)
 {
 	struct passwd	*pw;
@@ -55,5 +77,9 @@ void			client_exec_nick(t_client *this, char *s)
 			client_set_nick(this, (pw) ? pw->pw_name : "unknown");
 		}
 		client_exec_nick_register(this);
+	}
+	else
+	{
+		client_exec_change_nick(this, s);
 	}
 }

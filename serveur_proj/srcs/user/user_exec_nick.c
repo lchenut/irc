@@ -51,6 +51,26 @@ static bool		user_exec_nick_error(t_user *this, t_cmd *cmd,
 	return (false);
 }
 
+static void		iter_fn(void *data, void *ctx1, void *ctx2)
+{
+	t_query		*query;
+
+	query = query_new(data);
+	query->cmd = ft_strdup(ctx1);
+	lst_push_back(((t_server *)ctx2)->querries, query);
+}
+
+static void		user_change_nick(t_user *this, t_server *server, char *old)
+{
+	char		*to_send;
+
+	if (!ft_strcmp(this->nick, old))
+		return ;
+	to_send = utils_concat(":%s!%s@%s NICK %s", old, this->user,
+			IRC_NAME, this->nick);
+	vector_iter2(server->users, iter_fn, to_send, server);
+}
+
 void			user_exec_nick(t_user *this, t_cmd *cmd, t_server *server)
 {
 	char		*user_nick;
@@ -64,11 +84,15 @@ void			user_exec_nick(t_user *this, t_cmd *cmd, t_server *server)
 	this->nick = vector_get_first(cmd->params);
 	if (user_exec_nick_error(this, cmd, server, user_nick))
 		return ;
-	if (user_nick)
-		free(user_nick);
 	this->nick = ft_strdup(this->nick);
-	if (this->nick && this->user)
+	if (this->nick && this->user && !this->connected)
 	{
 		user_try_connect(this, server);
 	}
+	else if (this->connected)
+	{
+		user_change_nick(this, server, user_nick);
+	}
+	if (user_nick)
+		free(user_nick);
 }
