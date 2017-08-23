@@ -89,5 +89,6 @@ void				client_exec_topic(t_client *this, char *cmd);
 void				client_exec_list(t_client *this, char *cmd);
 void				client_exec_names(t_client *this, char *cmd);
 void				client_exec_nick(t_client *this, char *cmd);
+void				client_exec_mode(t_client *this, char *cmd);
 
 #endif

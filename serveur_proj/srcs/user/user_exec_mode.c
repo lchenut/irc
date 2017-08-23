@@ -10,33 +10,35 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "channel.h"
+#include "user.h"
 #include "server.h"
+#include "cmd.h"
+#include "channel.h"
 
-static bool	find_fn(void *data, void *context)
+void			user_exec_mode(t_user *this, t_cmd *cmd, t_server *server)
 {
-	return (data == context);
-}
+	t_channel	*channel;
 
-static void		iter_fn(void *data, void *ctx1, void *ctx2)
-{
-	t_query		*query;
-
-	query = query_new(data);
-	query->cmd = ft_strdup(ctx1);
-	lst_push_back(((t_server *)ctx2)->querries, query);
-}
-
-void		channel_user_part(t_channel *this, t_user *user, t_server *server)
-{
-	char	*cmd;
-
-	if (!vector_find(this->users, find_fn, user))
+	if (!this->connected)
 		return ;
-	cmd = utils_concat(":%s!%s@%s PART %s", user->nick, user->user,
-			IRC_NAME, this->name);
-	vector_iter2(this->users, iter_fn, cmd, server);
-	free(cmd);
-	channel_del_user(this, user);
-	channel_del_chanop(this, user);
+	if (vector_len(cmd->params) == 0)
+	{
+		err_needmoreparams(this, cmd, server);
+		return ;
+	}
+	channel = server_get_channel_from_name(server,
+			vector_get_first(cmd->params));
+	if (channel != NULL)
+	{
+		if (vector_len(channel->chanop) != 0 &&
+				!channel_is_user_chanop(channel, this))
+		{
+			if (channel_is_user_joined(channel, this))
+				err_notonchannel(this, channel->name, server);
+			else
+				err_chanoprivsneeded(this, channel->name, server);
+			return ;
+		}
+		user_exec_chanmode(this, cmd, server, channel);
+	}
 }

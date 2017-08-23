@@ -26,4 +26,8 @@ void			client_exec_connect(t_client *this, char *cmd)
 		client_set_port(this, split[2]);
 	array_del(split);
 	client_try_connect(this);
+	if (this->connected)
+	{
+		client_register(this);
+	}
 }

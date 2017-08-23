@@ -23,9 +23,10 @@ t_channel		*channel_new(char *name, char *key)
 	this->mode.secret = false;
 	this->mode.oninv = false;
 	this->mode.topiclock = false;
-	this->mode.msgrestricted = false;
+	this->mode.msgrestrict = false;
 	this->mode.moderate = false;
 	this->limit = 10;
 	this->users = vector_new();
+	this->chanop = vector_new();
 	return (this);
 }

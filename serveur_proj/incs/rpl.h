@@ -35,4 +35,7 @@ void			rpl_listend(t_user *this, t_server *server);
 void			rpl_namreply(t_user *this, t_channel *chan, t_server *server);
 void			rpl_endofnames(t_user *this, t_channel *chan, t_server *server);
 
+void			rpl_channelmodeis(t_user *this, t_channel *channel,
+		char *mode_param, t_server *server);
+
 #endif

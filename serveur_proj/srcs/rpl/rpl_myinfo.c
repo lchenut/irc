@@ -19,7 +19,7 @@ void			rpl_myinfo(t_user *this, t_server *server)
 	t_query	*query;
 
 	query = query_new(this);
-	query->cmd = utils_concat(":%s 004 %s %s 1.0.0 USERMODES= CHANMODEX=",
+	query->cmd = utils_concat(":%s 004 %s %s 1.0.0 USERMODES= opsitnmlvk",
 			IRC_NAME, this->nick, IRC_NAME);
 	lst_push_back(server->querries, query);
 }

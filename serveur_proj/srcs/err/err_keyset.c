@@ -10,33 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "channel.h"
+#include "user.h"
 #include "server.h"
 
-static bool	find_fn(void *data, void *context)
+void			err_keyset(t_user *this, char *name, t_server *server)
 {
-	return (data == context);
-}
+	t_query	*query;
 
-static void		iter_fn(void *data, void *ctx1, void *ctx2)
-{
-	t_query		*query;
-
-	query = query_new(data);
-	query->cmd = ft_strdup(ctx1);
-	lst_push_back(((t_server *)ctx2)->querries, query);
-}
-
-void		channel_user_part(t_channel *this, t_user *user, t_server *server)
-{
-	char	*cmd;
-
-	if (!vector_find(this->users, find_fn, user))
-		return ;
-	cmd = utils_concat(":%s!%s@%s PART %s", user->nick, user->user,
-			IRC_NAME, this->name);
-	vector_iter2(this->users, iter_fn, cmd, server);
-	free(cmd);
-	channel_del_user(this, user);
-	channel_del_chanop(this, user);
+	query = query_new(this);
+	query->cmd = utils_concat(":%s 467 %s :Channel key already set",
+			IRC_NAME, name);
+	lst_push_back(server->querries, query);
 }

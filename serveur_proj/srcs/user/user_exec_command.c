@@ -29,6 +29,7 @@ t_exec_cmd		g_exec_cmd[] =
 	{ "PONG", user_exec_pong },
 	{ "PART", user_exec_part },
 	{ "QUIT", user_exec_quit },
+	{ "MODE", user_exec_mode },
 	{ NULL, NULL }
 };
 

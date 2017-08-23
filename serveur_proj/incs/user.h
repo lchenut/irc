@@ -67,12 +67,18 @@ void            user_exec_names(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_pong(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_part(t_user *this, t_cmd *cmd, t_server *server);
 void            user_exec_quit(t_user *this, t_cmd *cmd, t_server *server);
+void            user_exec_mode(t_user *this, t_cmd *cmd, t_server *server);
+
+void			user_exec_chanmode(t_user *this, t_cmd *cmd,
+		t_server *server, t_channel *channel);
 
 void			err_norecipient(t_user *this, char *cmd, t_server *server);
 void			err_notextsend(t_user *this, t_server *server);
 void			err_toomanytargets(t_user *this, char *dest, t_server *server);
 void			err_cannotsendtochan(t_user *this, char *s, t_server *server);
-
+void			err_keyset(t_user *this, char *chan, t_server *server);
+void			err_unknownmode(t_user *this, char mode, t_server *server);
+void			err_chanoprivsneeded(t_user *this, char *c, t_server *server);
 void			err_nosuchchannel(t_user *this, char *chan, t_server *server);
 void			err_nosuchnick(t_user *this, char *nick, t_server *server);
 void			err_notonchannel(t_user *this, char *chan, t_server *server);
