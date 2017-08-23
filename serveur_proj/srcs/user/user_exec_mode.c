@@ -30,15 +30,6 @@ void			user_exec_mode(t_user *this, t_cmd *cmd, t_server *server)
 			vector_get_first(cmd->params));
 	if (channel != NULL)
 	{
-		if (vector_len(channel->chanop) != 0 &&
-				!channel_is_user_chanop(channel, this))
-		{
-			if (channel_is_user_joined(channel, this))
-				err_notonchannel(this, channel->name, server);
-			else
-				err_chanoprivsneeded(this, channel->name, server);
-			return ;
-		}
 		user_exec_chanmode(this, cmd, server, channel);
 	}
 }

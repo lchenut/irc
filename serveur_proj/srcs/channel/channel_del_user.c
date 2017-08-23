@@ -20,4 +20,6 @@ static bool	find_fn(void *data, void *context)
 void		channel_del_user(t_channel *this, t_user *user)
 {
 	vector_find_pop(this->users, find_fn, user);
+	vector_find_pop(this->chanop, find_fn, user);
+	vector_find_pop(this->moderate, find_fn, user);
 }

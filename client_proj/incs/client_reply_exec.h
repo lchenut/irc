@@ -42,5 +42,8 @@ void	client_reply_353(t_client *t, t_rpl_cnt *c);
 void	client_reply_366(t_client *t, t_rpl_cnt *c);
 
 void	client_reply_401(t_client *t, t_rpl_cnt *c, const t_reply *r);
+void	client_reply_404(t_client *t, t_rpl_cnt *c, const t_reply *r);
+void	client_reply_482(t_client *t, t_rpl_cnt *c, const t_reply *r);
+void	client_reply_324(t_client *t, t_rpl_cnt *c, const t_reply *r);
 
 #endif

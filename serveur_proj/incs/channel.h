@@ -38,6 +38,7 @@ typedef struct	s_channel
 	t_mode		mode;
 	t_vector	*users;
 	t_vector	*chanop;
+	t_vector	*moderate;
 }				t_channel;
 
 t_channel		*channel_new(char *name, char *key);
@@ -49,11 +50,15 @@ void			channel_del_user(t_channel *this, t_user *user);
 void			channel_new_chanop(t_channel *this, t_user *user,
 		char *to_chanop, t_server *server);
 void			channel_del_chanop(t_channel *this, t_user *user);
+void			channel_new_moderate(t_channel *this, t_user *user,
+		char *to_moderate, t_server *server);
+void			channel_del_moderate(t_channel *this, char *username);
 void			channel_user_part(t_channel *this, t_user *user,
 		t_server *server);
 
 bool			channel_is_user_joined(t_channel *this, t_user *user);
 bool			channel_is_user_chanop(t_channel *this, t_user *user);
+bool			channel_is_user_moderate(t_channel *this, t_user *user);
 
 void			channel_send_msg_from(t_channel *this, t_user *user,
 		char *msg, t_server *server);

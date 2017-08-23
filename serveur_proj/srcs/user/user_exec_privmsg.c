@@ -58,7 +58,14 @@ static void		exec_privmsg_to_channel(t_user *this, t_cmd *cmd,
 {
 	char		*tosend;
 
-	if (channel_is_user_joined(dest, this) && dest->mode.msgrestrict)
+	if (!channel_is_user_joined(dest, this) && dest->mode.msgrestrict)
+	{
+		err_cannotsendtochan(this, dest->name, server);
+		return ;
+	}
+	if (!channel_is_user_chanop(dest, this) &&
+			!channel_is_user_moderate(dest, this) &&
+			dest->mode.moderate)
 	{
 		err_cannotsendtochan(this, dest->name, server);
 		return ;

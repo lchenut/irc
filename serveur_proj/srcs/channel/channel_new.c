@@ -28,5 +28,6 @@ t_channel		*channel_new(char *name, char *key)
 	this->limit = 10;
 	this->users = vector_new();
 	this->chanop = vector_new();
+	this->moderate = vector_new();
 	return (this);
 }

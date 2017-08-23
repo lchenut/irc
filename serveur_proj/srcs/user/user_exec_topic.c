@@ -38,10 +38,24 @@ static t_channel	*exec_topic_get_channel(t_user *this, t_cmd *cmd,
 	return (channel);
 }
 
+static void			change_topic(t_user *this, t_cmd *cmd, t_server *server,
+		t_channel *channel)
+{
+	char			*topic;
+
+	topic = vector_get(cmd->params, 1);
+	if (channel->mode.topiclock && !channel_is_user_chanop(channel, this))
+	{
+		err_chanoprivsneeded(this, channel->name, server);
+	}
+	if (channel->topic)
+		free(channel->topic);
+	channel->topic = ft_strdup(topic);
+}
+
 void				user_exec_topic(t_user *this, t_cmd *cmd, t_server *server)
 {
 	t_channel		*channel;
-	char			*topic;
 
 	if ((channel = exec_topic_get_channel(this, cmd, server)) == NULL)
 		return ;
@@ -51,12 +65,7 @@ void				user_exec_topic(t_user *this, t_cmd *cmd, t_server *server)
 		return ;
 	}
 	if (vector_len(cmd->params) > 1)
-	{
-		topic = vector_get(cmd->params, 1);
-		if (channel->topic)
-			free(channel->topic);
-		channel->topic = ft_strdup(topic);
-	}
+		change_topic(this, cmd, server, channel);
 	else if (channel->topic)
 		rpl_topic(this, channel, server);
 	else

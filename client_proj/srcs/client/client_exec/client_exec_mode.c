@@ -19,6 +19,7 @@ static void		mode_current_channel(t_client *this)
 	{
 		visual_dump_date(this->visual, " HOME ");
 		visual_print_red(this->visual, "Cannot do mode on HOME channel", " HOME ");
+		visual_print_newline(this->visual, " HOME ");
 		return ;
 	}
 	client_write_sock(this, "MODE ");
@@ -34,6 +35,7 @@ static void		mode_current_channel_with_option(t_client *this, char **split)
 	{
 		visual_dump_date(this->visual, " HOME ");
 		visual_print_red(this->visual, "Cannot do mode on HOME channel", " HOME ");
+		visual_print_newline(this->visual, " HOME ");
 		return ;
 	}
 	client_write_sock(this, "MODE ");

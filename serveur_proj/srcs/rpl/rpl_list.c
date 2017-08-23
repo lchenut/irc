@@ -16,10 +16,6 @@
 #include "channel.h"
 #include "xstdlib.h"
 
-/*
-** TODO: SI PRIVE OU SECRET...
-*/
-
 void			rpl_list(t_user *this, t_channel *channel, t_server *server)
 {
 	t_query		*query;
@@ -27,9 +23,25 @@ void			rpl_list(t_user *this, t_channel *channel, t_server *server)
 
 	query = query_new(this);
 	nb = ft_itoa(vector_len(channel->users));
-	query->cmd = utils_concat(":%s 322 %s %s %s %s :%s", IRC_NAME, this->nick,
-			channel->name, "<TODO VISIBILITY>", nb,
-			channel->topic ? channel->topic : "");
+	if (channel->mode.secret)
+	{
+		if (channel_is_user_joined(channel, this))
+			query->cmd = utils_concat(":%s 322 %s %s Sec %s :%s", IRC_NAME,
+					this->nick, channel->name, nb,
+					channel->topic ? channel->topic : "");
+	}
+	else if (channel->mode.private)
+		query->cmd = utils_concat(":%s 322 %s %s Prv %s :%s", IRC_NAME,
+				this->nick, channel->name, nb,
+				(channel_is_user_joined(channel, this) && channel->topic) ?
+				channel->topic : "");
+	else
+		query->cmd = utils_concat(":%s 322 %s %s Nor %s :%s", IRC_NAME,
+				this->nick, channel->name, nb,
+				channel->topic ? channel->topic : "");
 	free(nb);
-	lst_push_back(server->querries, query);
+	if (query->cmd == NULL)
+		query_del(query);
+	else
+		lst_push_back(server->querries, query);
 }

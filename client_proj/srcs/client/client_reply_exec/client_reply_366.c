@@ -75,17 +75,16 @@ static void		find_longest_string_fn(void *data, void *context)
 void			client_reply_366(t_client *this, t_rpl_cnt *content)
 {
 	t_visual_channel	*channel;
+	char				*channame;
 
 	channel = visual_get_visual_channel(this->visual,
 			vector_get_first(content->params));
 	if (channel == NULL)
 		channel = vector_get_first(this->visual->channels);
-	if (channel->namreply)
-		free(channel->namreply);
-	channel->namreply = vector_get_first(content->params);
+	channame = vector_get_first(content->params);
 	visual_dump_date(this->visual, channel->name);
 	visual_print_green(this->visual, "Users: ", channel->name);
-	visual_print_green(this->visual, channel->namreply, channel->name);
+	visual_print_green(this->visual, channame, channel->name);
 	visual_print_newline(this->visual, channel->name);
 	if (vector_len(channel->users) > 0)
 	{
@@ -97,4 +96,5 @@ void			client_reply_366(t_client *this, t_rpl_cnt *content)
 		vector_iter2(channel->users, iter_fn, channel, this->visual);
 		visual_print_newline(this->visual, channel->name);
 	}
+	vector_clear(channel->users, free);
 }

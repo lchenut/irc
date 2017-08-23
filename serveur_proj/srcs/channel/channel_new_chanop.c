@@ -37,7 +37,7 @@ void			channel_new_chanop(t_channel *this, t_user *first,
 		{
 			err_notonchannel(first, to_chanop, server);
 		}
-		else
+		else if (!channel_is_user_chanop(this, user))
 		{
 			vector_push_back(this->chanop, user);
 		}

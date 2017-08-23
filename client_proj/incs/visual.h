@@ -42,7 +42,6 @@ typedef struct			s_visual_channel
 {
 	char				*name;
 	WINDOW				*chat;
-	char				*namreply;
 	t_vector			*users;
 	size_t				longest_users_name;
 	size_t				current_line;

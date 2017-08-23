@@ -20,5 +20,7 @@ static bool				find_fn(void *data, void *context)
 t_visual_channel		*visual_get_visual_channel(t_visual *this,
 		const char *chan)
 {
+	if (chan == NULL)
+		return (NULL);
 	return (vector_find(this->channels, find_fn, (void *)chan));
 }

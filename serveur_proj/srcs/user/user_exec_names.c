@@ -16,12 +16,13 @@
 #include "array.h"
 #include "channel.h"
 
-/*
-** TODO: Si le channel est prive ou secret
-*/
-
 static void		iter_fn(void *data, void *ctx1, void *ctx2)
 {
+	if (((t_channel *)data)->mode.private || ((t_channel *)data)->mode.secret)
+	{
+		if (!channel_is_user_joined(data, ctx1))
+			return ;
+	}
 	rpl_namreply(ctx1, data, ctx2);
 	rpl_endofnames(ctx1, data, ctx2);
 }
@@ -39,6 +40,12 @@ static void		exec_names_with_args(t_user *this, t_cmd *cmd, t_server *server)
 		channel = server_get_channel_from_name(server, split[index]);
 		if (channel != NULL)
 		{
+			if (!channel_is_user_joined(channel, this) &&
+					(channel->mode.private || channel->mode.secret))
+			{
+				index += 1;
+				continue ;
+			}
 			rpl_namreply(this, channel, server);
 			rpl_endofnames(this, channel, server);
 		}
