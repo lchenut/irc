@@ -17,6 +17,7 @@ t_query		*query_new(t_user *user)
 	t_query	*this;
 
 	this = ft_calloc(sizeof(t_query));
+	this->should_quit = false;
 	this->user = user;
 	return (this);
 }

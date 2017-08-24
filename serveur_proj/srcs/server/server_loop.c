@@ -39,6 +39,10 @@ static void	write_fd_isset(t_server *this, int index)
 	{
 		printf("Send to %s: %s", query->user->nick, query->cmd);
 		ft_putstr_fd(query->cmd, query->user->socket);
+		if (query->should_quit)
+		{
+			server_delete_user(this, query->user);
+		}
 		query_del(query);
 	}
 }
@@ -80,13 +84,9 @@ void		server_loop(t_server *this)
 		while (index < FD_SETSIZE)
 		{
 			if (FD_ISSET(index, &this->read_set))
-			{
 				read_fd_isset(this, index);
-			}
 			if (FD_ISSET(index, &this->write_set))
-			{
 				write_fd_isset(this, index);
-			}
 			index += 1;
 		}
 	}

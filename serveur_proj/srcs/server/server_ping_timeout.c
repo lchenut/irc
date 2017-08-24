@@ -12,64 +12,56 @@
 
 #include "server.h"
 
-static void		exec_ping(t_user *this, t_server *server)
+static void		timeout(t_user *this, t_server *server)
 {
 	t_query		*query;
-
-	query = query_new(this);
-	query->cmd = utils_concat("PING :%s", IRC_NAME);
-	lst_push_back(server->querries, query);
-}
-
-static void		iter_fn(void *data, void *context)
-{
-	((t_user *)data)->msg_nb = 0;
-	if (((t_user *)data)->connected && ((t_user *)data)->timeout == 2)
-	{
-		exec_ping(data, context);
-	}
-	((t_user *)data)->timeout -= 1;
-}
-
-static bool		find_fn(void *data)
-{
-	return (((t_user *)data)->timeout == 0);
-}
-
-static void		iter_del_fn(void *data, void *context)
-{
-	t_user		*user;
 	char		address[INET6_ADDRSTRLEN];
 
-	user = data;
-	if (!inet_ntop(AF_INET6, &(user->sin.sin6_addr), address, sizeof(address)))
+	if (!inet_ntop(AF_INET6, &(this->sin.sin6_addr), address, sizeof(address)))
 	{
-		server_delete_user(context, user);
+		server_delete_user(server, this);
 		return ;
 	}
-	if (!user->connected)
+	query = query_new(this);
+	if (!this->connected)
 	{
 		ft_putstr("\033[34;1mregistration timeout from ");
-		write(user->socket, "ERROR: Registration timeout\r\n", 29);
+		query->cmd = utils_concat("ERROR: Registration timeout");
 	}
 	else
 	{
 		ft_putstr("\033[34;1mping timeout from ");
-		write(user->socket, "ERROR: Ping timeout\r\n", 21);
+		query->cmd = utils_concat("ERROR: Ping timeout");
 	}
+	query->should_quit = true;
+	lst_push_front(server->querries, query);
 	ft_putstr(address);
 	ft_putstr(" (port: ");
-	ft_putnbr(user->sin.sin6_port);
+	ft_putnbr(this->sin.sin6_port);
 	ft_putstr(")\033[0m\n");
-	server_delete_user(context, user);
+}
+
+static void		iter_fn(void *data, void *context)
+{
+	t_user		*this;
+	t_server	*server;
+	t_query		*query;
+
+	this = data;
+	server = context;
+	this->msg_nb = 0;
+	if (this->connected && this->timeout == 2)
+	{
+		query = query_new(this);
+		query->cmd = utils_concat("PING :%s", IRC_NAME);
+		lst_push_back(server->querries, query);
+	}
+	this->timeout -= 1;
+	if (this->timeout == 0)
+		timeout(this, server);
 }
 
 void			server_ping_timeout(t_server *this)
 {
-	t_vector	*user_to_del;
-
 	vector_iter(this->users, iter_fn, this);
-	user_to_del = vector_find0_all_pop(this->users, find_fn);
-	vector_iter(user_to_del, iter_del_fn, this);
-	vector_del(user_to_del, NULL);
 }

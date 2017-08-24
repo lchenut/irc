@@ -33,7 +33,7 @@ void	client_reply_quit(t_client *t, t_rpl_cnt *c, const t_reply *r);
 /*
 ** 331 / 332
 */
-void	client_reply_topic(t_client *t, t_rpl_cnt *c, const t_reply *r); // 331 / 332
+void	client_reply_topic(t_client *t, t_rpl_cnt *c, const t_reply *r);
 /*
 ** 353 / 366
 */

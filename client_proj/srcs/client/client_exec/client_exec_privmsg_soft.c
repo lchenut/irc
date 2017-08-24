@@ -20,7 +20,8 @@ void			client_exec_privmsg_soft(t_client *this, char *cmd)
 	if (!ft_strcmp(channel->name, " HOME "))
 	{
 		visual_dump_date(this->visual, " HOME ");
-		visual_print_red(this->visual, "Cannot send message in  HOME ", " HOME ");
+		visual_print_red(this->visual,
+				"Cannot send message in  HOME ", " HOME ");
 		visual_print_newline(this->visual, " HOME ");
 		return ;
 	}

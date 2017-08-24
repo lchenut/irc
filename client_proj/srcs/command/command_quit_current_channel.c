@@ -13,9 +13,9 @@
 #include "command.h"
 #include "client.h"
 
-static void	exec_part_current_channel(t_client *this)
+static void		exec_part_current_channel(t_client *this)
 {
-	char	*current;
+	char		*current;
 
 	current = this->visual->current->name;
 	if (*current == '#' || *current == '&')

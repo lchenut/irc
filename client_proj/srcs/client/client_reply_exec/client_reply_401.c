@@ -12,32 +12,31 @@
 
 #include "client.h"
 
-void			client_reply_401(t_client *this, t_rpl_cnt *content,
+void			client_reply_401(t_client *this, t_rpl_cnt *cnt,
 		const t_reply *reply)
 {
-	t_visual_channel	*channel;
+	t_visual_channel	*chan;
 
-	client_reply_pop_params(this, content);
-	channel = visual_get_visual_channel(this->visual,
-			vector_get_first(content->params));
-	if (channel == NULL)
+	client_reply_pop_params(this, cnt);
+	chan = visual_get_visual_channel(this->visual, vector_get(cnt->params, 0));
+	if (chan == NULL)
 	{
-		channel = vector_get_first(this->visual->channels);
-		visual_dump_date(this->visual, channel->name);
-		visual_print_channel(this->visual, vector_get_last(content->params),
-				channel->name);
-		visual_print_newline(this->visual, channel->name);
+		chan = vector_get_first(this->visual->channels);
+		visual_dump_date(this->visual, chan->name);
+		visual_print_channel(this->visual, vector_get_last(cnt->params),
+				chan->name);
+		visual_print_newline(this->visual, chan->name);
 	}
 	else
 	{
-		visual_dump_date(this->visual, channel->name);
-		visual_print_channel(this->visual, vector_get_last(content->params),
-				channel->name);
-		visual_print_newline(this->visual, channel->name);
-		visual_dump_date(this->visual, channel->name);
-		visual_print_channel(this->visual, "You should leave the channel "
-				"using CTRL-D", channel->name);
-		visual_print_newline(this->visual, channel->name);
+		visual_dump_date(this->visual, chan->name);
+		visual_print_channel(this->visual, vector_get_last(cnt->params),
+				chan->name);
+		visual_print_newline(this->visual, chan->name);
+		visual_dump_date(this->visual, chan->name);
+		visual_print_channel(this->visual, "You should leave the chan "
+				"using CTRL-D", chan->name);
+		visual_print_newline(this->visual, chan->name);
 	}
 	visual_move_curspos(this->visual, command_get_curspos(this->command));
 	(void)reply;

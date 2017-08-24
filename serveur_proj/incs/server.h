@@ -31,6 +31,7 @@
 typedef struct		s_query
 {
 	t_user			*user;
+	bool			should_quit;
 	char			*cmd;
 }					t_query;
 
@@ -40,8 +41,8 @@ typedef struct		s_cmd_lst
 	char			*line;
 }					t_cmd_lst;
 
-t_query			*query_new(t_user *user);
-void			query_del(t_query *this);
+t_query				*query_new(t_user *user);
+void				query_del(t_query *this);
 
 typedef struct		s_server
 {

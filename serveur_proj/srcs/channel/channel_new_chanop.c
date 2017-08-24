@@ -30,17 +30,11 @@ void			channel_new_chanop(t_channel *this, t_user *first,
 	{
 		user = server_get_user_from_nick(server, to_chanop);
 		if (user == NULL)
-		{
 			err_nosuchnick(first, to_chanop, server);
-		}
 		else if (!channel_is_user_joined(this, user))
-		{
 			err_notonchannel(first, to_chanop, server);
-		}
 		else if (!channel_is_user_chanop(this, user))
-		{
 			vector_push_back(this->chanop, user);
-		}
 	}
 	else
 	{

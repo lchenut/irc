@@ -16,7 +16,6 @@
 # include "basics.h"
 
 typedef struct s_client	t_client;
-typedef struct s_reply	t_reply;
 
 typedef enum			e_rpl_type
 {
@@ -37,6 +36,15 @@ typedef struct			s_rpl_cnt
 	char				*command;
 	t_vector			*params;
 }						t_rpl_cnt;
+
+typedef struct			s_reply
+{
+	bool				is_reply;
+	char				*command;
+	char				*message;
+	int					args_number;
+	void				(*fn)(t_client *, t_rpl_cnt *, const struct s_reply *);
+}						t_reply;
 
 typedef enum			e_rpl_status
 {
@@ -69,15 +77,6 @@ void					rpl_tokenizer_delimit(t_rpl_tokenizer *this,
 void					rpl_tokenizer_addone(t_rpl_tokenizer *this);
 
 typedef t_rpl_status	(*t_rpl_tokenizer_fn)(t_rpl_tokenizer *);
-
-typedef struct			s_reply
-{
-	bool				is_reply;
-	char				*command;
-	char				*message;
-	int					args_number;
-	void				(*fn)(t_client *, t_rpl_cnt *, const struct s_reply *);
-}						t_reply;
 
 extern const t_reply	g_replies[];
 

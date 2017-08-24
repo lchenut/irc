@@ -30,17 +30,11 @@ void			channel_new_moderate(t_channel *this, t_user *first,
 	{
 		user = server_get_user_from_nick(server, to_modo);
 		if (user == NULL)
-		{
 			err_nosuchnick(first, to_modo, server);
-		}
 		else if (!channel_is_user_joined(this, user))
-		{
 			err_notonchannel(first, to_modo, server);
-		}
 		else if (!channel_is_user_moderate(this, user))
-		{
 			vector_push_back(this->moderate, user);
-		}
 	}
 	else
 	{

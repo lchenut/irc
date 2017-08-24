@@ -43,7 +43,6 @@ static void	create_mode(char *m, t_channel *channel)
 void		rpl_channelmodeis(t_user *this, t_channel *channel,
 		char *mode_param, t_server *server)
 {
-	// TODO mode param == list des params, pas juste le premier
 	t_query	*query;
 	char	m[64];
 
@@ -52,7 +51,8 @@ void		rpl_channelmodeis(t_user *this, t_channel *channel,
 	if (m[0] == 0 && !mode_param)
 		query->cmd = utils_concat(":%s 324 %s", IRC_NAME, channel->name);
 	else if (m[0] == 0 && mode_param)
-		query->cmd = utils_concat(":%s 324 %s :%s", IRC_NAME, channel->name, mode_param);
+		query->cmd = utils_concat(":%s 324 %s :%s", IRC_NAME,
+				channel->name, mode_param);
 	else if (!mode_param)
 		query->cmd = utils_concat(":%s 324 %s %s", IRC_NAME, channel->name, m);
 	else

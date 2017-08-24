@@ -32,7 +32,7 @@ static void				data_command_push01(t_vector *data)
 	vector_push_back(data, cmd_new("/connect", "CONNECT", client_exec_connect));
 	vector_push_back(data, cmd_new("/error", "ERROR", NULL));
 	vector_push_back(data, cmd_new("/info", "INFO", NULL));
-	vector_push_back(data, cmd_new("/invite", "INVITE", NULL));
+	vector_push_back(data, cmd_new("/invite", "INVITE", client_exec_invite));
 	vector_push_back(data, cmd_new("/ison", "ISON", NULL));
 	vector_push_back(data, cmd_new("/join", "JOIN", client_exec_join));
 	vector_push_back(data, cmd_new("/kick", "KICK", NULL));

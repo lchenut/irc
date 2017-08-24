@@ -16,6 +16,18 @@
 #include "channel.h"
 #include "xstdlib.h"
 
+static void		push_query(t_server *server, t_query *query)
+{
+	if (query->cmd == NULL)
+	{
+		query_del(query);
+	}
+	else
+	{
+		lst_push_back(server->querries, query);
+	}
+}
+
 void			rpl_list(t_user *this, t_channel *channel, t_server *server)
 {
 	t_query		*query;
@@ -40,8 +52,5 @@ void			rpl_list(t_user *this, t_channel *channel, t_server *server)
 				this->nick, channel->name, nb,
 				channel->topic ? channel->topic : "");
 	free(nb);
-	if (query->cmd == NULL)
-		query_del(query);
-	else
-		lst_push_back(server->querries, query);
+	push_query(server, query);
 }

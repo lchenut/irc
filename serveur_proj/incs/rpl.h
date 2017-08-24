@@ -37,5 +37,7 @@ void			rpl_endofnames(t_user *this, t_channel *chan, t_server *server);
 
 void			rpl_channelmodeis(t_user *this, t_channel *channel,
 		char *mode_param, t_server *server);
+void			rpl_inviting(t_user *this, t_user *invited,
+		t_channel *channel, t_server *server);
 
 #endif

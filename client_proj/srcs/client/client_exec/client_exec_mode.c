@@ -18,7 +18,8 @@ static void		mode_current_channel(t_client *this)
 	if (this->visual->current == vector_get_first(this->visual->channels))
 	{
 		visual_dump_date(this->visual, " HOME ");
-		visual_print_red(this->visual, "Cannot do mode on HOME channel", " HOME ");
+		visual_print_red(this->visual,
+				"Cannot do mode on HOME channel", " HOME ");
 		visual_print_newline(this->visual, " HOME ");
 		return ;
 	}
@@ -34,7 +35,8 @@ static void		mode_current_channel_with_option(t_client *this, char **split)
 	if (this->visual->current == vector_get_first(this->visual->channels))
 	{
 		visual_dump_date(this->visual, " HOME ");
-		visual_print_red(this->visual, "Cannot do mode on HOME channel", " HOME ");
+		visual_print_red(this->visual,
+				"Cannot do mode on HOME channel", " HOME ");
 		visual_print_newline(this->visual, " HOME ");
 		return ;
 	}

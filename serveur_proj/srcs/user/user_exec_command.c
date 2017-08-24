@@ -30,12 +30,14 @@ t_exec_cmd		g_exec_cmd[] =
 	{ "PART", user_exec_part },
 	{ "QUIT", user_exec_quit },
 	{ "MODE", user_exec_mode },
+	{ "INVITE", user_exec_invite },
 	{ NULL, NULL }
 };
 
 static void		flood_timeout(t_user *this, t_server *server)
 {
 	char		address[INET6_ADDRSTRLEN];
+	t_query		*query;
 
 	if (!inet_ntop(AF_INET6, &(this->sin.sin6_addr), address, sizeof(address)))
 	{
@@ -47,8 +49,10 @@ static void		flood_timeout(t_user *this, t_server *server)
 	ft_putstr(" (port: ");
 	ft_putnbr(this->sin.sin6_port);
 	ft_putstr(")\033[0m\n");
-	write(this->socket, "ERROR: Flood timeout\r\n", 22);
-	server_delete_user(server, this);
+	query = query_new(this);
+	query->cmd = utils_concat("ERROR: Flood timeout");
+	query->should_quit = true;
+	lst_push_front(server->querries, query);
 }
 
 void			user_exec_command(t_user *this, char *line, t_server *server)
@@ -72,14 +76,10 @@ void			user_exec_command(t_user *this, char *line, t_server *server)
 	while (g_exec_cmd[i].cmd)
 	{
 		if (!ft_strcmp(g_exec_cmd[i].cmd, cmd->command))
-		{
 			break ;
-		}
 		i += 1;
 	}
 	if (g_exec_cmd[i].cmd)
-	{
 		g_exec_cmd[i].fn(this, cmd, server);
-	}
 	cmd_del(cmd);
 }

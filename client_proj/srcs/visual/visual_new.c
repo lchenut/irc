@@ -31,24 +31,24 @@ static void			iter_fn(void *data)
 	wresize(((t_visual_channel *)data)->chat, CHAT_NB_LINES, CHAT_NB_COLS);
 	mvwin(((t_visual_channel *)data)->chat, CHAT_START_LINES, CHAT_START_COLS);
 }
-/*
-** TODO !!!!
-*/
+
+static void			print_command(t_client *this)
+{
+	char *cmd;
+
+	cmd = command_get_line_scaled(this->command);
+	visual_print_prompt(this->visual, cmd);
+	free(cmd);
+	visual_move_curspos(this->visual, command_get_curspos(this->command));
+}
+
 static void			sigwinch_handler(int sig)
 {
 	t_visual		*this;
-	this = client_singleton()->visual;
-	endwin();
-	refresh();
-	clear();
-	wresize(this->border, BORDER_NB_LINES, BORDER_NB_COLS);
-	mvwin(this->border, BORDER_START_LINES, BORDER_START_COLS);
-	visual_print_border(this);
-	return ;
 	struct winsize	ws;
 
+	this = client_singleton()->visual;
 	ioctl(1, TIOCGWINSZ, &ws);
-	clear();
 	resize_term(ws.ws_row, ws.ws_col);
 	this = client_singleton()->visual;
 	wresize(this->prompt, PROMPT_NB_LINES, PROMPT_NB_COLS);
@@ -57,12 +57,9 @@ static void			sigwinch_handler(int sig)
 	mvwin(this->border, BORDER_START_LINES, BORDER_START_COLS);
 	vector_iter0(this->channels, iter_fn);
 	visual_print_border(this);
-	return ;
-	//visual_print_prompt(this);
-	doupdate();
-	return ;
-	visual_refresh_current(this);
-	visual_move_curspos(this, command_get_curspos(client_singleton()->command));
+	wrefresh(this->current->chat);
+	if (client_singleton()->command)
+		print_command(client_singleton());
 	(void)sig;
 }
 

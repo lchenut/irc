@@ -13,7 +13,7 @@
 #include "channel.h"
 #include "server.h"
 
-static bool	find_fn(void *data, void *context)
+static bool		find_fn(void *data, void *context)
 {
 	return (data == context);
 }
@@ -27,9 +27,10 @@ static void		iter_fn(void *data, void *ctx1, void *ctx2)
 	lst_push_back(((t_server *)ctx2)->querries, query);
 }
 
-void		channel_user_part(t_channel *this, t_user *user, t_server *server)
+void			channel_user_part(t_channel *this,
+		t_user *user, t_server *server)
 {
-	char	*cmd;
+	char		*cmd;
 
 	if (!vector_find(this->users, find_fn, user))
 		return ;
