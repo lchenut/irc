@@ -69,6 +69,6 @@ char			*ft_strndup(const char *s1, size_t n);
 ** Give the string length
 */
 
-size_t			ft_strlen(const char *str);;
+size_t			ft_strlen(const char *str);
 
 #endif

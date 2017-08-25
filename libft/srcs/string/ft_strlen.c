@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "stringft.h"
+
 /*
 ** #define RET(a)		{if (!p[a]) return (p - str + a);}
 ** #define MAKE_ALL	RET(0) RET(1) RET(2) RET(3) RET(4) RET(5) RET(6) RET(7)

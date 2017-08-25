@@ -13,14 +13,14 @@
 #include "vector.h"
 
 void			vector_insert_when_match(t_vector *this, void *data,
-		bool(*fn)(void *, void *))
+		bool (*match_fn)(void *, void *))
 {
 	size_t		pos;
 
 	pos = 0;
 	while (pos < this->current)
 	{
-		if (fn(this->data[pos], data))
+		if (match_fn(this->data[pos], data))
 			break ;
 		pos += 1;
 	}

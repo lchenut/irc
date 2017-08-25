@@ -13,36 +13,37 @@
 #ifndef BASICS_H
 # define BASICS_H
 
-# define __DEBUG
-# ifdef __DEBUG
-#  include <stdio.h>
-#  define DEBUG_FILE "/tmp/.debug_irc"
-#  define LOG_ERROR(STR, ...) {\
-	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
-	dprintf(fd__, "%-40.40s:%3i [\e[31;1mERROR\e[0m]: ", __FILE__, __LINE__);\
-	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
-	close(fd__);\
-}
-#  define LOG_INFO(STR, ...) {\
-	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
-	dprintf(fd__, "%-40.40s:%3i [\e[32;1mINFO-\e[0m]: ", __FILE__, __LINE__);\
-	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
-	close(fd__);\
-}
-#  define LOG_WARN(STR, ...) {\
-	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
-	dprintf(fd__, "%-40.40s:%3i [\e[33;1mWARN-\e[0m]: ", __FILE__, __LINE__);\
-	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
-	close(fd__);\
-}
-#  define LOG_DEBUG(STR, ...) {\
-	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
-	dprintf(fd__, "%-40.40s:%3i [\e[34;1mDEBUG\e[0m]: ", __FILE__, __LINE__);\
-	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
-	close(fd__);\
-}
-# endif
-
+/*
+** # define __DEBUG
+** # ifdef __DEBUG
+** #  include <stdio.h>
+** #  define DEBUG_FILE "/tmp/.debug_irc"
+** #  define LOG_ERROR(STR, ...) {\
+** 	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
+** 	dprintf(fd__, "%-40.40s:%3i [\e[31;1mERROR\e[0m]: ", __FILE__, __LINE__);\
+** 	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
+** 	close(fd__);\
+** }
+** #  define LOG_INFO(STR, ...) {\
+** 	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
+** 	dprintf(fd__, "%-40.40s:%3i [\e[32;1mINFO-\e[0m]: ", __FILE__, __LINE__);\
+** 	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
+** 	close(fd__);\
+** }
+** #  define LOG_WARN(STR, ...) {\
+** 	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
+** 	dprintf(fd__, "%-40.40s:%3i [\e[33;1mWARN-\e[0m]: ", __FILE__, __LINE__);\
+** 	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
+** 	close(fd__);\
+** }
+** #  define LOG_DEBUG(STR, ...) {\
+** 	int fd__ = open(DEBUG_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);\
+** 	dprintf(fd__, "%-40.40s:%3i [\e[34;1mDEBUG\e[0m]: ", __FILE__, __LINE__);\
+** 	dprintf(fd__, ">"STR"<\n", ##__VA_ARGS__);\
+** 	close(fd__);\
+** }
+** # endif
+*/
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>

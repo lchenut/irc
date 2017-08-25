@@ -14,7 +14,7 @@
 
 static void			print_usage(t_argparser *this)
 {
-	char            *option_chars;
+	char			*option_chars;
 
 	option_chars = argparser_argument_mgr_get_all_chars(this->arguments);
 	ft_putstr_fd("usage: ", 2);
@@ -34,7 +34,7 @@ static void			print_usage(t_argparser *this)
 
 static void			print_fn(void *data)
 {
-	t_argparser_argument    *argument;
+	t_argparser_argument	*argument;
 
 	argument = data;
 	ft_putchar_fd('-', 2);

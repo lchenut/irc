@@ -70,7 +70,7 @@ static inline long long int	ft_atoll_pos(const char *s, long long cutoff,
 	return (ret);
 }
 
-long long int					ft_atoll(const char *s)
+long long int				ft_atoll(const char *s)
 {
 	int			c;
 	int			neg;

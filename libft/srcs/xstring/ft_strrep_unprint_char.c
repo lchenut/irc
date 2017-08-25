@@ -66,21 +66,19 @@ char			*ft_strrep_unprint_char(const char *s)
 	while (*s)
 	{
 		if (*s >= 32 && *s <= 126)
-		{
 			ret[index] = *s;
-			index += 1;
-		}
 		else if (*s == '\n' || *s == '\t' ||
 				*s == '\r' || *s == '\b' || *s == '\v')
 		{
 			place_space(ret + index, *s);
-			index += 2;
+			index += 1;
 		}
 		else
 		{
 			place_hexa(ret + index, *s);
-			index += 4;
+			index += 3;
 		}
+		index += 1;
 		s += 1;
 	}
 	return (ret);

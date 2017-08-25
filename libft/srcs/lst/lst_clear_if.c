@@ -12,33 +12,41 @@
 
 #include "lst.h"
 
-void			lst_clear_if(t_lst *this, void (*del_fn)(void *),
+static inline void	foundlst(t_lst *this, t_lst__ *ltmp, void (*del_fn)(void *))
+{
+	t_lst__		*ltmp_;
+
+	if (del_fn)
+		del_fn(ltmp->data);
+	if (ltmp->prev)
+		ltmp->prev->next = ltmp->next;
+	else
+		this->head = ltmp->next;
+	if (ltmp->next)
+		ltmp->next->prev = ltmp->prev;
+	else
+		this->tail = ltmp->prev;
+	this->size -= 1;
+	ltmp_ = ltmp->next;
+	free(ltmp);
+	ltmp = ltmp_;
+}
+
+void				lst_clear_if(t_lst *this, void (*del_fn)(void *),
 		bool (*find_fn)(void *, void *), void *context)
 {
 	t_lst__		*ltmp;
-	t_lst__		*ltmp_;
 
 	ltmp = this->head;
 	while (ltmp)
 	{
 		if (find_fn(ltmp->data, context))
 		{
-			if (del_fn)
-				del_fn(ltmp->data);
-			if (ltmp->prev)
-				ltmp->prev->next = ltmp->next;
-			else
-				this->head = ltmp->next;
-			if (ltmp->next)
-				ltmp->next->prev = ltmp->prev;
-			else
-				this->tail = ltmp->prev;
-			this->size -= 1;
-			ltmp_ = ltmp->next;
-			free(ltmp);
-			ltmp = ltmp_;
+			foundlst(this, ltmp, del_fn);
 		}
 		else
+		{
 			ltmp = ltmp->next;
+		}
 	}
 }
