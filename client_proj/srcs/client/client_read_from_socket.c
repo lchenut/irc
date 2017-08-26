@@ -21,7 +21,6 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 	index = 0;
 	if (!content->command)
 	{
-		LOG_WARN("There's no command");
 		return ;
 	}
 	while (g_replies[index].command)
@@ -31,15 +30,10 @@ void				client_read(t_client *this, t_rpl_cnt *content)
 		index += 1;
 	}
 	rep = g_replies + index;
-	if (!rep->command)
-	{
-		LOG_WARN("Command unknown");
-	}
-	else
+	if (rep->command)
 	{
 		rep->fn(this, content, rep);
 	}
-	(void)this;
 }
 
 static void			client_pop_line(t_client *this)
@@ -54,10 +48,6 @@ static void			client_pop_line(t_client *this)
 		else
 		{
 			content = rpl_tokenizer_tokenize(rep);
-			LOG_INFO("======================");
-			LOG_INFO("Current user: %s", this->nick);
-			LOG_INFO("%s", rep);
-			LOG_INFO("======================");
 			client_read(this, content);
 			reply_del(content);
 		}

@@ -32,8 +32,6 @@ void			client_write_sock(t_client *this, char *to_print)
 	{
 		buffer[index] = '\r';
 		buffer[index + 1] = '\n';
-		LOG_INFO("write(this->sock, \"%.*s\\r\\n\", %i);",
-				index, buffer, index + 2);
 		write(this->sock, buffer, index + 2);
 		ft_bzero(buffer, sizeof(buffer));
 		index = 0;

@@ -29,14 +29,6 @@ void				client_try_connect_log(t_client *this, int af_family)
 	char			*tmp;
 	char			*s;
 
-	if (af_family == AF_INET)
-	{
-		LOG_INFO("Try connect ipv4");
-	}
-	else
-	{
-		LOG_INFO("Try connect ipv6");
-	}
 	tmp = malloc(ft_strlen(this->address) + ft_strlen(this->port) + 20);
 	s = concat_str(tmp, "Try connect to: ");
 	s = concat_str(s, this->address);
@@ -44,4 +36,5 @@ void				client_try_connect_log(t_client *this, int af_family)
 	concat_str(s, this->port);
 	client_print_chan(this, visual_print_bold, tmp, " HOME ");
 	free(tmp);
+	(void)af_family;
 }

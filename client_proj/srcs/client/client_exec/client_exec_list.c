@@ -85,4 +85,5 @@ void			client_exec_list(t_client *this, char *cmd)
 	{
 		exec_list_with_arg(this, split[1]);
 	}
+	array_del(split);
 }

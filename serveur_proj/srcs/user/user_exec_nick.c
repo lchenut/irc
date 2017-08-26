@@ -69,6 +69,7 @@ static void		user_change_nick(t_user *this, t_server *server, char *old)
 	to_send = utils_concat(":%s!%s@%s NICK %s", old, this->user,
 			IRC_NAME, this->nick);
 	vector_iter2(server->users, iter_fn, to_send, server);
+	free(to_send);
 }
 
 void			user_exec_nick(t_user *this, t_cmd *cmd, t_server *server)

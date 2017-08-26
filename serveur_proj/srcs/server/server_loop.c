@@ -41,7 +41,8 @@ static void	write_fd_isset(t_server *this, int index)
 		ft_putstr_fd(query->cmd, query->user->socket);
 		if (query->should_quit)
 		{
-			server_delete_user(this, query->user);
+			user_exec_quit_from_query(query->user, query, this);
+			// server_delete_user(this, query->user);
 		}
 		query_del(query);
 	}

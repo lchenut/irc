@@ -13,10 +13,6 @@
 #include "user.h"
 #include "server.h"
 
-/*
-** TODO: Gerer le topic lock (mode)
-*/
-
 static t_channel	*exec_topic_get_channel(t_user *this, t_cmd *cmd,
 		t_server *server)
 {

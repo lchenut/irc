@@ -76,10 +76,13 @@ void					visual_print_prompt(t_visual *this, char *buf);
 void					visual_dump_date(t_visual *this, char *chan);
 void					visual_print_newline(t_visual *this, char *chan);
 
-void					visual_print_channel(t_visual *this, char *buf, char *chan);
+void					visual_print_channel(t_visual *this,
+		char *buf, char *chan);
 void					visual_perror(t_visual *this, char *buf, char *chan);
-void					visual_print_bold(t_visual *this, char *buf, char *chan);
-void					visual_print_green(t_visual *this, char *buf, char *chan);
+void					visual_print_bold(t_visual *this,
+		char *buf, char *chan);
+void					visual_print_green(t_visual *this,
+		char *buf, char *chan);
 void					visual_print_red(t_visual *this, char *buf, char *chan);
 
 void					visual_move_curspos(t_visual *this, int x);

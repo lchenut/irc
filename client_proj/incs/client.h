@@ -46,6 +46,8 @@ typedef struct		s_client
 	t_command		*command;
 }					t_client;
 
+typedef void		(*t_execute_fn)(t_client *, char *);
+
 t_client			*client_new(void);
 void				client_del(t_client *this);
 t_client			*client_singleton(void);
@@ -74,7 +76,7 @@ void				client_read_from_socket(t_client *this, int fd);
 void				client_print_chan(t_client *this,
 		void (*fn)(t_visual *, char *, char *), char *msg, char *chan);
 
-void                (*client_get_execute_fn(char *s))(t_client *, char *);
+t_execute_fn		client_get_execute_fn(char *s);
 void				client_exec(t_client *this);
 void				client_exec_pass(t_client *this, char *cmd);
 void				client_exec_nick(t_client *this, char *cmd);

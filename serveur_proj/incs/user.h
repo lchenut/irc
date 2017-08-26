@@ -24,6 +24,7 @@
 
 typedef struct s_server	t_server;
 typedef struct sockaddr_in6	t_sai6;
+typedef struct s_query	t_query;
 
 typedef struct	s_user
 {
@@ -71,6 +72,8 @@ void			user_exec_quit(t_user *this, t_cmd *cmd, t_server *server);
 void			user_exec_mode(t_user *this, t_cmd *cmd, t_server *server);
 void			user_exec_invite(t_user *this, t_cmd *cmd, t_server *server);
 
+void			user_exec_quit_from_query(t_user *this,
+		t_query *query, t_server *server);
 void			user_exec_chanmode(t_user *this, t_cmd *cmd,
 		t_server *server, t_channel *channel);
 void			user_exec_chanmode_minus(t_user *this, t_cmd *cmd,

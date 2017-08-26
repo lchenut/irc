@@ -32,4 +32,8 @@ void			user_exec_mode(t_user *this, t_cmd *cmd, t_server *server)
 	{
 		user_exec_chanmode(this, cmd, server, channel);
 	}
+	else
+	{
+		err_nosuchchannel(this, vector_get_first(cmd->params), server);
+	}
 }
