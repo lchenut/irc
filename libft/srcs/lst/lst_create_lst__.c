@@ -19,7 +19,6 @@ t_lst__			*lst_create_lst__(void *data)
 	ret = malloc(sizeof(t_lst__));
 	if (!ret)
 	{
-		perror("malloc()");
 		exit(-1);
 	}
 	ret->prev = NULL;

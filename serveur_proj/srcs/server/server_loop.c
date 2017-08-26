@@ -37,12 +37,11 @@ static void	write_fd_isset(t_server *this, int index)
 	query = lst_find_pop(this->querries, find_fn, &index);
 	if (query)
 	{
-		printf("Send to %s: %s", query->user->nick, query->cmd);
+		utils_printf("Send to %s: %s", query->user->nick, query->cmd);
 		ft_putstr_fd(query->cmd, query->user->socket);
 		if (query->should_quit)
 		{
 			user_exec_quit_from_query(query->user, query, this);
-			// server_delete_user(this, query->user);
 		}
 		query_del(query);
 	}

@@ -65,7 +65,7 @@ void			user_exec_command(t_user *this, char *line, t_server *server)
 		flood_timeout(this, server);
 		return ;
 	}
-	printf("Recv from %s: %s", this->nick, line);
+	utils_printf("Recv from %s: %s", this->nick, line);
 	cmd = cmd_tokenizer_tokenize(line);
 	if (!cmd->command)
 	{

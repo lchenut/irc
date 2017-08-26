@@ -18,6 +18,7 @@
 # define IRC_NAME "irc.42.fr"
 
 char			*utils_concat(char *fmt, ...);
+void			utils_printf(char *fmt, ...);
 
 bool			utils_is_valid_nickname(char *s);
 bool			utils_is_valid_key(char *s);

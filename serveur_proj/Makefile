@@ -28,26 +28,21 @@ C_DIR		= srcs
 H_DIR		= incs
 O_DIR		= objs
 
-C_FILES		= $(shell find $(C_DIR) -type f -follow -print | grep ".*\.c$$")
-C_DIRS		= $(shell find $(C_DIR) -type d -follow -print)
-
-H_FILES		= $(shell find $(H_DIR) -type f -follow -print | grep ".*\.h$$")
+include Makefile_cfg.mk
 
 O_DIRS		= $(C_DIRS:$(C_DIR)%=$(O_DIR)%)
 O_FILES		= $(C_FILES:$(C_DIR)%.c=$(O_DIR)%.o)
 
 all:
-	@make -sC $(LIB_PATH)
-	@make -s $(NAME)
+	make -C $(LIB_PATH)
+	make $(NAME)
 
 $(NAME):		$(O_FILES) $(LIB_LD)
-	@echo ""
-	@$(CC) $^ -o $@ $(LIB_LD) -lncurses
+	$(CC) $^ -o $@ $(LIB_LD) -lncurses
 
 $(O_DIR)/%.o:	$(C_DIR)/%.c $(H_FILES)
 	@mkdir -p $(O_DIRS) $(O_DIR)
-	@$(CC) $(CC_FLAGS) $(CC_HEADERS) $(LIB_INCS) -o $@ -c $< && \
-	printf "\033[38;5;"$(shell $(RANDOM))"mS\033[0m"
+	$(CC) $(CC_FLAGS) $(CC_HEADERS) $(LIB_INCS) -o $@ -c $<
 
 clean:
 	@rm -rf $(O_DIR)
@@ -55,10 +50,15 @@ clean:
 fclean: clean
 	@rm -rf $(NAME)
 
-make check:
+check:
 	make -k -C tests/unit
 
 log:
 	touch /tmp/.debug_irc; clear; tail -f /tmp/.debug_irc
+
+config:
+	@echo "C_FILES="$$(find srcs -name '*.c' -type f) > Makefile_cfg.mk
+	@echo "C_DIRS="$$(find srcs -type d -follow -print) >> Makefile_cfg.mk
+	@echo "H_FILES="$$(find incs -name '*.h' -type f) >> Makefile_cfg.mk
 
 re: fclean all

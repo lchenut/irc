@@ -36,14 +36,12 @@ O_FILES		= $(C_FILES:$(C_DIR)%.c=$(O_DIR)%.o)
 all:			$(NAME)
 
 $(NAME):		$(O_FILES)
-	@echo ""
-	@ar -rc $@ $^
-	@ranlib $@
+	ar -rc $@ $^
+	ranlib $@
 
 $(O_DIR)/%.o:	$(C_DIR)/%.c $(H_FILES)
 	@mkdir -p $(O_DIRS) $(O_DIR)
-	@$(CC) $(CC_FLAGS) $(CC_HEADERS) -o $@ -c $< && \
-	printf "\033[38;5;"$(shell $(RANDOM))"mL\033[0m"
+	$(CC) $(CC_FLAGS) $(CC_HEADERS) -o $@ -c $<
 
 clean:
 	@rm -rf $(O_DIR)

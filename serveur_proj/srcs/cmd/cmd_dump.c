@@ -14,23 +14,23 @@
 
 static void			iter_fn(void *data, int index)
 {
-	printf("param[%i]: %s\n", index, data);
+	utils_printf("param[%i]: %s\n", index, data);
 }
 
 void				cmd_dump(t_cmd *this)
 {
-	printf("======================\n");
+	utils_printf("======================\n");
 	if (this->servername)
 	{
-		printf("servername: %s\n", this->servername);
+		utils_printf("servername: %s\n", this->servername);
 	}
 	else
 	{
-		printf("nick: %s\n", this->nick);
-		printf("user: %s\n", this->user);
-		printf("host: %s\n", this->host);
+		utils_printf("nick: %s\n", this->nick);
+		utils_printf("user: %s\n", this->user);
+		utils_printf("host: %s\n", this->host);
 	}
-	printf("command: %s\n", this->command);
+	utils_printf("command: %s\n", this->command);
 	vector_iteri0(this->params, iter_fn);
-	printf("======================\n");
+	utils_printf("======================\n");
 }

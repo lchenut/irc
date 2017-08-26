@@ -19,7 +19,6 @@ t_lst		*lst_new(void)
 	ret = (t_lst *)malloc(sizeof(t_lst));
 	if (!ret)
 	{
-		perror("malloc()");
 		exit(-1);
 	}
 	ret->head = NULL;
