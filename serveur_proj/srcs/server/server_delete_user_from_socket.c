@@ -36,7 +36,6 @@ void		server_delete_user_from_socket(t_server *this, int csocket)
 {
 	t_user	*user;
 
-	printf("Ben alors?\n");
 	if (this == NULL)
 		return ;
 	user = vector_find_pop(this->users, find_user, &csocket);
