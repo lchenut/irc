@@ -20,6 +20,8 @@ static void	concat_arg(char *buf, va_list ap, int *index_buf, int *index_fmt)
 
 	arg = va_arg(ap, char *);
 	index_arg = 0;
+	if (arg == NULL)
+		arg = "(null)";
 	while (*index_buf < 509 && arg[index_arg])
 	{
 		buf[*index_buf] = arg[index_arg];
@@ -53,8 +55,6 @@ void		utils_printf(char *fmt, ...)
 		else
 			concat_fmt(buf, fmt, &index_buf, &index_fmt);
 	}
-	buf[index_buf] = '\r';
-	buf[index_buf + 1] = '\n';
-	buf[index_buf + 2] = '\0';
+	buf[index_buf] = '\0';
 	ft_putstr(buf);
 }

@@ -12,7 +12,8 @@
 
 #include "lst.h"
 
-static inline void	foundlst(t_lst *this, t_lst__ *ltmp, void (*del_fn)(void *))
+static inline t_lst__	*foundlst(t_lst *this,
+		t_lst__ *ltmp, void (*del_fn)(void *))
 {
 	t_lst__		*ltmp_;
 
@@ -29,10 +30,10 @@ static inline void	foundlst(t_lst *this, t_lst__ *ltmp, void (*del_fn)(void *))
 	this->size -= 1;
 	ltmp_ = ltmp->next;
 	free(ltmp);
-	ltmp = ltmp_;
+	return (ltmp_);
 }
 
-void				lst_clear_if(t_lst *this, void (*del_fn)(void *),
+void					lst_clear_if(t_lst *this, void (*del_fn)(void *),
 		bool (*find_fn)(void *, void *), void *context)
 {
 	t_lst__		*ltmp;
@@ -42,7 +43,7 @@ void				lst_clear_if(t_lst *this, void (*del_fn)(void *),
 	{
 		if (find_fn(ltmp->data, context))
 		{
-			foundlst(this, ltmp, del_fn);
+			ltmp = foundlst(this, ltmp, del_fn);
 		}
 		else
 		{
