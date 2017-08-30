@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "prog.h"
+#include "data.h"
 
 void			prog_del(t_prog *this)
 {
@@ -20,5 +21,7 @@ void			prog_del(t_prog *this)
 		argparser_result_del(this->res);
 	if (this->arg)
 		argparser_del(this->arg);
+	data_ctrl_mvmt(true);
+	data_command(true);
 	free(this);
 }

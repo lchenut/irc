@@ -33,6 +33,7 @@ typedef struct		s_client
 	bool			should_quit;
 	char			*quit_msg;
 	bool			connected;
+	bool			serv_connect;
 	char			*address;
 	char			*port;
 	char			*nick;

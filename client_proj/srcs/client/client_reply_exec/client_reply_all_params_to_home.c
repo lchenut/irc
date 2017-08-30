@@ -28,6 +28,10 @@ void			client_reply_print_all_params_to_home(t_client *this,
 {
 	char		*to_print;
 
+	if (ft_strcmp(content->command, "001") == 0)
+	{
+		this->serv_connect = true;
+	}
 	client_reply_pop_params(this, content);
 	to_print = ft_strnew(0);
 	vector_iter(content->params, iter_fn, &to_print);

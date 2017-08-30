@@ -18,6 +18,7 @@ t_client			*client_new(void)
 
 	this = ft_calloc(sizeof(t_client));
 	this->connected = false;
+	this->serv_connect = false;
 	client_set_port(this, DFL_SERVER_PORT);
 	this->sock = -1;
 	this->should_quit = false;

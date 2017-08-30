@@ -15,10 +15,6 @@
 #include <pwd.h>
 #include <uuid/uuid.h>
 
-/*
-** TODO: le rename
-*/
-
 static void		client_exec_nick_register(t_client *this)
 {
 	char		buffer[512];
@@ -60,6 +56,10 @@ static void		client_exec_change_nick(t_client *this, char *s)
 	while (*s && *s != ' ')
 		s += 1;
 	s = 0;
+	if (!this->serv_connect)
+	{
+		client_set_nick(this, new_nick);
+	}
 	client_write_sock(this, "NICK ");
 	client_write_sock(this, new_nick);
 	client_write_sock(this, "\r\n");

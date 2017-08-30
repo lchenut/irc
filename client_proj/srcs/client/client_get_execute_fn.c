@@ -28,7 +28,7 @@ void				(*client_get_execute_fn(char *s))(t_client *, char *)
 
 	if (*s == '\0')
 		return (NULL);
-	data = data_command();
+	data = data_command(false);
 	cmd = vector_find(data, find_fn, s);
 	if (!cmd)
 		return (NULL);

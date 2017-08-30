@@ -23,11 +23,16 @@ static t_ctrl_mvmt_data	*ctrlmv_new(char *sequence, void (*fn)(t_command *))
 	return (data);
 }
 
-t_vector				*data_ctrl_mvmt(void)
+t_vector				*data_ctrl_mvmt(bool clear)
 {
 	static t_vector	*data = NULL;
 
-	if (!data)
+	if (clear && data)
+	{
+		vector_del(data, free);
+		data = NULL;
+	}
+	else if (!data)
 	{
 		data = vector_new();
 		vector_push_back(data, ctrlmv_new("\033[A", command_history_up));

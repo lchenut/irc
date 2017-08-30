@@ -73,11 +73,16 @@ static void				data_command_push02(t_vector *data)
 	vector_push_back(data, cmd_new("/whowas", "WHOWAS", NULL));
 }
 
-t_vector				*data_command(void)
+t_vector				*data_command(bool clear)
 {
 	static t_vector	*data = NULL;
 
-	if (!data)
+	if (clear && data)
+	{
+		vector_del(data, free);
+		data = NULL;
+	}
+	else if (!data)
 	{
 		data = vector_new();
 		data_command_push01(data);

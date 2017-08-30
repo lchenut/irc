@@ -31,7 +31,7 @@ typedef struct				s_command_data
 	void					(*exec_fn)(t_client *, char *cmd);
 }							t_command_data;
 
-t_vector					*data_ctrl_mvmt(void);
-t_vector					*data_command(void);
+t_vector					*data_ctrl_mvmt(bool clear);
+t_vector					*data_command(bool clear);
 
 #endif
